@@ -56,7 +56,6 @@ public class InputActivity extends Activity {
                 // Create the AlertDialog
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
             }
         });
     }
