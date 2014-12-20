@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="C:\Users\Алексей\AndroidStudioProjects\MapMyTrip\app\build\intermediates\pre-dexed\release\support-annotations-20.0.0-35fdd9dfdefd099efe08bb8f3263ee379a7a385d.jar"
+        jar="D:\Android\android-studio\sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa"/>
+    <item
+        dex="C:\Users\Алексей\AndroidStudioProjects\MapMyTrip\app\build\intermediates\pre-dexed\release\classes-476fc282d7ec60deaea5759a080451cbe1c7294d.jar"
+        jar="C:\Users\Алексей\AndroidStudioProjects\MapMyTrip\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0"/>
+    <item
+        dex="C:\Users\Алексей\AndroidStudioProjects\MapMyTrip\app\build\intermediates\pre-dexed\release\internal_impl-20.0.0-55ac011813f26793111e3f6eb39d324aeaa209ac.jar"
+        jar="C:\Users\Алексей\AndroidStudioProjects\MapMyTrip\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\libs\internal_impl-20.0.0.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d"/>
+    <item
+        dex="C:\Users\Алексей\AndroidStudioProjects\MapMyTrip\app\build\intermediates\pre-dexed\debug\android-support-v4-009546aaa3d7d3749a0a0e47c50004945eb52871.jar"
+        jar="C:\Users\Алексей\AndroidStudioProjects\MapMyTrip\app\libs\android-support-v4.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="3e1409c5f5c4cdf9fd41db4b22a3eec5b3b10d96"/>
+    <item
+        dex="C:\Users\Алексей\AndroidStudioProjects\MapMyTrip\app\build\intermediates\pre-dexed\release\classes-b37d13b1b4ed4518a2c8d4e462f237eb5656b563.jar"
+        jar="C:\Users\Алексей\AndroidStudioProjects\MapMyTrip\app\build\intermediates\exploded-aar\com.google.android.gms\play-services\6.1.71\classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="0f6d5c1ef2e982c3b7858408e3df389cf5d202da"/>
+
+</pre-dex-items>

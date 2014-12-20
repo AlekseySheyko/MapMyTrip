@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="action_titles">
+        <item>Record my Trip</item>
+        <item>Log my Trip</item>
+        <item>Log Gas</item>
+        <item>Log my Rest</item>
+        <item>Trip Summary</item>
+        <item>Settings</item>
+    </string-array>
+    <string-array name="test_trip_names">
+        <item>Trip on 12 dec, 16:50</item>
+        <item>Trip on 12 dec, 12:15</item>
+        <item>Trip on 12 dec, 9:47</item>
+        <item>Trip on 11 dec, 20:12</item>
+        <item>Trip on 11 dec, 16:45</item>
+        <item>Trip on 11 dec, 11:29</item>
+    </string-array>
+    <string-array name="test_trip_distances">
+        <item>9,37 miles</item>
+        <item>16,45 miles</item>
+        <item>21,54 miles</item>
+        <item>8,43 miles</item>
+        <item>35,18 miles</item>
+        <item>19,70 miles</item>
+    </string-array>
+    <string-array name="test_trip_durations">
+        <item>02:15:34</item>
+        <item>00:34:27</item>
+        <item>01:09:47</item>
+        <item>02:15:29</item>
+        <item>00:55:20</item>
+        <item>01:13:29</item>
+    </string-array>
+    <string-array name="pref_units_array">
+        <item>@string/units_miles</item>
+        <item>@string/units_kilometers</item>
+        </string-array>
+</resources>
