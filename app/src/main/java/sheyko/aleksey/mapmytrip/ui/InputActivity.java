@@ -19,6 +19,8 @@ public class InputActivity extends Activity {
     private String mTripId;
     private SharedPreferences sharedPrefs;
 
+    private String testVariable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
