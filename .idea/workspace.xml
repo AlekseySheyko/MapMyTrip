@@ -57,15 +57,13 @@
     </layouts>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="States" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="INFO" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: sheyko.aleksey.mapthetrip" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb7d208a-9f29-48ba-9f4c-bcdf016b593c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SaveTripTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SaveTripTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/SummaryActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/SummaryActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SendLocationService.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SendLocationService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Map My Trip.iws" />
@@ -92,22 +90,46 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2749141" vertical-offset="8238" max-vertical-offset="13345">
-              <caret line="509" column="48" selection-start-line="509" selection-start-column="48" selection-end-line="509" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.2749141" vertical-offset="8697" max-vertical-offset="15096">
+              <caret line="521" column="50" selection-start-line="521" selection-start-column="50" selection-end-line="521" selection-end-column="50" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#4202#4241#0" expanded="true" />
-                <element signature="e#4848#4890#0" expanded="true" />
-                <element signature="e#6619#6650#0" expanded="true" />
-                <element signature="e#7243#7276#0" expanded="true" />
-                <element signature="e#8394#8429#0" expanded="true" />
-                <element signature="e#10229#10254#0" expanded="true" />
-                <element signature="e#10942#10964#0" expanded="true" />
-                <element signature="e#11649#11672#0" expanded="true" />
-                <element signature="e#13554#13574#0" expanded="true" />
-                <element signature="e#13643#13664#0" expanded="true" />
-                <element signature="e#15918#15957#0" expanded="true" />
-                <element signature="e#29324#29355#0" expanded="true" />
+                <element signature="e#4250#4289#0" expanded="true" />
+                <element signature="e#4525#5597#0" expanded="true" />
+                <element signature="e#4896#4938#0" expanded="true" />
+                <element signature="e#5586#5587#0" expanded="true" />
+                <element signature="e#6667#6698#0" expanded="true" />
+                <element signature="e#7291#7324#0" expanded="true" />
+                <element signature="e#7428#8368#0" expanded="true" />
+                <element signature="e#8357#8358#0" expanded="true" />
+                <element signature="e#8442#8477#0" expanded="true" />
+                <element signature="e#9162#9493#0" expanded="true" />
+                <element signature="e#9241#9467#0" expanded="true" />
+                <element signature="e#9448#9449#0" expanded="true" />
+                <element signature="e#9482#9483#0" expanded="true" />
+                <element signature="e#10277#10302#0" expanded="true" />
+                <element signature="e#10990#11012#0" expanded="true" />
+                <element signature="e#11697#11720#0" expanded="true" />
+                <element signature="e#13602#13622#0" expanded="true" />
+                <element signature="e#13691#13712#0" expanded="true" />
+                <element signature="e#15966#16005#0" expanded="true" />
+                <element signature="e#16531#17260#0" expanded="true" />
+                <element signature="e#16968#17194#0" expanded="true" />
+                <element signature="e#17167#17168#0" expanded="true" />
+                <element signature="e#17249#17250#0" expanded="true" />
+                <element signature="e#30262#30263#0" expanded="true" />
+                <element signature="e#30296#30297#0" expanded="true" />
+                <element signature="e#30567#30568#0" expanded="true" />
+                <element signature="e#30608#30609#0" expanded="true" />
+                <element signature="e#30646#30647#0" expanded="true" />
+                <element signature="e#30680#30681#0" expanded="true" />
+                <element signature="e#30721#30722#0" expanded="true" />
+                <element signature="e#30765#30766#0" expanded="true" />
+                <element signature="e#30923#30924#0" expanded="true" />
+                <element signature="e#30982#30983#0" expanded="true" />
+                <element signature="e#31249#31250#0" expanded="true" />
+                <element signature="e#31275#31276#0" expanded="true" />
+                <element signature="e#32568#32599#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -123,11 +145,34 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="SendLocationService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SendLocationService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="475" max-vertical-offset="1564">
+              <caret line="55" column="13" selection-start-line="55" selection-start-column="13" selection-end-line="55" selection-end-column="13" />
+              <folding>
+                <element signature="e#2287#2288#0" expanded="true" />
+                <element signature="e#2314#2315#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UpdateTripStatusTask.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/UpdateTripStatusTask.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="1479">
+              <caret line="17" column="42" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="SaveTripTask.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SaveTripTask.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="1581">
-              <caret line="40" column="62" selection-start-line="40" selection-start-column="62" selection-end-line="40" selection-end-column="62" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="455" max-vertical-offset="1581">
+              <caret line="40" column="50" selection-start-line="40" selection-start-column="43" selection-end-line="40" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -1116,16 +1161,16 @@
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/Alarm.java" />
         <option value="$PROJECT_DIR$/../../Backups/MapTheTrip/35. Hooray. Sends location from alarm service/app/src/main/java/sheyko/aleksey/mapthetrip/ui/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SendLocationService.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/database/TripSQLiteOpenHelper.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/database/TripDataSourse.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/database/TripSQLiteHelper.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/GetSummaryInfoTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SendLocationTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/UpdateTripStatusTask.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/SummaryActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SaveTripTask.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SendLocationService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/MainActivity.java" />
       </list>
     </option>
   </component>
@@ -2178,7 +2223,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2193,7 +2238,7 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.516184" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6983607" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5262295" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3253833" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -2598,25 +2643,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SendLocationService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="356" max-vertical-offset="1445">
-          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SendLocationTask.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2618">
-          <caret line="17" column="42" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/UpdateTripStatusTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1479">
           <caret line="17" column="42" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
           <folding />
         </state>
@@ -2664,32 +2693,75 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/UpdateTripStatusTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1479">
+          <caret line="17" column="42" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SaveTripTask.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="1581">
-          <caret line="40" column="62" selection-start-line="40" selection-start-column="62" selection-end-line="40" selection-end-column="62" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="455" max-vertical-offset="1581">
+          <caret line="40" column="50" selection-start-line="40" selection-start-column="43" selection-end-line="40" selection-end-column="50" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/SendLocationService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="475" max-vertical-offset="1564">
+          <caret line="55" column="13" selection-start-line="55" selection-start-column="13" selection-end-line="55" selection-end-column="13" />
+          <folding>
+            <element signature="e#2287#2288#0" expanded="true" />
+            <element signature="e#2314#2315#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2749141" vertical-offset="8238" max-vertical-offset="13345">
-          <caret line="509" column="48" selection-start-line="509" selection-start-column="48" selection-end-line="509" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.2749141" vertical-offset="8697" max-vertical-offset="15096">
+          <caret line="521" column="50" selection-start-line="521" selection-start-column="50" selection-end-line="521" selection-end-column="50" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4202#4241#0" expanded="true" />
-            <element signature="e#4848#4890#0" expanded="true" />
-            <element signature="e#6619#6650#0" expanded="true" />
-            <element signature="e#7243#7276#0" expanded="true" />
-            <element signature="e#8394#8429#0" expanded="true" />
-            <element signature="e#10229#10254#0" expanded="true" />
-            <element signature="e#10942#10964#0" expanded="true" />
-            <element signature="e#11649#11672#0" expanded="true" />
-            <element signature="e#13554#13574#0" expanded="true" />
-            <element signature="e#13643#13664#0" expanded="true" />
-            <element signature="e#15918#15957#0" expanded="true" />
-            <element signature="e#29324#29355#0" expanded="true" />
+            <element signature="e#4250#4289#0" expanded="true" />
+            <element signature="e#4525#5597#0" expanded="true" />
+            <element signature="e#4896#4938#0" expanded="true" />
+            <element signature="e#5586#5587#0" expanded="true" />
+            <element signature="e#6667#6698#0" expanded="true" />
+            <element signature="e#7291#7324#0" expanded="true" />
+            <element signature="e#7428#8368#0" expanded="true" />
+            <element signature="e#8357#8358#0" expanded="true" />
+            <element signature="e#8442#8477#0" expanded="true" />
+            <element signature="e#9162#9493#0" expanded="true" />
+            <element signature="e#9241#9467#0" expanded="true" />
+            <element signature="e#9448#9449#0" expanded="true" />
+            <element signature="e#9482#9483#0" expanded="true" />
+            <element signature="e#10277#10302#0" expanded="true" />
+            <element signature="e#10990#11012#0" expanded="true" />
+            <element signature="e#11697#11720#0" expanded="true" />
+            <element signature="e#13602#13622#0" expanded="true" />
+            <element signature="e#13691#13712#0" expanded="true" />
+            <element signature="e#15966#16005#0" expanded="true" />
+            <element signature="e#16531#17260#0" expanded="true" />
+            <element signature="e#16968#17194#0" expanded="true" />
+            <element signature="e#17167#17168#0" expanded="true" />
+            <element signature="e#17249#17250#0" expanded="true" />
+            <element signature="e#30262#30263#0" expanded="true" />
+            <element signature="e#30296#30297#0" expanded="true" />
+            <element signature="e#30567#30568#0" expanded="true" />
+            <element signature="e#30608#30609#0" expanded="true" />
+            <element signature="e#30646#30647#0" expanded="true" />
+            <element signature="e#30680#30681#0" expanded="true" />
+            <element signature="e#30721#30722#0" expanded="true" />
+            <element signature="e#30765#30766#0" expanded="true" />
+            <element signature="e#30923#30924#0" expanded="true" />
+            <element signature="e#30982#30983#0" expanded="true" />
+            <element signature="e#31249#31250#0" expanded="true" />
+            <element signature="e#31275#31276#0" expanded="true" />
+            <element signature="e#32568#32599#0" expanded="true" />
           </folding>
         </state>
       </provider>

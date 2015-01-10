@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.location.LocationClient;
@@ -15,7 +16,7 @@ import sheyko.aleksey.mapthetrip.activities.MainActivity;
 
 public class SendLocationService extends Service
         implements ConnectionCallbacks, LocationListener {
-    public static final String TAG = SendLocationService.class.getSimpleName();
+
     Alarm alarm = new Alarm();
 
     private LocationClient mLocationClient;
@@ -40,13 +41,18 @@ public class SendLocationService extends Service
 
             } else if (intent.getExtras().getString("action").equals("sendLocation")) {
 
-                // Send location to server
-                new SendLocationTask().execute(
-                        mTripId,
-                        currentLocation.getLatitude() + "",
-                        currentLocation.getLongitude() + "",
-                        new MainActivity().getCurrentDateTime(),
-                        new MainActivity().getTimeZone());
+                if (mTripId != null)
+                try {
+                    // Send location to server
+                    new SendLocationTask().execute(
+                            mTripId,
+                            currentLocation.getLatitude() + "",
+                            currentLocation.getLongitude() + "",
+                            new MainActivity().getCurrentDateTime(),
+                            new MainActivity().getTimeZone());
+                } catch (Exception e) {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         }
         return START_STICKY;
