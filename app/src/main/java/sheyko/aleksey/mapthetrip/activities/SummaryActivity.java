@@ -22,6 +22,7 @@ public class SummaryActivity extends Activity {
     private String mTripName;
     private String mTripNotes;
     private String mDateTime;
+    private String mStates;
 
     private EditText tripNameField;
     private SharedPreferences sharedPrefs;
@@ -38,6 +39,7 @@ public class SummaryActivity extends Activity {
         mDistance = sharedPrefs.getString("Distance", "Unspecified");
         mDuration = sharedPrefs.getString("Duration", "Unspecified");
         mDateTime = sharedPrefs.getString("DateTime", "Unspecified");
+        mStates = sharedPrefs.getString("States", "Unspecified");
 
         // Update counters with trip info
         ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
@@ -83,7 +85,7 @@ public class SummaryActivity extends Activity {
         if (mTripName.equals("")) mTripName = "Trip on " + mDateTime;
         mTripNotes = ((EditText) findViewById(R.id.tripNotesField)).getText().toString();
 
-        new SaveTripTask().execute(mTripId, "" + isSaved, mDistance, mDuration, mTripName, mTripNotes);
+        new SaveTripTask().execute(mTripId, "" + isSaved, mDistance, mDuration, mTripName, mTripNotes, mStates);
         startActivity(new Intent(this, MainActivity.class));
     }
 }

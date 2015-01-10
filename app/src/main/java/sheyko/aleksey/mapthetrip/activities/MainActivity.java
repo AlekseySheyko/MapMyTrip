@@ -507,11 +507,11 @@ public class MainActivity extends Activity
 
             mCurrentNewState = "";
             mPreviousState = "";
-            sharedPrefs.edit().putString("currentState", "");
+            sharedPrefs.edit().putString("States", "");
         }
 
         mCurrentNewState = logDistanceForEachState(location.getLatitude(), location.getLongitude());
-        mLoggedStates = sharedPrefs.getString("currentState", "");
+        mLoggedStates = sharedPrefs.getString("States", "");
         if (!mCurrentNewState.equals("") /* Не стоит на месте */
                 && !mPreviousState.equals(mCurrentNewState)) { /* Типо не в том же штате*/
             if (!mLoggedStates.equals("")) {
@@ -519,8 +519,7 @@ public class MainActivity extends Activity
             } else {
                 mLoggedStates = mCurrentNewState;
             }
-            sharedPrefs.edit().putString("currentState", mLoggedStates).commit();
-            Log.i(TAG, "States: " + mLoggedStates);
+            sharedPrefs.edit().putString("States", mLoggedStates).commit();
             mPreviousState = mCurrentNewState;
         }
 

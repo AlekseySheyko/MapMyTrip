@@ -38,7 +38,7 @@ public class SaveTripTask extends AsyncTask<String, Void, Void> {
                     .appendQueryParameter("TripName", "" + params[4])
                     .appendQueryParameter("TripDesc", "" + params[4])
                     .appendQueryParameter("TripNotes", "" + params[5])
-                    .appendQueryParameter("StateCd", "US")
+                    .appendQueryParameter("StateCd", params[6])
                     .appendQueryParameter("TotalStateDistanceTraveled", params[2])
                     .appendQueryParameter("Total_State_Trip_Duration", "" + (int) Math.round(Double.parseDouble(params[2])))
                     .appendQueryParameter("EntityId", "1")
