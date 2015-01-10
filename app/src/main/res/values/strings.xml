@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">MapMyTrip</string>
+    <string name="app_name">MapTheTrip</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="record_trip">Record Trip</string>
     <string name="travel_tab_label">Travel</string>
     <string name="gas_tab_label">Gas</string>
-    <string name="start_trip_button_label">Start Run</string>
+    <string name="start_trip_button_label">Start Trip</string>
     <string name="pause_trip_button_label">Pause Trip</string>
     <string name="rest_tab_label">Rest</string>
     <string name="drawer_open">Open navigation drawer</string>

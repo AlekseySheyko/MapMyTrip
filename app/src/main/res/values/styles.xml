@@ -12,6 +12,12 @@
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">#0076c0</item>
         <item name="android:backgroundStacked">@drawable/action_bar_background</item>
+        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+    </style>
+
+    <style name="MyActionBarTitleText"
+           parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="MyActionBarTabs"
@@ -171,19 +177,29 @@
     <style name="TripLabelHeader">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:layout_marginTop">26dp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginBottom">4dp</item>
     </style>
 
-    <style name="TripLabelValue">
+    <style name="TripLabelDistance">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">16dp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="TripLabelUnits">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">14dp</item>
     </style>
 
     <color name="background">#f3f5f6</color>

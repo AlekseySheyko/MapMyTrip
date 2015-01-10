@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Parse-1.8.0">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/src/libs/Parse-1.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/libs/Parse-1.8.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
