@@ -63,7 +63,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb7d208a-9f29-48ba-9f4c-bcdf016b593c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Map My Trip.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -89,8 +90,8 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="7.675676" vertical-offset="8233" max-vertical-offset="13379">
-              <caret line="516" column="34" selection-start-line="516" selection-start-column="34" selection-end-line="516" selection-end-column="34" />
+            <state vertical-scroll-proportion="1.2435898" vertical-offset="8408" max-vertical-offset="13362">
+              <caret line="521" column="80" selection-start-line="521" selection-start-column="80" selection-end-line="521" selection-end-column="80" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#4202#4241#0" expanded="true" />
@@ -104,8 +105,18 @@
                 <element signature="e#13554#13574#0" expanded="true" />
                 <element signature="e#13643#13664#0" expanded="true" />
                 <element signature="e#15918#15957#0" expanded="true" />
-                <element signature="e#29386#29417#0" expanded="true" />
+                <element signature="e#29394#29425#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SummaryActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/SummaryActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="98" max-vertical-offset="1258">
+              <caret line="33" column="78" selection-start-line="31" selection-start-column="50" selection-end-line="33" selection-end-column="78" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -2166,7 +2177,7 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.516184" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.89344263" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.6983607" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3253833" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -2264,7 +2275,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="26" />
+      <option name="time" value="27" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -2603,19 +2614,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/SummaryActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="1258">
-          <caret line="33" column="78" selection-start-line="31" selection-start-column="50" selection-end-line="33" selection-end-column="78" />
-          <folding>
-            <element signature="e#995#1034#0" expanded="true" />
-            <element signature="e#1946#1980#0" expanded="true" />
-            <element signature="e#2018#2054#0" expanded="true" />
-            <element signature="e#2197#2213#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/classes.jar!/com/google/android/gms/internal/ly.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.32" vertical-offset="657" max-vertical-offset="1071">
@@ -2650,10 +2648,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/SummaryActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="1258">
+          <caret line="33" column="78" selection-start-line="31" selection-start-column="50" selection-end-line="33" selection-end-column="78" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/activities/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="7.675676" vertical-offset="8233" max-vertical-offset="13379">
-          <caret line="516" column="34" selection-start-line="516" selection-start-column="34" selection-end-line="516" selection-end-column="34" />
+        <state vertical-scroll-proportion="1.2435898" vertical-offset="8408" max-vertical-offset="13362">
+          <caret line="521" column="80" selection-start-line="521" selection-start-column="80" selection-end-line="521" selection-end-column="80" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#4202#4241#0" expanded="true" />
@@ -2667,7 +2673,7 @@
             <element signature="e#13554#13574#0" expanded="true" />
             <element signature="e#13643#13664#0" expanded="true" />
             <element signature="e#15918#15957#0" expanded="true" />
-            <element signature="e#29386#29417#0" expanded="true" />
+            <element signature="e#29394#29425#0" expanded="true" />
           </folding>
         </state>
       </provider>
