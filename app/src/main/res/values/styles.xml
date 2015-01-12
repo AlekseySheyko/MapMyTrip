@@ -202,6 +202,144 @@
         <item name="android:layout_marginBottom">14dp</item>
     </style>
 
+    <style name="ActionbarTabsContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ActionbarTabLayout">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="ActionbarTabImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">5dp</item>
+    </style>
+
+    <style name="ActionbarTabText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">@color/tab_text</item>
+    </style>
+
+    <style name="ActionbarTabDivider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/tab_indicator_normal</item>
+    </style>
+
+    <style name="NavigationDrawerList">
+        <item name="android:layout_width">240dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:background">#204562</item>
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">0dp</item>
+    </style>
+
+    <style name="CountersContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">#f6f7f9</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="durationLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">-8dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">#6b737e</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="durationCounter">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@+id/duration_label</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">#38404c</item>
+        <item name="android:textSize">35sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="durationUnits">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@+id/duration_counter</item>
+        <item name="android:layout_marginTop">-8dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textColor">#6b737e</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="countersSeparator">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">#e2e4e7</item>
+    </style>
+
+    <style name="countersDivider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">#fff</item>
+    </style>
+
+    <style name="distanceCounterContainer">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:visibility">visible</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="distanceLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">-4dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">#6b737e</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="distanceCounter">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@+id/distance_label</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">#38404c</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="distanceUnits">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@+id/distance_counter</item>
+        <item name="android:layout_marginTop">-4dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textColor">#6b737e</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <color name="background">#f3f5f6</color>
     <color name="white">#ffffff</color>
 </resources>

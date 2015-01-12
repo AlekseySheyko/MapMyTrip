@@ -1,4 +1,4 @@
-package sheyko.aleksey.mapthetrip.utils;
+package sheyko.aleksey.mapthetrip.services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -12,7 +12,9 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 
-import sheyko.aleksey.mapthetrip.activities.MainActivity;
+import sheyko.aleksey.mapthetrip.helpers.Alarm;
+import sheyko.aleksey.mapthetrip.models.DeviceInfo;
+import sheyko.aleksey.mapthetrip.utils.SendLocationTask;
 
 public class SendLocationService extends Service
         implements ConnectionCallbacks, LocationListener {
@@ -48,8 +50,8 @@ public class SendLocationService extends Service
                             mTripId,
                             currentLocation.getLatitude() + "",
                             currentLocation.getLongitude() + "",
-                            new MainActivity().getCurrentDateTime(),
-                            new MainActivity().getTimeZone());
+                            new DeviceInfo().getCurrentDateTime(),
+                            new DeviceInfo().getTimeZone());
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }

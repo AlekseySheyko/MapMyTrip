@@ -76,7 +76,7 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/yellow_button_selector"
-                android:onClick="saveButtonPressed"/>
+                android:onClick="saveTrip"/>
 
             <TextView
                 android:id="@+id/start_button_label"
@@ -98,6 +98,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:clickable="true"
+            android:onClick="cancelTrip"
             android:drawableLeft="@drawable/arrow_back"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"

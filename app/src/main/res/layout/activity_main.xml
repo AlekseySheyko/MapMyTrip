@@ -5,317 +5,84 @@
     android:layout_height="match_parent">
 
     <!-- The main content view -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Action bar tabs -->
+        <!--Tabs container-->
         <LinearLayout
             android:id="@+id/actionBarTabsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:gravity="center_vertical"
-            android:minHeight="40dp"
-            android:orientation="horizontal"
-            android:paddingRight="5dp"
-            android:visibility="gone">
+            style="@style/ActionbarTabsContainer">
 
+            <!--Tab #1-->
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                style="@style/ActionbarTabLayout">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
+                    style="@style/ActionbarTabImage"
                     android:background="@drawable/ic_travel"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/travel_tab_label"
-                    android:textColor="@color/tab_text"/>
+                    style="@style/ActionbarTabText"
+                    android:text="@string/travel_tab_label"/>
 
             </LinearLayout>
 
+            <!--Divider-->
             <FrameLayout
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/tab_indicator_normal"/>
+                style="@style/ActionbarTabDivider"/>
 
+            <!--Tab #2-->
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                style="@style/ActionbarTabLayout">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
+                    style="@style/ActionbarTabImage"
                     android:background="@drawable/ic_gas"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/gas_tab_label"
-                    android:textColor="#a5a5a5"/>
+                    style="@style/ActionbarTabText"
+                    android:text="@string/gas_tab_label"/>
 
             </LinearLayout>
 
+            <!--Divider-->
             <FrameLayout
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/tab_indicator_normal"/>
+                style="@style/ActionbarTabDivider"/>
 
+            <!--Tab #3-->
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                style="@style/ActionbarTabLayout">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/ActionbarTabImage"
                     android:layout_marginRight="8dp"
                     android:background="@drawable/ic_rest"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/rest_tab_label"
-                    android:textColor="#a5a5a5"/>
+                    style="@style/ActionbarTabText"
+                    android:text="@string/rest_tab_label"/>
 
             </LinearLayout>
         </LinearLayout>
 
-
-
-        <LinearLayout
-            android:id="@+id/counters_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="#f6f7f9"
-            android:visibility="gone">
-
-            <!-- Time counter -->
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2">
-
-                <TextView
-                    android:id="@+id/duration_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="-8dp"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/duration_label"
-                    android:textColor="#6b737e"
-                    android:textSize="18sp"/>
-
-                <TextView
-                    android:id="@+id/duration_counter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/duration_label"
-                    android:gravity="center_horizontal"
-                    android:text="@string/duration_default_value"
-                    android:textColor="#38404c"
-                    android:textSize="35sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/duration_counter"
-                    android:layout_marginTop="-8dp"
-                    android:gravity="center_horizontal"
-                    android:paddingBottom="8dp"
-                    android:text="@string/duration_units"
-                    android:textColor="#6b737e"
-                    android:textSize="18sp"/>
-
-            </RelativeLayout>
-
-            <!--Separator-->
-            <FrameLayout
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="#e2e4e7"/>
-
-            <FrameLayout
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="#fff"/>
-
-            <!-- Distance counter -->
-            <RelativeLayout
-                android:id="@+id/distance_counter_container"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="visible"
-                android:layout_gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/distance_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="-4dp"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/distance_label"
-                    android:textColor="#6b737e"
-                    android:textSize="15sp"/>
-
-                <TextView
-                    android:id="@+id/distance_counter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/distance_label"
-                    android:gravity="center_horizontal"
-                    android:text="@string/distance_default_value"
-                    android:textColor="#38404c"
-                    android:textSize="25sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/distance_counter"
-                    android:layout_marginTop="-4dp"
-                    android:gravity="center_horizontal"
-                    android:paddingBottom="8dp"
-                    android:text="@string/distance_units"
-                    android:textColor="#6b737e"
-                    android:textSize="15sp"/>
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
+        <!--Map fragment container-->
         <FrameLayout
+            android:id="@+id/fragment_container"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#e0dddd"/>
+            android:layout_height="match_parent"
+            tools:context="aleksey.sheyko.sgbp.ui.activities.MainActivity">
 
-        <!-- Map container (with button) -->
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <fragment
-                android:id="@+id/map"
-                class="com.google.android.gms.maps.MapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-
-            <RelativeLayout
-                android:id="@+id/button_container"
-                style="buttonContainerShadow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/map"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="30dp">
-
-                <Button
-                    android:id="@+id/yellow_button_start"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/yellow_button_selector"/>
-
-                <Button
-                    android:id="@+id/red_button_pause"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/red_button_normal"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/start_button_label"
-                    style="@style/ShadowOverlayText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/start_trip_button_label"
-                    android:textColor="@android:color/white"
-                    android:textSize="24sp"/>
-
-                <TextView
-                    android:id="@+id/pause_button_label"
-                    style="@style/ShadowOverlayText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/pause_trip_button_label"
-                    android:textColor="@android:color/white"
-                    android:textSize="22sp"
-                    android:visibility="gone"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/slide_button_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/button_container"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="16dp">
-
-                <Button
-                    android:id="@+id/black_button_finish"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/black_slide_button_normal"
-                    android:drawableLeft="@drawable/ic_dots"
-                    android:drawableRight="@drawable/ic_arrow_next"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/finish_button_label"
-                    style="@style/ShadowOverlayText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/finish_trip_button_label"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
-                    android:visibility="gone"/>
-            </RelativeLayout>
-
-        </RelativeLayout>
+        </FrameLayout>
 
     </LinearLayout>
 
-    <!-- The navigation drawer -->
-
+    <!--Navigation drawer-->
     <ListView
-        android:id="@+id/left_drawer"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#204562"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"/>
+        android:id="@+id/navigationDrawerList"
+        style="@style/NavigationDrawerList"/>
 
 </android.support.v4.widget.DrawerLayout>

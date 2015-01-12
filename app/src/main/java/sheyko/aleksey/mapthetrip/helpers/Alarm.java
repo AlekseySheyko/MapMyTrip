@@ -1,4 +1,4 @@
-package sheyko.aleksey.mapthetrip.utils;
+package sheyko.aleksey.mapthetrip.helpers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
+
+import sheyko.aleksey.mapthetrip.services.SendLocationService;
 
 
 public class Alarm extends BroadcastReceiver {
