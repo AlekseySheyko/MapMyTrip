@@ -3,6 +3,7 @@ package sheyko.aleksey.mapthetrip.models;
 import com.orm.SugarRecord;
 
 import sheyko.aleksey.mapthetrip.utils.RegisterDeviceTask;
+import sheyko.aleksey.mapthetrip.utils.RegisterDeviceTask.OnGetTripIdListener;
 
 public class Trip extends SugarRecord<Trip> {
 
@@ -16,8 +17,8 @@ public class Trip extends SugarRecord<Trip> {
 //    ArrayList<String> stateDistances;
 //    ArrayList<String> stateDurations;
 
-    public Trip(String deviceId, String deviceType, String isCameraAvailable) {
-        new RegisterDeviceTask().execute(deviceId, deviceType, isCameraAvailable);
+    public Trip(OnGetTripIdListener listener, String deviceId, String deviceType, String isCameraAvailable) {
+        new RegisterDeviceTask(listener).execute(deviceId, deviceType, isCameraAvailable);
     }
 
     public Trip(String tripId) {

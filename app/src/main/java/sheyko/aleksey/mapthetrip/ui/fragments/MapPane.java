@@ -43,7 +43,7 @@ import sheyko.aleksey.mapthetrip.utils.RegisterDeviceTask.OnGetTripIdListener;
 import sheyko.aleksey.mapthetrip.utils.UpdateTripStatusTask;
 
 public class MapPane extends Fragment
-        implements ConnectionCallbacks, LocationListener, OnGetTripIdListener {
+        implements ConnectionCallbacks, LocationListener {
 
     // Callback to update tabs in MainActivity
     OnActionbarTabSelectedListener mCallback;
@@ -103,17 +103,35 @@ public class MapPane extends Fragment
                 updateUI(Status.RESUME);
                 startTimer();
 
-                // Register new trip ID
-                mCurrentTrip = new Trip(getDeviceId(), getDeviceType(), isCameraAvailable());
+                if (mTripId == null) {
 
-                // If continued, update trip status
-                // to «resumed»
-                if (mTripId != null) {
-                    startLocationUpdates();
+                    // Will get Trip ID via this listener
+                    OnGetTripIdListener mListener = new OnGetTripIdListener() {
+                        @Override
+                        public void onIdRetrieved(String tripId) {
+                            mCurrentTrip.setTripId(tripId);
+                            mTripId = tripId;
 
+                            sendLocationIntent = new Intent(getActivity(), SendLocationService.class)
+                                    .putExtra("action", "startTimer")
+                                    .putExtra("tripId", mTripId);
+                            getActivity().startService(sendLocationIntent);
+
+                            getLocationClient().connect();
+                        }
+                    };
+                    // Register new trip ID
+                    mCurrentTrip = new Trip(mListener,
+                            getDeviceId(), getDeviceType(), isCameraAvailable());
+
+                } else {
+                    // If continued, update trip status
+                    // to «resumed»
                     new UpdateTripStatusTask().execute(
                             mTripId,
                             Status.RESUME);
+
+                    startLocationUpdates();
 
                     getActivity().startService(sendLocationIntent);
                 }
@@ -126,7 +144,7 @@ public class MapPane extends Fragment
             public String getDeviceType() {
                 boolean tabletSize = getActivity().getResources().getBoolean(R.bool.isTablet);
                 if (tabletSize) {
-                    return  "Tablet";
+                    return "Tablet";
                 } else {
                     return "Phone";
                 }
@@ -207,18 +225,6 @@ public class MapPane extends Fragment
                 startButtonLabel.setText(R.string.resume_trip_button_label);
                 break;
         }
-    }
-
-    @Override
-    public void onIdRetrieved(String tripId) {
-        mCurrentTrip.setTripId(tripId);
-        mTripId = tripId;
-
-        getActivity().startService(new Intent(getActivity(), SendLocationService.class)
-                .putExtra("action", "startTimer")
-                .putExtra("tripId", mTripId));
-
-        getLocationClient().connect();
     }
 
     private GoogleMap getMap() {

@@ -24,7 +24,7 @@ import sheyko.aleksey.mapthetrip.ui.fragments.MapPane.OnActionbarTabSelectedList
 
 
 public class MainActivity extends Activity
-    implements OnActionbarTabSelectedListener{
+    implements OnActionbarTabSelectedListener {
 
     // Navigation drawer
     private ActionBar mActionBar;

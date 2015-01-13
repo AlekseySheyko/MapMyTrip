@@ -22,7 +22,7 @@ public class SaveTripTask extends AsyncTask<String, Void, Void> {
         BufferedReader reader = null;
 
         // Will contain JSON responses as a string
-        String saveTripJsonResponse = null;
+        String saveTripJsonResponse;
 
         try {
             // Construct the URL for the query
