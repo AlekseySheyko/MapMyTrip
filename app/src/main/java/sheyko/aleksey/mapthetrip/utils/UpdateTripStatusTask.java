@@ -10,12 +10,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLDecoder;
+
+import sheyko.aleksey.mapthetrip.helpers.Constants.Device;
+import sheyko.aleksey.mapthetrip.models.DeviceInfo;
 
 public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
 
     public static final String TAG = UpdateTripStatusTask.class.getSimpleName();
-    private boolean ENABLE_LOGGING = false;
 
     @Override
     protected Void doInBackground(String... params) {
@@ -33,14 +34,13 @@ public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
                     .authority("wsapp.mapthetrip.com")
                     .appendPath("TrucFuelLog.svc")
                     .appendPath("TFLUpdateTripStatus")
-                    .appendQueryParameter("TripId", params[0])
-                    .appendQueryParameter("TripStatus", params[1])
-                    .appendQueryParameter("TripDateTime", URLDecoder.decode(params[2]))
-                    .appendQueryParameter("TripTimezone", params[3])
-                    .appendQueryParameter("UserId", params[4]);
+                    .appendQueryParameter("TripId", /*TODO getTrip.getId() somehow*/ "")
+                    .appendQueryParameter("TripStatus", params[0])
+                    .appendQueryParameter("TripDateTime", new DeviceInfo().getCurrentDateTime())
+                    .appendQueryParameter("TripTimezone", new DeviceInfo().getTimeZone())
+                    .appendQueryParameter("UserId", Device.USER_ID);
             String mUrlString = builder.build().toString();
 
-            if (ENABLE_LOGGING)
             Log.i(TAG, "Service: TFLUpdateTripStatus,\n" +
                     "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
@@ -69,7 +69,6 @@ public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
             }
 
             updateTripJsonResponse = buffer.toString();
-            if (ENABLE_LOGGING)
             Log.i(TAG, "Service: TFLUpdateTripStatus " + "(" + params[1] + " trip)" + ",\n" +
                     "Result: " + java.net.URLDecoder.decode(updateTripJsonResponse, "UTF-8"));
         } catch (IOException e) {

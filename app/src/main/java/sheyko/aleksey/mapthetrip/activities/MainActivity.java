@@ -1,6 +1,8 @@
 package sheyko.aleksey.mapthetrip.activities;
 
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -18,9 +20,11 @@ import android.widget.Toast;
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.adapters.NavigationAdapter;
 import sheyko.aleksey.mapthetrip.fragments.MapPane;
+import sheyko.aleksey.mapthetrip.fragments.MapPane.OnActionbarTabSelectedListener;
 
 
-public class MainActivity extends Activity{
+public class MainActivity extends Activity
+    implements OnActionbarTabSelectedListener{
 
     // Navigation drawer
     private ActionBar mActionBar;
@@ -28,6 +32,10 @@ public class MainActivity extends Activity{
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
 
+    // Action bar tabs
+    private Tab tab1;
+    private Tab tab2;
+    private Tab tab3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +43,7 @@ public class MainActivity extends Activity{
         setContentView(R.layout.activity_main);
 
         addSideNavigation();
+        addActionBarTabs();
 
         MapPane mapFragment = new MapPane();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -84,10 +93,69 @@ public class MainActivity extends Activity{
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    private void addActionBarTabs() {
+        // Setup action bar for tabs
+        if (mActionBar != null) {
+            mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+            TabListener tabListener = new TabListener() {
+                @Override
+                public void onTabSelected(Tab tab, FragmentTransaction ft) {
+                }
+
+                @Override
+                public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+                }
+
+                @Override
+                public void onTabReselected(Tab tab, FragmentTransaction ft) {
+                }
+            };
+
+            tab1 = mActionBar.newTab()
+                    .setText(R.string.travel_tab_label)
+                    .setIcon(R.drawable.ic_travel);
+            tab1.setTabListener(tabListener);
+            mActionBar.addTab(tab1);
+
+            tab2 = mActionBar.newTab()
+                    .setText(R.string.gas_tab_label)
+                    .setIcon(R.drawable.ic_gas);
+            tab2.setTabListener(tabListener);
+            mActionBar.addTab(tab2);
+
+            tab3 = mActionBar.newTab()
+                    .setText(R.string.rest_tab_label)
+                    .setIcon(R.drawable.ic_rest);
+            tab3.setTabListener(tabListener);
+            mActionBar.addTab(tab3);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Navigation drawer toggle
         return mDrawerToggle.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onTabSelected(int position) {
+        mActionBar.removeAllTabs();
+
+        switch (position) {
+            case 1:
+                mActionBar.setTitle(getString(R.string.recording_label));
+                mActionBar.addTab(tab1, 0, false);
+                mActionBar.addTab(tab2, 1, true);
+                mActionBar.addTab(tab3, 2, false);
+                break;
+            case 2:
+                mActionBar.setTitle(getString(R.string.pause_label));
+                mActionBar.addTab(tab1, 0, false);
+                mActionBar.addTab(tab2, 1, false);
+                mActionBar.addTab(tab3, 2, true);
+                break;
+        }
     }
 
     // Click listener for side navigation
