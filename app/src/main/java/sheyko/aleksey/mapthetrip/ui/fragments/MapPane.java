@@ -3,10 +3,13 @@ package sheyko.aleksey.mapthetrip.ui.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.provider.Settings.Secure;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,22 +53,20 @@ public class MapPane extends Fragment
     private TextView durationCounter;
     private TextView distanceCounter;
     private TimerTask timerTask;
-    private boolean isCountdownJustStarted = true;
     private int elapsedSeconds = 0;
 
     private Trip mCurrentTrip;
     public String mTripId;
 
+    // Location variables
     private Intent sendLocationIntent;
-
-    // Map
+    private LocationClient mLocationClient;
     private LocationRequest mLocationRequest;
-    private Location startLocation;
+    Location previousLocation;
 
     // Control buttons
     private Button startButton, pauseButton, finishButton;
     private TextView startButtonLabel, pauseButtonLabel, finishButtonLabel;
-    private LocationClient mLocationClient;
 
     public MapPane() {
     }
@@ -99,12 +100,11 @@ public class MapPane extends Fragment
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                updateUi(Status.RESUME);
+                updateUI(Status.RESUME);
                 startTimer();
 
                 // Register new trip ID
-                mCurrentTrip = new Trip();
+                mCurrentTrip = new Trip(getDeviceId(), getDeviceType(), isCameraAvailable());
 
                 // If continued, update trip status
                 // to «resumed»
@@ -112,9 +112,31 @@ public class MapPane extends Fragment
                     startLocationUpdates();
 
                     new UpdateTripStatusTask().execute(
+                            mTripId,
                             Status.RESUME);
 
                     getActivity().startService(sendLocationIntent);
+                }
+            }
+
+            public String getDeviceId() {
+                return Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+            }
+
+            public String getDeviceType() {
+                boolean tabletSize = getActivity().getResources().getBoolean(R.bool.isTablet);
+                if (tabletSize) {
+                    return  "Tablet";
+                } else {
+                    return "Phone";
+                }
+            }
+
+            public String isCameraAvailable() {
+                if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                    return "true";
+                } else {
+                    return "false";
                 }
             }
         });
@@ -123,17 +145,19 @@ public class MapPane extends Fragment
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateUi(Status.PAUSE);
+                updateUI(Status.PAUSE);
+                adjustTimer(Commands.PAUSE);
 
                 stopLocationUpdates();
 
-                adjustTimer(Commands.PAUSE);
+                // Update status on server
+                // to «paused»
+                new UpdateTripStatusTask().execute(
+                        mTripId,
+                        Status.PAUSE);
 
                 if (sendLocationIntent != null)
                     getActivity().stopService(sendLocationIntent);
-
-                new UpdateTripStatusTask().execute(
-                        Status.PAUSE);
             }
         });
 
@@ -141,14 +165,10 @@ public class MapPane extends Fragment
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Save trip data
-                //TODO                sharedPrefs.edit()
-                //                        .putString("Duration", elapsedSeconds + "")
-                //                        .putString("DateTime", new SimpleDateFormat("dd MMM, hh:mm").format(new Date()).toLowerCase())
-                //                        .commit();
 
                 // Update trip status
                 new UpdateTripStatusTask().execute(
+                        mTripId,
                         Status.FINISH);
 
                 startActivity(new Intent(getActivity(), SummaryActivity.class));
@@ -156,7 +176,7 @@ public class MapPane extends Fragment
         });
     }
 
-    private void updateUi(String tripStatus) {
+    private void updateUI(String tripStatus) {
         switch (tripStatus) {
             case Status.RESUME:
                 mCallback.onTabSelected(Tab.REST);
@@ -192,18 +212,13 @@ public class MapPane extends Fragment
     @Override
     public void onIdRetrieved(String tripId) {
         mCurrentTrip.setTripId(tripId);
+        mTripId = tripId;
 
         getActivity().startService(new Intent(getActivity(), SendLocationService.class)
                 .putExtra("action", "startTimer")
                 .putExtra("tripId", mTripId));
 
         getLocationClient().connect();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mCurrentTrip.save();
     }
 
     private GoogleMap getMap() {
@@ -235,55 +250,42 @@ public class MapPane extends Fragment
     public void onDisconnected() {
     }
 
-    // Location variables
-    Location previousLocation;
-
     @Override
     public void onLocationChanged(Location currentLocation) {
-
-        if (isCountdownJustStarted) {
-
-            // Save first point (to calculate distance)
-            startLocation = currentLocation;
-
-            // Update counter
-            isCountdownJustStarted = false;
-        }
-
-        LatLng currentLatLng = new LatLng(
-                currentLocation.getLatitude(), currentLocation.getLongitude());
 
         if (previousLocation == null)
             previousLocation = currentLocation;
 
-        getMap().animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-                .target(currentLatLng)
+        GoogleMap mMap = getMap();
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+                .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
                 .bearing(currentLocation.bearingTo(previousLocation))
                 .tilt(30)
                 .zoom(17)
                 .build()));
 
         // Draw path on map
-        getMap().addPolygon(new PolygonOptions()
+        mMap.addPolygon(new PolygonOptions()
                 .strokeColor(Color.parseColor("#9f5c8f"))
                 .add(new LatLng(previousLocation.getLatitude(), previousLocation.getLongitude()),
                         new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
 
-        // Calculate distance
-        String totalDistanceString = getDistance(startLocation, currentLocation);
-
-        getTrip.increazeDistance(getDistance(previousLocation, currentLocation))
+        // Increment distance by current sector
+        mCurrentTrip.increazeDistance(getDistance(previousLocation, currentLocation));
 
         // Update UI
-        distanceCounter.setText(totalDistanceString);
-        //TODO        sharedPrefs.edit().putString("Distance", totalDistanceString).commit();
+        distanceCounter.setText(formatDistanceString(mCurrentTrip.getDistance()));
 
         // Current turns into previous on the next iteration
-        previousLocation = startLocation;
+        previousLocation = currentLocation;
     }
 
-    private String getDistance(Location startLocation, Location finalLocation) {
-        double distance = finalLocation.distanceTo(startLocation) / 1000;
+    private float getDistance(Location previousLocation, Location currentLocation) {
+        return previousLocation.distanceTo(currentLocation) / 1000;
+    }
+
+    private String formatDistanceString(float distance) {
         return String.format("%.1f", distance);
     }
 
@@ -304,13 +306,6 @@ public class MapPane extends Fragment
         mTimer.schedule(timerTask, 0, 1000);
     }
 
-    private String convertSecondsToHMmSs(long seconds) {
-        long s = seconds % 60;
-        long m = (seconds / 60) % 60;
-        long h = (seconds / (60 * 60)) % 24;
-        return String.format("%02d:%02d:%02d", h, m, s);
-    }
-
     public void adjustTimer(int pauseOrStop) {
         if (timerTask != null) {
             timerTask.cancel();
@@ -319,6 +314,12 @@ public class MapPane extends Fragment
         if (pauseOrStop == Commands.STOP) elapsedSeconds = 0;
     }
 
+    private String convertSecondsToHMmSs(long seconds) {
+        long s = seconds % 60;
+        long m = (seconds / 60) % 60;
+        long h = (seconds / (60 * 60)) % 24;
+        return String.format("%02d:%02d:%02d", h, m, s);
+    }
 
     private LocationClient getLocationClient() {
         // Create location client

@@ -8,7 +8,7 @@ public class Trip extends SugarRecord<Trip> {
 
     String tripId;
 //    boolean isSaved;
-//    float distance;
+    float distance = 0;
 //    int duration;
 //    String name;
 //    String note;
@@ -16,8 +16,8 @@ public class Trip extends SugarRecord<Trip> {
 //    ArrayList<String> stateDistances;
 //    ArrayList<String> stateDurations;
 
-    public Trip() {
-        new RegisterDeviceTask().execute();
+    public Trip(String deviceId, String deviceType, String isCameraAvailable) {
+        new RegisterDeviceTask().execute(deviceId, deviceType, isCameraAvailable);
     }
 
     public Trip(String tripId) {
@@ -30,5 +30,13 @@ public class Trip extends SugarRecord<Trip> {
 
     public void setTripId(String tripId) {
         this.tripId = tripId;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void increazeDistance(float increment) {
+        distance = distance + increment;
     }
 }

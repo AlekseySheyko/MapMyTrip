@@ -17,7 +17,7 @@ import java.net.URL;
 import sheyko.aleksey.mapthetrip.helpers.Constants.Device;
 import sheyko.aleksey.mapthetrip.models.DeviceInfo;
 
-public class RegisterDeviceTask extends AsyncTask<Void, Void, String> {
+public class RegisterDeviceTask extends AsyncTask<String, Void, String> {
     private static final String TAG = RegisterDeviceTask.class.getSimpleName();
 
     OnGetTripIdListener mCallback;
@@ -28,7 +28,7 @@ public class RegisterDeviceTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected String doInBackground(String... params) {
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -46,9 +46,9 @@ public class RegisterDeviceTask extends AsyncTask<Void, Void, String> {
                     .authority("wsapp.mapthetrip.com")
                     .appendPath("TrucFuelLog.svc")
                     .appendPath("TFLRegDeviceandGetTripId")
-                    .appendQueryParameter("DeviceUID", deviceInfo.getDeviceId())
+                    .appendQueryParameter("DeviceUID", params[0])
                     .appendQueryParameter("DeviceName", deviceInfo.getModel())
-                    .appendQueryParameter("DeviceType", deviceInfo.getDeviceType())
+                    .appendQueryParameter("DeviceType", params[1])
                     .appendQueryParameter("DeviceManufacturerName", deviceInfo.getManufacturer())
                     .appendQueryParameter("DeviceModelName", deviceInfo.getModel())
                     .appendQueryParameter("DeviceModelNumber", Device.MODEL_NUMBER)
@@ -60,7 +60,7 @@ public class RegisterDeviceTask extends AsyncTask<Void, Void, String> {
                     .appendQueryParameter("DeviceOS", Device.SYSTEM_NAME)
                     .appendQueryParameter("DeviceTimezone", deviceInfo.getTimeZone())
                     .appendQueryParameter("LanguageUsedOnDevice", deviceInfo.getLocale())
-                    .appendQueryParameter("HasCamera", deviceInfo.isCameraAvailable())
+                    .appendQueryParameter("HasCamera", params[2])
                     .appendQueryParameter("UserId", Device.USER_ID)
                     .appendQueryParameter("TripDateTime", deviceInfo.getCurrentDateTime())
                     .appendQueryParameter("TripTimezone", deviceInfo.getTimeZone())

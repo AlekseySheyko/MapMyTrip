@@ -20,7 +20,6 @@ public class StatsActivity extends Activity {
         ListView list = (ListView) findViewById(R.id.trip_list);
 
         // For now we'll take trip info from hard-coded array
-        // TODO: In future we need to take it from Service 4
         String[] mTripTitles = getResources().getStringArray(R.array.test_trip_names);
         String[] mTripDurations = getResources().getStringArray(R.array.test_trip_durations);
         String[] mTripDistances = getResources().getStringArray(R.array.test_trip_distances);

@@ -34,8 +34,8 @@ public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
                     .authority("wsapp.mapthetrip.com")
                     .appendPath("TrucFuelLog.svc")
                     .appendPath("TFLUpdateTripStatus")
-                    .appendQueryParameter("TripId", /*TODO getTrip.getId() somehow*/ "")
-                    .appendQueryParameter("TripStatus", params[0])
+                    .appendQueryParameter("TripId", params[0])
+                    .appendQueryParameter("TripStatus", params[1])
                     .appendQueryParameter("TripDateTime", new DeviceInfo().getCurrentDateTime())
                     .appendQueryParameter("TripTimezone", new DeviceInfo().getTimeZone())
                     .appendQueryParameter("UserId", Device.USER_ID);
