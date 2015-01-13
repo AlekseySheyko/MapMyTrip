@@ -12,7 +12,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 
-import sheyko.aleksey.mapthetrip.helpers.Alarm;
+import sheyko.aleksey.mapthetrip.recievers.Alarm;
 import sheyko.aleksey.mapthetrip.models.DeviceInfo;
 import sheyko.aleksey.mapthetrip.utils.SendLocationTask;
 

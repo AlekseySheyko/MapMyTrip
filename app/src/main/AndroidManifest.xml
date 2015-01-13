@@ -35,11 +35,11 @@
             android:value="sheyko.aleksey.mapthetrip"/>
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:label="@string/record_trip">
         </activity>
         <activity
-            android:name=".activities.SplashScreen"
+            android:name=".ui.activities.SplashScreen"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.NoActionBar">
             <intent-filter>
@@ -49,20 +49,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SummaryActivity"
+            android:name=".ui.activities.SummaryActivity"
             android:label="@string/title_activity_input"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".ui.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
+                android:value=".ui.activities.MainActivity"/>
         </activity>
         <activity
-            android:name=".activities.StatsActivity"
+            android:name=".ui.activities.StatsActivity"
             android:label="@string/title_activity_summary"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".ui.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
+                android:value=".ui.activities.MainActivity"/>
         </activity>
 
         <service
@@ -77,7 +77,7 @@
             android:value="AIzaSyBiChgfH3p8k3H2vyJjbbsJgQqDLY4HZJc"/>
 
         <receiver
-            android:name=".helpers.Alarm"
+            android:name=".recievers.Alarm"
             android:exported="true">
             <intent-filter>
                 <action android:name="sheyko.aleksey.mapthetrip.START_ALARM">

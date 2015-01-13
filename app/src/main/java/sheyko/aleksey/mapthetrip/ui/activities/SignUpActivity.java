@@ -1,4 +1,4 @@
-package sheyko.aleksey.mapthetrip.activities;
+package sheyko.aleksey.mapthetrip.ui.activities;
 
 import android.app.Activity;
 

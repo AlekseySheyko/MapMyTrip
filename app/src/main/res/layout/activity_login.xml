@@ -2,7 +2,7 @@
     style="@style/LoginBackground"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="sheyko.aleksey.mapthetrip.activities.LoginActivity">
+    tools:context="sheyko.aleksey.mapthetrip.ui.activities.LoginActivity">
 
     <ImageView
         style="@style/LoginLogoText"

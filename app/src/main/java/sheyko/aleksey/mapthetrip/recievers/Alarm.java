@@ -1,4 +1,4 @@
-package sheyko.aleksey.mapthetrip.helpers;
+package sheyko.aleksey.mapthetrip.recievers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

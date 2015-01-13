@@ -2,7 +2,7 @@
     style="@style/InputBackground"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="sheyko.aleksey.mapthetrip.activities.SummaryActivity">
+    tools:context="sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity">
 
 
     <LinearLayout

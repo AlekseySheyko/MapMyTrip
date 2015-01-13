@@ -1,4 +1,4 @@
-package sheyko.aleksey.mapthetrip.activities;
+package sheyko.aleksey.mapthetrip.ui.activities;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -19,8 +19,8 @@ import android.widget.Toast;
 
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.adapters.NavigationAdapter;
-import sheyko.aleksey.mapthetrip.fragments.MapPane;
-import sheyko.aleksey.mapthetrip.fragments.MapPane.OnActionbarTabSelectedListener;
+import sheyko.aleksey.mapthetrip.ui.fragments.MapPane;
+import sheyko.aleksey.mapthetrip.ui.fragments.MapPane.OnActionbarTabSelectedListener;
 
 
 public class MainActivity extends Activity

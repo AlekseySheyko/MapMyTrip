@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
-                tools:context="sheyko.aleksey.mapthetrip.activities.StatsActivity"
+                tools:context="sheyko.aleksey.mapthetrip.ui.activities.StatsActivity"
                 style="@style/SummaryBackground">
 
     <LinearLayout

@@ -1,6 +1,5 @@
 package sheyko.aleksey.mapthetrip.utils;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -15,13 +14,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import sheyko.aleksey.mapthetrip.helpers.Constants;
+import sheyko.aleksey.mapthetrip.helpers.Constants.Device;
 import sheyko.aleksey.mapthetrip.models.DeviceInfo;
-import sheyko.aleksey.mapthetrip.models.Trip;
-import sheyko.aleksey.mapthetrip.services.SendLocationService;
 
 public class RegisterDeviceTask extends AsyncTask<Void, Void, String> {
     private static final String TAG = RegisterDeviceTask.class.getSimpleName();
+
+    OnGetTripIdListener mCallback;
+
+    // Main Activity will implement this interface
+    public interface OnGetTripIdListener {
+        public void onIdRetrieved(String tripId);
+    }
 
     @Override
     protected String doInBackground(Void... params) {
@@ -31,6 +35,8 @@ public class RegisterDeviceTask extends AsyncTask<Void, Void, String> {
 
         // Will contain JSON response
         String resultJsonStr;
+
+        String mTripId = null;
         DeviceInfo deviceInfo = new DeviceInfo();
 
         try {
@@ -45,22 +51,22 @@ public class RegisterDeviceTask extends AsyncTask<Void, Void, String> {
                     .appendQueryParameter("DeviceType", deviceInfo.getDeviceType())
                     .appendQueryParameter("DeviceManufacturerName", deviceInfo.getManufacturer())
                     .appendQueryParameter("DeviceModelName", deviceInfo.getModel())
-                    .appendQueryParameter("DeviceModelNumber", Constants.modelNumber)
-                    .appendQueryParameter("DeviceSystemName", Constants.systemName)
+                    .appendQueryParameter("DeviceModelNumber", Device.MODEL_NUMBER)
+                    .appendQueryParameter("DeviceSystemName", Device.SYSTEM_NAME)
                     .appendQueryParameter("DeviceSystemVersion", deviceInfo.getAndroidVersion())
-                    .appendQueryParameter("DeviceSoftwareVersion", Constants.softwareVersion)
+                    .appendQueryParameter("DeviceSoftwareVersion", Device.SOFTWARE_VERSION)
                     .appendQueryParameter("DevicePlatformVersion", deviceInfo.getAndroidVersion())
                     .appendQueryParameter("DeviceFirmwareVersion", deviceInfo.getAndroidVersion())
-                    .appendQueryParameter("DeviceOS", Constants.systemName)
+                    .appendQueryParameter("DeviceOS", Device.SYSTEM_NAME)
                     .appendQueryParameter("DeviceTimezone", deviceInfo.getTimeZone())
                     .appendQueryParameter("LanguageUsedOnDevice", deviceInfo.getLocale())
                     .appendQueryParameter("HasCamera", deviceInfo.isCameraAvailable())
-                    .appendQueryParameter("UserId", Constants.userId)
+                    .appendQueryParameter("UserId", Device.USER_ID)
                     .appendQueryParameter("TripDateTime", deviceInfo.getCurrentDateTime())
                     .appendQueryParameter("TripTimezone", deviceInfo.getTimeZone())
-                    .appendQueryParameter("UserDefinedTripId", Constants.userDefinedTripId)
-                    .appendQueryParameter("TripReferenceNumber", Constants.referenceNumber)
-                    .appendQueryParameter("EntityId", Constants.entityId);
+                    .appendQueryParameter("UserDefinedTripId", Device.USER_DEFINED_TRIP_ID)
+                    .appendQueryParameter("TripReferenceNumber", Device.REFERENCE_NUMBER)
+                    .appendQueryParameter("EntityId", Device.ENTITY_ID);
 
             String mUrlString = builder.build().toString();
             Log.i(TAG, "Service: TFLRegDeviceandGetTripIdResult,\n" +
@@ -127,13 +133,6 @@ public class RegisterDeviceTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String mTripId) {
         super.onPostExecute(mTripId);
 
-        new Trip(mTripId + "").save();
-
-        mLocationClient.connect();
-
-        // Start service to send location
-        getActivity().startService(new Intent(getActivity(), SendLocationService.class)
-                .putExtra("action", "startTimer")
-                .putExtra("tripId", mTripId));
+        mCallback.onIdRetrieved(mTripId);
     }
 }

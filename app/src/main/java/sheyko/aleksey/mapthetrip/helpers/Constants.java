@@ -30,4 +30,11 @@ public class Constants {
     public class Map {
         public static final int UPDATE_INTERVAL = 5 * 1000;
     }
+
+    public class ActionBar {
+        public class Tab {
+            public static final int GAS = 1;
+            public static final int REST = 2;
+        }
+    }
 }

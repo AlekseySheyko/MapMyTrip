@@ -1,4 +1,4 @@
-package sheyko.aleksey.mapthetrip.fragments;
+package sheyko.aleksey.mapthetrip.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -29,16 +29,20 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import sheyko.aleksey.mapthetrip.R;
-import sheyko.aleksey.mapthetrip.activities.SummaryActivity;
+import sheyko.aleksey.mapthetrip.helpers.Constants.ActionBar.Tab;
 import sheyko.aleksey.mapthetrip.helpers.Constants.Map;
 import sheyko.aleksey.mapthetrip.helpers.Constants.Timer.Commands;
 import sheyko.aleksey.mapthetrip.helpers.Constants.Trip.Status;
-import sheyko.aleksey.mapthetrip.utils.RegisterDeviceTask;
+import sheyko.aleksey.mapthetrip.models.Trip;
+import sheyko.aleksey.mapthetrip.services.SendLocationService;
+import sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity;
+import sheyko.aleksey.mapthetrip.utils.RegisterDeviceTask.OnGetTripIdListener;
 import sheyko.aleksey.mapthetrip.utils.UpdateTripStatusTask;
 
 public class MapPane extends Fragment
-        implements ConnectionCallbacks, LocationListener {
+        implements ConnectionCallbacks, LocationListener, OnGetTripIdListener {
 
+    // Callback to update tabs in MainActivity
     OnActionbarTabSelectedListener mCallback;
 
     // Time counter
@@ -49,11 +53,12 @@ public class MapPane extends Fragment
     private boolean isCountdownJustStarted = true;
     private int elapsedSeconds = 0;
 
+    private Trip mCurrentTrip;
     public String mTripId;
+
     private Intent sendLocationIntent;
 
     // Map
-    private GoogleMap mMap;
     private LocationRequest mLocationRequest;
     private Location startLocation;
 
@@ -63,7 +68,6 @@ public class MapPane extends Fragment
     private LocationClient mLocationClient;
 
     public MapPane() {
-        // Required empty public constructor
     }
 
     // Main Activity will implement this interface
@@ -74,15 +78,7 @@ public class MapPane extends Fragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (OnActionbarTabSelectedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
+        mCallback = (OnActionbarTabSelectedListener) activity;
     }
 
     @Override
@@ -95,23 +91,26 @@ public class MapPane extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initializeViews(view);
 
-        createMap();
+        initializeViews(view);
+        disableMapUiControls(getMap());
 
         // Start button listener
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                getLocationClient().connect();
-
-                updateUiOnStart();
-
+                updateUi(Status.RESUME);
                 startTimer();
 
-                // Update trip status
+                // Register new trip ID
+                mCurrentTrip = new Trip();
+
+                // If continued, update trip status
+                // to «resumed»
                 if (mTripId != null) {
+                    startLocationUpdates();
+
                     new UpdateTripStatusTask().execute(
                             Status.RESUME);
 
@@ -124,34 +123,17 @@ public class MapPane extends Fragment
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateUiOnPause();
+                updateUi(Status.PAUSE);
 
-                if (mLocationClient.isConnected()) {
-                    // Disconnecting the client invalidates it.
-                    mLocationClient.disconnect();
-                }
-                stopTimer(Commands.PAUSE);
+                stopLocationUpdates();
+
+                adjustTimer(Commands.PAUSE);
 
                 if (sendLocationIntent != null)
                     getActivity().stopService(sendLocationIntent);
 
                 new UpdateTripStatusTask().execute(
                         Status.PAUSE);
-            }
-
-            private void updateUiOnPause() {
-                mCallback.onTabSelected(2);
-
-                pauseButton.setVisibility(View.GONE);
-                pauseButtonLabel.setVisibility(View.GONE);
-
-                startButton.setVisibility(View.VISIBLE);
-                startButtonLabel.setVisibility(View.VISIBLE);
-
-                finishButton.setVisibility(View.VISIBLE);
-                finishButtonLabel.setVisibility(View.VISIBLE);
-
-                startButtonLabel.setText(R.string.resume_trip_button_label);
             }
         });
 
@@ -174,13 +156,66 @@ public class MapPane extends Fragment
         });
     }
 
-    private void createMap() {
-        mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(false);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mMap.getUiSettings().setAllGesturesEnabled(false);
-        mMap.getUiSettings().setZoomControlsEnabled(false);
+    private void updateUi(String tripStatus) {
+        switch (tripStatus) {
+            case Status.RESUME:
+                mCallback.onTabSelected(Tab.REST);
+
+                startButton.setVisibility(View.GONE);
+                startButtonLabel.setVisibility(View.GONE);
+
+                pauseButton.setVisibility(View.VISIBLE);
+                pauseButtonLabel.setVisibility(View.VISIBLE);
+
+                finishButton.setVisibility(View.GONE);
+                finishButtonLabel.setVisibility(View.GONE);
+
+                countersContainer.setVisibility(View.VISIBLE);
+                break;
+            case Status.PAUSE:
+                mCallback.onTabSelected(Tab.REST);
+
+                pauseButton.setVisibility(View.GONE);
+                pauseButtonLabel.setVisibility(View.GONE);
+
+                startButton.setVisibility(View.VISIBLE);
+                startButtonLabel.setVisibility(View.VISIBLE);
+
+                finishButton.setVisibility(View.VISIBLE);
+                finishButtonLabel.setVisibility(View.VISIBLE);
+
+                startButtonLabel.setText(R.string.resume_trip_button_label);
+                break;
+        }
+    }
+
+    @Override
+    public void onIdRetrieved(String tripId) {
+        mCurrentTrip.setTripId(tripId);
+
+        getActivity().startService(new Intent(getActivity(), SendLocationService.class)
+                .putExtra("action", "startTimer")
+                .putExtra("tripId", mTripId));
+
+        getLocationClient().connect();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCurrentTrip.save();
+    }
+
+    private GoogleMap getMap() {
+        return ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+    }
+
+    private void disableMapUiControls(GoogleMap map) {
+        map.setMyLocationEnabled(true);
+        map.getUiSettings().setCompassEnabled(false);
+        map.getUiSettings().setMyLocationButtonEnabled(false);
+        map.getUiSettings().setAllGesturesEnabled(false);
+        map.getUiSettings().setZoomControlsEnabled(false);
     }
 
     @Override
@@ -190,6 +225,10 @@ public class MapPane extends Fragment
 
     private void startLocationUpdates() {
         mLocationClient.requestLocationUpdates(mLocationRequest, this);
+    }
+
+    private void stopLocationUpdates() {
+        mLocationClient.removeLocationUpdates(this);
     }
 
     @Override
@@ -203,7 +242,6 @@ public class MapPane extends Fragment
     public void onLocationChanged(Location currentLocation) {
 
         if (isCountdownJustStarted) {
-            new RegisterDeviceTask().execute();
 
             // Save first point (to calculate distance)
             startLocation = currentLocation;
@@ -218,7 +256,7 @@ public class MapPane extends Fragment
         if (previousLocation == null)
             previousLocation = currentLocation;
 
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+        getMap().animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
                 .target(currentLatLng)
                 .bearing(currentLocation.bearingTo(previousLocation))
                 .tilt(30)
@@ -226,7 +264,7 @@ public class MapPane extends Fragment
                 .build()));
 
         // Draw path on map
-        mMap.addPolygon(new PolygonOptions()
+        getMap().addPolygon(new PolygonOptions()
                 .strokeColor(Color.parseColor("#9f5c8f"))
                 .add(new LatLng(previousLocation.getLatitude(), previousLocation.getLongitude()),
                         new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
@@ -247,21 +285,6 @@ public class MapPane extends Fragment
     private String getDistance(Location startLocation, Location finalLocation) {
         double distance = finalLocation.distanceTo(startLocation) / 1000;
         return String.format("%.1f", distance);
-    }
-
-    private void updateUiOnStart() {
-        mCallback.onTabSelected(1);
-
-        startButton.setVisibility(View.GONE);
-        startButtonLabel.setVisibility(View.GONE);
-
-        pauseButton.setVisibility(View.VISIBLE);
-        pauseButtonLabel.setVisibility(View.VISIBLE);
-
-        finishButton.setVisibility(View.GONE);
-        finishButtonLabel.setVisibility(View.GONE);
-
-        countersContainer.setVisibility(View.VISIBLE);
     }
 
     // Countdown timer
@@ -288,14 +311,13 @@ public class MapPane extends Fragment
         return String.format("%02d:%02d:%02d", h, m, s);
     }
 
-    public void stopTimer(int pauseOrStop) {
+    public void adjustTimer(int pauseOrStop) {
         if (timerTask != null) {
             timerTask.cancel();
             timerTask = null;
         }
         if (pauseOrStop == Commands.STOP) elapsedSeconds = 0;
     }
-
 
 
     private LocationClient getLocationClient() {
