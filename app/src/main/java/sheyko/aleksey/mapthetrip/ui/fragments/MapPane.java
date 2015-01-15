@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,12 +27,13 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
-import sheyko.aleksey.mapthetrip.models.Trip.Status;
 import sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity;
 import sheyko.aleksey.mapthetrip.utils.helpers.Constants.ActionBar.Tab;
-import sheyko.aleksey.mapthetrip.utils.helpers.Constants.Map;
 
 public class MapPane extends Fragment
         implements LocationListener, OnClickListener, ConnectionCallbacks {
@@ -59,6 +61,12 @@ public class MapPane extends Fragment
     private TextView mPauseButtonLabel;
     private TextView mFinishButtonLabel;
     private LocationRequest mLocationRequest;
+
+    // Timer
+    private TimerTask timerTask;
+    private int elapsedSeconds = 0;
+    private static final int JUST_PAUSE = 0;
+    private static final int STOP = 1;
 
     // Required empty constructor
     public MapPane() {
@@ -253,5 +261,37 @@ public class MapPane extends Fragment
 
     private float getDistance(Location previousLocation, Location currentLocation) {
         return previousLocation.distanceTo(currentLocation) / 1000;
+    }
+
+    public void startUiStopwatch() {
+        final Handler handler = new Handler();
+        Timer mTimer = new Timer();
+        timerTask = new TimerTask() {
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        durationCounter.setText(convertSecondsToHMmSs(elapsedSeconds));
+                        elapsedSeconds++;
+                    }
+                });
+            }
+
+        };
+        mTimer.schedule(timerTask, 0, 1000);
+    }
+
+    private String convertSecondsToHMmSs(long seconds) {
+        long s = seconds % 60;
+        long m = (seconds / 60) % 60;
+        long h = (seconds / (60 * 60)) % 24;
+        return String.format("%02d:%02d:%02d", h, m, s);
+    }
+
+    public void pauseUiStopWatch(int pauseOrStop) {
+        if (timerTask != null) {
+            timerTask.cancel();
+            timerTask = null;
+        }
+        if (pauseOrStop == STOP) elapsedSeconds = 0;
     }
 }

@@ -64,7 +64,7 @@
         </activity>
 
         <service
-            android:name=".utils.services.SendLocationService"
+            android:name=".utils.services.LocationService"
             android:exported="false"/>
 
     </application>

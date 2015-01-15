@@ -9,7 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.orm.SugarRecord;
 
 import sheyko.aleksey.mapthetrip.utils.helpers.Constants;
-import sheyko.aleksey.mapthetrip.utils.services.SendLocationService;
+import sheyko.aleksey.mapthetrip.utils.services.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
@@ -65,7 +65,7 @@ public class Trip extends SugarRecord<Trip>
     public void onTripRegistered(Context context, String id) {
         setTripId(id);
         // Sends location to server
-        mSendIntent = new Intent(context, SendLocationService.class);
+        mSendIntent = new Intent(context, LocationService.class);
         context.startService(mSendIntent);
     }
 
