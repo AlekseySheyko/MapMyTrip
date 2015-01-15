@@ -2,13 +2,11 @@ package sheyko.aleksey.mapthetrip.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.provider.Settings.Secure;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,15 +26,15 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
 
+import java.util.concurrent.TimeUnit;
+
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
+import sheyko.aleksey.mapthetrip.models.Trip.Status;
 import sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity;
 import sheyko.aleksey.mapthetrip.utils.helpers.Constants.ActionBar.Tab;
 import sheyko.aleksey.mapthetrip.utils.helpers.Constants.Map;
 import sheyko.aleksey.mapthetrip.utils.helpers.Constants.Timer.Commands;
-import sheyko.aleksey.mapthetrip.utils.helpers.Constants.Trip.Status;
-import sheyko.aleksey.mapthetrip.utils.services.SendLocationService;
-import sheyko.aleksey.mapthetrip.utils.tasks.RegisterDeviceTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
 public class MapPane extends Fragment
@@ -55,7 +53,7 @@ public class MapPane extends Fragment
 
     // Location variables
     private Intent sendIntent;
-    private LocationClient mClient;
+    private LocationClient mLocationClient;
     private LocationRequest locationRequest;
     private Location previousLocation;
     private GoogleMap mMap;
@@ -110,86 +108,31 @@ public class MapPane extends Fragment
 
     @Override
     public void onClick(View view) {
-
         switch (view.getId()) {
             case R.id.startButton:
-                updateUI(Status.RESUME);
+                updateUiOnStart();
 
-                if (mCurrentTrip == null)
-                    new Trip().start();
+                if (mCurrentTrip == null) {
 
-
-
-
-
-
-
-
-
-
-                startUiStopwatch();
-
-                sendIntent = new Intent(getActivity(), SendLocationService.class)
-                        .putExtra("action", "startTimer")
-                        .putExtra("tripId", mTripId);
-                getActivity().startService(sendIntent);
-
-                if (mTripId == null) {
-
-                    OnTripRegistered mCallback = new OnTripRegistered() {
-                        @Override
-                        public void onIdRetrieved(String tripId) {
-                            mCurrentTrip.setTripId(tripId);
-                            mTripId = tripId;
-
-                            mClient = new LocationClient(getActivity(), MapPane.this, null);
-
-                            locationRequest = LocationRequest.create()
-                                    .setInterval(Map.UPDATE_INTERVAL).setFastestInterval(Map.UPDATE_INTERVAL);
-
-                            mClient.connect();
-                        }
-                    };
-                    // Register new trip ID
-                    mCurrentTrip = new Trip(mCallback,
-                            getDeviceId(), getDeviceType(), isCameraAvailable());
-
+                    mCurrentTrip = new Trip();
+                    mCurrentTrip.start(this.getActivity());
                 } else {
-                    // If continued, update trip status
-                    // to «resumed»
-                    new UpdateTripStatusTask().execute(
-                            mTripId,
-                            Status.RESUME);
-
-                    startLocationUpdates();
-
-                    getActivity().startService(sendIntent);
+                    mCurrentTrip.resume();
                 }
 
                 break;
             case R.id.pauseButton:
-                updateUI(Status.PAUSE);
-                adjustTimer(Commands.PAUSE);
+                updateUiOnPause();
 
-                stopLocationUpdates();
-
-                // Update status on server
-                // to «paused»
-                new UpdateTripStatusTask().execute(
-                        mTripId,
-                        Status.PAUSE);
-
-                if (sendIntent != null)
-                    getActivity().stopService(sendIntent);
+                mCurrentTrip.pause();
 
                 break;
             case R.id.finishButton:
-                // Update trip status
-                new UpdateTripStatusTask().execute(
-                        mTripId,
-                        Status.FINISH);
 
-                startActivity(new Intent(getActivity(), SummaryActivity.class));
+                mCurrentTrip.finish();
+
+                startActivity(new Intent(
+                        this.getActivity(), SummaryActivity.class));
                 break;
         }
     }
@@ -207,38 +150,43 @@ public class MapPane extends Fragment
         distanceCounter = (TextView) rootView.findViewById(R.id.distance_counter);
     }
 
-    private void updateUI(String tripStatus) {
-        switch (tripStatus) {
-            case Status.RESUME:
+    private void updateUiOnStart() {
+        createLocationClient(this.getActivity())
+                .connect();
 
-                mCallback.onTabSelected(Tab.REST);
+        mCallback.onTabSelected(Tab.REST);
 
-                mStartButton.setVisibility(View.GONE);
-                mStartButtonLabel.setVisibility(View.GONE);
+        mStartButton.setVisibility(View.GONE);
+        mStartButtonLabel.setVisibility(View.GONE);
 
-                mPauseButton.setVisibility(View.VISIBLE);
-                mPauseButtonLabel.setVisibility(View.VISIBLE);
+        mPauseButton.setVisibility(View.VISIBLE);
+        mPauseButtonLabel.setVisibility(View.VISIBLE);
 
-                mFinishButton.setVisibility(View.GONE);
-                mFinishButtonLabel.setVisibility(View.GONE);
+        mFinishButton.setVisibility(View.GONE);
+        mFinishButtonLabel.setVisibility(View.GONE);
 
-                countersContainer.setVisibility(View.VISIBLE);
-                break;
-            case Status.PAUSE:
-                mCallback.onTabSelected(Tab.REST);
+        countersContainer.setVisibility(View.VISIBLE);
 
-                mPauseButton.setVisibility(View.GONE);
-                mPauseButtonLabel.setVisibility(View.GONE);
+        startUiStopwatch();
+    }
 
-                mStartButton.setVisibility(View.VISIBLE);
-                mStartButtonLabel.setVisibility(View.VISIBLE);
+    private void updateUiOnPause() {
+        stopLocationUpdates(mLocationClient);
 
-                mFinishButton.setVisibility(View.VISIBLE);
-                mFinishButtonLabel.setVisibility(View.VISIBLE);
+        mCallback.onTabSelected(Tab.REST);
 
-                mStartButtonLabel.setText(R.string.resume_trip_button_label);
-                break;
-        }
+        mPauseButton.setVisibility(View.GONE);
+        mPauseButtonLabel.setVisibility(View.GONE);
+
+        mStartButton.setVisibility(View.VISIBLE);
+        mStartButtonLabel.setVisibility(View.VISIBLE);
+
+        mFinishButton.setVisibility(View.VISIBLE);
+        mFinishButtonLabel.setVisibility(View.VISIBLE);
+
+        mStartButtonLabel.setText(R.string.resume_trip_button_label);
+
+        pauseUiStopWatch();
     }
 
     private GoogleMap disableMapUiControls(Fragment fragment) {
@@ -253,15 +201,26 @@ public class MapPane extends Fragment
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        startLocationUpdates();
+        startLocationUpdates(mLocationClient);
     }
 
-    private void startLocationUpdates() {
-        mClient.requestLocationUpdates(locationRequest, this);
+    private LocationClient createLocationClient(Context context) {
+        // Create location client
+        mLocationClient = new LocationClient(context, this, null);
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        int UPDATE_INTERVAL = 5 * 1000; // 5 seconds
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        return mLocationClient;
     }
 
-    private void stopLocationUpdates() {
-        mClient.removeLocationUpdates(this);
+    private void startLocationUpdates(LocationClient client) {
+        client.requestLocationUpdates(locationRequest, this);
+    }
+
+    private void stopLocationUpdates(LocationClient client) {
+        client.removeLocationUpdates(this);
     }
 
     @Override

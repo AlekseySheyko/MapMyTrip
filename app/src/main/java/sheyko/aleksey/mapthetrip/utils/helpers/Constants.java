@@ -12,23 +12,11 @@ public class Constants {
         public static final String ENTITY_ID = "1";
     }
 
-    public class Trip {
-        public class Status {
-            public static final String RESUME = "Resume";
-            public static final String PAUSE = "Pause";
-            public static final String FINISH = "Finish";
-        }
-    }
-
     public class Timer {
         public class Commands {
             public static final int PAUSE = 0;
             public static final int STOP = 1;
         }
-    }
-
-    public class Map {
-        public static final int UPDATE_INTERVAL = 5 * 1000;
     }
 
     public class ActionBar {

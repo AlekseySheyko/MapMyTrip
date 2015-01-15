@@ -62,43 +62,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb7d208a-9f29-48ba-9f4c-bcdf016b593c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/ic_launcher.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/ic_launcher.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/ic_launcher.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/recievers/SendLocationAlarm.java" />
-      <change type="DELETED" beforePath="D:\MapTheTrip\.idea\libraries\Parse_1_8_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\MapTheTrip\.idea\libraries\bolts_android_1_1_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\MapTheTrip\app\libs\Parse-1.8.0.jar" afterPath="" />
-      <change type="DELETED" beforePath="D:\MapTheTrip\app\libs\bolts-android-1.1.4.jar" afterPath="" />
-      <change type="DELETED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\recievers\Alarm.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/ic_launcher.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/model_data.bin" afterPath="$PROJECT_DIR$/build/intermediates/model_data.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/activities/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/activities/MainActivity.java" />
+      <change type="DELETED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\utils\recievers\SendLocationAlarm.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/helpers/Constants.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/helpers/Constants.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/activities/SplashScreen.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/activities/SplashScreen.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/activities/StatsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/activities/StatsActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/activities/SummaryActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/activities/SummaryActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/services/SendLocationService.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/services/SendLocationService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Trip.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Trip.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_map.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_map.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local.properties" afterPath="$PROJECT_DIR$/local.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/sugar_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/sugar_1_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\adapters\NavigationAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/adapters/NavigationAdapter.java" />
-      <change type="MOVED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\adapters\SummaryListAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/adapters/SummaryListAdapter.java" />
-      <change type="MOVED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\helpers\Constants.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/helpers/Constants.java" />
-      <change type="MOVED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\models\DeviceInfo.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Device.java" />
-      <change type="MOVED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\services\SendLocationService.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/services/SendLocationService.java" />
-      <change type="MOVED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\utils\GetSummaryInfoTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/GetSummaryInfoTask.java" />
-      <change type="MOVED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\utils\RegisterDeviceTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/RegisterDeviceTask.java" />
-      <change type="MOVED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\utils\SaveTripTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/SaveTripTask.java" />
-      <change type="MOVED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\utils\SendLocationTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/SendLocationTask.java" />
-      <change type="MOVED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\utils\UpdateTripStatusTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/UpdateTripStatusTask.java" />
+      <change type="MOVED" beforePath="D:\MapTheTrip\app\src\main\java\sheyko\aleksey\mapthetrip\utils\tasks\RegisterDeviceTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/RegisterTripTask.java" />
     </list>
     <ignored path="Map My Trip.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -121,25 +91,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MapPane.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="MapPane.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2526" max-vertical-offset="4607">
-              <caret line="208" column="0" selection-start-line="208" selection-start-column="0" selection-end-line="208" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.77147764" vertical-offset="1030" max-vertical-offset="3944">
+              <caret line="124" column="34" selection-start-line="124" selection-start-column="34" selection-end-line="124" selection-end-column="34" />
               <folding>
                 <element signature="class#OnTabSelectedListener#0;class#MapPane#0" expanded="false" />
-                <element signature="e#4546#5150#0" expanded="true" />
-                <element signature="e#5127#5128#0" expanded="true" />
                 <element signature="method#initializeViews#0;class#MapPane#0" expanded="false" />
-                <element signature="e#8258#8291#0" expanded="true" />
-                <element signature="e#8823#8824#0" expanded="true" />
-                <element signature="e#8861#8862#0" expanded="true" />
-                <element signature="e#8904#8905#0" expanded="true" />
-                <element signature="e#8973#8974#0" expanded="true" />
-                <element signature="e#9015#9016#0" expanded="true" />
-                <element signature="e#9066#9067#0" expanded="true" />
-                <element signature="e#10533#10534#0" expanded="true" />
-                <element signature="e#10587#10588#0" expanded="true" />
+                <element signature="e#6148#6181#0" expanded="true" />
+                <element signature="e#6709#6710#0" expanded="true" />
+                <element signature="e#6762#6763#0" expanded="true" />
+                <element signature="e#7417#7418#0" expanded="true" />
+                <element signature="e#7467#7468#0" expanded="true" />
+                <element signature="e#8934#8935#0" expanded="true" />
+                <element signature="e#8988#8989#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -148,51 +114,19 @@
       <file leaf-file-name="Trip.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Trip.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="183" max-vertical-offset="765">
-              <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RegisterDeviceTask.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/RegisterDeviceTask.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.1460481" vertical-offset="863" max-vertical-offset="2584">
-              <caret line="90" column="63" selection-start-line="90" selection-start-column="63" selection-end-line="90" selection-end-column="63" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="251" max-vertical-offset="1105">
+              <caret line="34" column="54" selection-start-line="34" selection-start-column="54" selection-end-line="34" selection-end-column="54" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#860#861#0" expanded="true" />
-                <element signature="e#896#897#0" expanded="true" />
-                <element signature="e#946#947#0" expanded="true" />
-                <element signature="e#980#981#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Device.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Device.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="829" max-vertical-offset="1445">
-              <caret line="98" column="41" selection-start-line="98" selection-start-column="41" selection-end-line="98" selection-end-column="41" />
-              <folding>
-                <element signature="e#1745#1746#0" expanded="true" />
-                <element signature="e#1797#1798#0" expanded="true" />
-                <element signature="e#1834#1835#0" expanded="true" />
-                <element signature="e#1885#1886#0" expanded="true" />
-                <element signature="e#1927#1928#0" expanded="true" />
-                <element signature="e#1983#1984#0" expanded="true" />
-                <element signature="e#2018#2019#0" expanded="true" />
-                <element signature="e#2069#2070#0" expanded="true" />
-                <element signature="e#2102#2103#0" expanded="true" />
-                <element signature="e#2149#2150#0" expanded="true" />
-                <element signature="e#2193#2194#0" expanded="true" />
-                <element signature="e#2253#2254#0" expanded="true" />
-                <element signature="e#2299#2300#0" expanded="true" />
-                <element signature="e#2355#2356#0" expanded="true" />
-                <element signature="e#2390#2391#0" expanded="true" />
-                <element signature="e#2439#2440#0" expanded="true" />
+                <element signature="e#1025#1026#0" expanded="true" />
+                <element signature="e#1086#1087#0" expanded="true" />
+                <element signature="e#1114#1115#0" expanded="true" />
+                <element signature="e#1150#1151#0" expanded="true" />
+                <element signature="e#1285#1286#0" expanded="true" />
+                <element signature="e#1321#1322#0" expanded="true" />
+                <element signature="e#1607#1608#0" expanded="true" />
+                <element signature="e#1673#1674#0" expanded="true" />
+                <element signature="e#1718#1719#0" expanded="true" />
+                <element signature="e#1754#1755#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1145,8 +1079,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapmytrip/utils/ActionEditText.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapmytrip/ui/InputActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_input.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapmytrip/utils/UpdateTripStatusTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapmytrip/utils/SendLocationTask.java" />
@@ -1191,11 +1123,13 @@
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/services/CountdownTimer.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/recievers/SendLocationAlarm.java" />
         <option value="$PROJECT_DIR$/.idea/.name" />
-        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/helpers/Constants.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Trip.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Device.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/RegisterDeviceTask.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/services/SendLocationService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/RegisterTripTask.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/helpers/Constants.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Trip.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java" />
       </list>
     </option>
   </component>
@@ -1733,16 +1667,16 @@
       <recent name="sheyko.aleksey.mapthetrip.ui.fragments" />
       <recent name="sheyko.aleksey.mapmytrip.ui" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Алексей\AndroidStudioProjects\MapMyTrip\app\src\main\assets\fonts" />
+    <key name="android.template.parentActivityClass">
+      <recent name="sheyko.aleksey.mapmytrip.ui.MainActivity" />
+      <recent name="" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="sheyko.aleksey.mapthetrip" />
       <recent name="sheyko.aleksey.mapmytrip.ui" />
     </key>
-    <key name="android.template.parentActivityClass">
-      <recent name="sheyko.aleksey.mapmytrip.ui.MainActivity" />
-      <recent name="" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Алексей\AndroidStudioProjects\MapMyTrip\app\src\main\assets\fonts" />
     </key>
   </component>
   <component name="RunManager" selected="Android Application.app">
@@ -2330,7 +2264,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -2351,7 +2285,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29500756" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29500756" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6377049" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="15" side_tool="true" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" x="92" y="92" width="1182" height="544" />
@@ -2458,23 +2392,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="1700">
           <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/recievers/SendLocationAlarm.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="697">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/recievers/SendLocationAlarm.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="697">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#3813#3985#0" expanded="true" />
+            <element signature="e#3978#3979#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2751,22 +2672,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/services/SendLocationService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="452" max-vertical-offset="1666">
-          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/recievers/SendLocationAlarm.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="26" max-vertical-offset="595">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.idea/.name">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="582">
@@ -2793,47 +2698,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/helpers/Constants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="61" max-vertical-offset="782">
-          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2526" max-vertical-offset="4607">
-          <caret line="208" column="0" selection-start-line="208" selection-start-column="0" selection-end-line="208" selection-end-column="0" />
-          <folding>
-            <element signature="class#OnTabSelectedListener#0;class#MapPane#0" expanded="false" />
-            <element signature="e#4546#5150#0" expanded="true" />
-            <element signature="e#5127#5128#0" expanded="true" />
-            <element signature="method#initializeViews#0;class#MapPane#0" expanded="false" />
-            <element signature="e#8258#8291#0" expanded="true" />
-            <element signature="e#8823#8824#0" expanded="true" />
-            <element signature="e#8861#8862#0" expanded="true" />
-            <element signature="e#8904#8905#0" expanded="true" />
-            <element signature="e#8973#8974#0" expanded="true" />
-            <element signature="e#9015#9016#0" expanded="true" />
-            <element signature="e#9066#9067#0" expanded="true" />
-            <element signature="e#10533#10534#0" expanded="true" />
-            <element signature="e#10587#10588#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Trip.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="183" max-vertical-offset="765">
-          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Device.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="829" max-vertical-offset="1445">
+        <state vertical-scroll-proportion="0.79553264" vertical-offset="829" max-vertical-offset="1445">
           <caret line="98" column="41" selection-start-line="98" selection-start-column="41" selection-end-line="98" selection-end-column="41" />
           <folding>
             <element signature="e#1745#1746#0" expanded="true" />
@@ -2856,16 +2723,66 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/RegisterDeviceTask.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/RegisterTripTask.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.1460481" vertical-offset="863" max-vertical-offset="2584">
-          <caret line="90" column="63" selection-start-line="90" selection-start-column="63" selection-end-line="90" selection-end-column="63" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1611" max-vertical-offset="2193">
+          <caret line="135" column="45" selection-start-line="135" selection-start-column="45" selection-end-line="135" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/services/SendLocationService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1887">
+          <caret line="25" column="52" selection-start-line="25" selection-start-column="52" selection-end-line="25" selection-end-column="52" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#860#861#0" expanded="true" />
-            <element signature="e#896#897#0" expanded="true" />
-            <element signature="e#946#947#0" expanded="true" />
-            <element signature="e#980#981#0" expanded="true" />
+            <element signature="e#3813#3985#0" expanded="true" />
+            <element signature="e#3978#3979#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/helpers/Constants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.55498284" vertical-offset="0" max-vertical-offset="582">
+          <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Trip.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="251" max-vertical-offset="1105">
+          <caret line="34" column="54" selection-start-line="34" selection-start-column="54" selection-end-line="34" selection-end-column="54" />
+          <folding>
+            <element signature="e#1025#1026#0" expanded="true" />
+            <element signature="e#1086#1087#0" expanded="true" />
+            <element signature="e#1114#1115#0" expanded="true" />
+            <element signature="e#1150#1151#0" expanded="true" />
+            <element signature="e#1285#1286#0" expanded="true" />
+            <element signature="e#1321#1322#0" expanded="true" />
+            <element signature="e#1607#1608#0" expanded="true" />
+            <element signature="e#1673#1674#0" expanded="true" />
+            <element signature="e#1718#1719#0" expanded="true" />
+            <element signature="e#1754#1755#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.77147764" vertical-offset="1030" max-vertical-offset="3944">
+          <caret line="124" column="34" selection-start-line="124" selection-start-column="34" selection-end-line="124" selection-end-column="34" />
+          <folding>
+            <element signature="class#OnTabSelectedListener#0;class#MapPane#0" expanded="false" />
+            <element signature="method#initializeViews#0;class#MapPane#0" expanded="false" />
+            <element signature="e#6148#6181#0" expanded="true" />
+            <element signature="e#6709#6710#0" expanded="true" />
+            <element signature="e#6762#6763#0" expanded="true" />
+            <element signature="e#7417#7418#0" expanded="true" />
+            <element signature="e#7467#7468#0" expanded="true" />
+            <element signature="e#8934#8935#0" expanded="true" />
+            <element signature="e#8988#8989#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -17,23 +17,20 @@ import java.net.URL;
 
 import sheyko.aleksey.mapthetrip.models.Device;
 
-public class RegisterDeviceTask extends AsyncTask<String, Void, String> {
-    private static final String TAG = RegisterDeviceTask.class.getSimpleName();
+public class RegisterTripTask extends AsyncTask<String, Void, String> {
+    private static final String TAG = RegisterTripTask.class.getSimpleName();
 
-    OnTripRegistered mCallback;
-    Context mContext;
+    protected OnTripRegistered mCallback;
+    private Context mContext;
 
-    // Main Activity will implement this interface
+    // Interface to return trip ID
     public interface OnTripRegistered {
-        public void onIdRetrieved(String tripId);
+        public void onTripRegistered(Context context, String tripId);
     }
 
-    public RegisterDeviceTask(OnTripRegistered callback){
-        mCallback = callback;
-    }
-
-    public RegisterDeviceTask(Context context) {
+    public RegisterTripTask(Context context, OnTripRegistered callback){
         mContext = context;
+        mCallback = callback;
     }
 
     @Override
@@ -98,23 +95,18 @@ public class RegisterDeviceTask extends AsyncTask<String, Void, String> {
             while ((line = reader.readLine()) != null) {
                 buffer.append(line).append("\n");
             }
-
-            if (buffer.length() == 0) {
-                // Stream was empty.  No point in parsing.
-                return null;
-            }
             resultJsonStr = buffer.toString();
 
             Log.i(TAG, "Service: TFLRegDeviceandGetTripIdResult,\n" +
                     "Result: " + java.net.URLDecoder.decode(resultJsonStr, "UTF-8"));
 
             try {
-                JSONObject regResultObject = new JSONObject(resultJsonStr);
-                JSONObject regResponse = regResultObject.getJSONObject("TFLRegDeviceandGetTripIdResult");
+                JSONObject mParseObject = new JSONObject(resultJsonStr);
+                JSONObject mServerResponseObject = mParseObject.getJSONObject("TFLRegDeviceandGetTripIdResult");
 
-                String mParseStatus = regResponse.getString("Status");
+                String mParseStatus = mServerResponseObject.getString("Status");
                 if (mParseStatus.equals("Success")) {
-                    mTripId = regResponse.getString("TripId");
+                    mTripId = mServerResponseObject.getString("TripId");
                 }
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
@@ -141,6 +133,6 @@ public class RegisterDeviceTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String mTripId) {
         super.onPostExecute(mTripId);
 
-        mCallback.onIdRetrieved(mTripId);
+        mCallback.onTripRegistered(mContext, mTripId);
     }
 }

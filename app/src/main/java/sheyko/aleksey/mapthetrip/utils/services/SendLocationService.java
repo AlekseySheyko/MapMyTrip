@@ -1,6 +1,10 @@
 package sheyko.aleksey.mapthetrip.utils.services;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -90,5 +94,34 @@ public class SendLocationService extends Service
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    private void startSendingLocation() {
+        AlarmManager am = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(mContext, Trip.class);
+
+        PendingIntent pi = PendingIntent.getBroadcast(mContext, 0, i, 0);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * 2, pi); // Millisec * Second * Minute
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Trip.this.receivedBroadcast(intent);
+        }
+    };
+
+    private void receivedBroadcast(Intent i) {
+        // Put your receive handling code here
     }
 }
