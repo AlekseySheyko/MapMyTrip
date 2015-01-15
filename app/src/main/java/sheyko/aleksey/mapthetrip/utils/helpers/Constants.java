@@ -2,6 +2,10 @@ package sheyko.aleksey.mapthetrip.utils.helpers;
 
 public class Constants {
 
+    // Defines a custom Intent action
+    public static final String BROADCAST_ACTION =
+            "sheyko.aleksey.mapthetrip.BROADCAST";
+
     public class Device {
         public static final String MODEL_NUMBER = "1";
         public static final String SYSTEM_NAME = "Android";
@@ -10,13 +14,6 @@ public class Constants {
         public static final String USER_DEFINED_TRIP_ID = "";
         public static final String REFERENCE_NUMBER = "";
         public static final String ENTITY_ID = "1";
-    }
-
-    public class Timer {
-        public class Commands {
-            public static final int PAUSE = 0;
-            public static final int STOP = 1;
-        }
     }
 
     public class ActionBar {

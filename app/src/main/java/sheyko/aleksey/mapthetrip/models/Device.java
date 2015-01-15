@@ -98,4 +98,8 @@ public class Device {
     public String getEntityId() {
         return Constants.Device.ENTITY_ID;
     }
+
+    public String getCoordinatesCountry() {
+        return "US";
+    }
 }
