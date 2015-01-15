@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import sheyko.aleksey.mapthetrip.R;
-import sheyko.aleksey.mapthetrip.adapters.SummaryListAdapter;
+import sheyko.aleksey.mapthetrip.ui.adapters.SummaryListAdapter;
 
 public class StatsActivity extends Activity {
 

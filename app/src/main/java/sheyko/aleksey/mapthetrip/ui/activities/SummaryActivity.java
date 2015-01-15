@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import sheyko.aleksey.mapthetrip.R;
-import sheyko.aleksey.mapthetrip.utils.SaveTripTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
 
 public class SummaryActivity extends Activity {
 

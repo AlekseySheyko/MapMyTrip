@@ -1,4 +1,4 @@
-package sheyko.aleksey.mapthetrip.utils;
+package sheyko.aleksey.mapthetrip.utils.tasks;
 
 import android.os.AsyncTask;
 

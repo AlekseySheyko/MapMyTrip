@@ -13,18 +13,12 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import sheyko.aleksey.mapthetrip.R;
 
 public class SplashScreen extends Activity {
-    /**
-     * Duration of wait *
-     */
-    private final int SPLASH_DISPLAY_LENGTH = 1000;
 
-    /**
-     * Called when the activity is first created.
-     */
+    private static final int SPLASH_DISPLAY_LENGTH = 1000;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-//        Parse.initialize(this, "w7h87LOw8fzK84g0noTS1b4nZhWYXBbRCendV756", "0uzaKEj3Q9R0kTRlq6pg4vawar1HkMTrWFeZ46Yb");
 
         setContentView(R.layout.splash_screen);
 

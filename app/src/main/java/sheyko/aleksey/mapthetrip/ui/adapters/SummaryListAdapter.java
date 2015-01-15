@@ -1,4 +1,4 @@
-package sheyko.aleksey.mapthetrip.adapters;
+package sheyko.aleksey.mapthetrip.ui.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

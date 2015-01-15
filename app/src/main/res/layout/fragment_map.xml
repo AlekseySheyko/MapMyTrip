@@ -90,13 +90,13 @@
             android:layout_marginBottom="30dp">
 
             <Button
-                android:id="@+id/yellow_button_start"
+                android:id="@+id/startButton"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/yellow_button_selector"/>
 
             <Button
-                android:id="@+id/red_button_pause"
+                android:id="@+id/pauseButton"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/red_button_normal"
@@ -136,7 +136,7 @@
             android:layout_marginBottom="16dp">
 
             <Button
-                android:id="@+id/black_button_finish"
+                android:id="@+id/finishButton"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/black_slide_button_normal"

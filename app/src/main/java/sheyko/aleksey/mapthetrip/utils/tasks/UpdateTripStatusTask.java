@@ -1,4 +1,4 @@
-package sheyko.aleksey.mapthetrip.utils;
+package sheyko.aleksey.mapthetrip.utils.tasks;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -8,8 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
-import sheyko.aleksey.mapthetrip.helpers.Constants.Device;
-import sheyko.aleksey.mapthetrip.models.DeviceInfo;
+import sheyko.aleksey.mapthetrip.models.Device;
 
 public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
 
@@ -33,9 +32,9 @@ public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
                     .appendPath("TFLUpdateTripStatus")
                     .appendQueryParameter("TripId", params[0])
                     .appendQueryParameter("TripStatus", params[1])
-                    .appendQueryParameter("TripDateTime", new DeviceInfo().getCurrentDateTime())
-                    .appendQueryParameter("TripTimezone", new DeviceInfo().getTimeZone())
-                    .appendQueryParameter("UserId", Device.USER_ID);
+                    .appendQueryParameter("TripDateTime", new Device(mContext).getCurrentDateTime())
+                    .appendQueryParameter("TripTimezone", new Device(mContext).getTimeZone())
+                    .appendQueryParameter("UserId", sheyko.aleksey.mapthetrip.utils.helpers.Constants.Device.USER_ID);
             String mUrlString = builder.build().toString();
 
             Log.i(TAG, "Service: TFLUpdateTripStatus,\n" +

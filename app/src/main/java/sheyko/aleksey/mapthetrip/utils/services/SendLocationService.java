@@ -1,4 +1,4 @@
-package sheyko.aleksey.mapthetrip.services;
+package sheyko.aleksey.mapthetrip.utils.services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -12,23 +12,20 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 
-import sheyko.aleksey.mapthetrip.recievers.Alarm;
-import sheyko.aleksey.mapthetrip.models.DeviceInfo;
-import sheyko.aleksey.mapthetrip.utils.SendLocationTask;
+import sheyko.aleksey.mapthetrip.models.Device;
+import sheyko.aleksey.mapthetrip.utils.recievers.SendLocationAlarm;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
 public class SendLocationService extends Service
         implements ConnectionCallbacks, LocationListener {
 
-    Alarm alarm = new Alarm();
+    SendLocationAlarm mSendLocationAlarm = new SendLocationAlarm();
 
     private LocationClient mLocationClient;
     private LocationRequest mLocationRequest;
-    private static final int UPDATE_INTERVAL = 10 * 1000;
+    private static final int UPDATE_INTERVAL = 5 * 1000;
     private static final int FASTEST_INTERVAL = 5 * 1000;
-
-    private Location currentLocation;
-    private boolean isCountDownJustStarted = true;
-
+    private Location mCurrentLocation;
     private String mTripId;
 
     @Override
@@ -48,10 +45,10 @@ public class SendLocationService extends Service
                     // Send location to server
                     new SendLocationTask().execute(
                             mTripId,
-                            currentLocation.getLatitude() + "",
-                            currentLocation.getLongitude() + "",
-                            new DeviceInfo().getCurrentDateTime(),
-                            new DeviceInfo().getTimeZone());
+                            mCurrentLocation.getLatitude() + "",
+                            mCurrentLocation.getLongitude() + "",
+                            new Device(mContext).getCurrentDateTime(),
+                            new Device(mContext).getTimeZone());
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -63,7 +60,7 @@ public class SendLocationService extends Service
     @Override
     public void onDestroy() {
         super.onDestroy();
-        alarm.CancelAlarm(SendLocationService.this);
+        mSendLocationAlarm.CancelAlarm(SendLocationService.this);
     }
 
     @Override
@@ -83,6 +80,7 @@ public class SendLocationService extends Service
     @Override
     public void onConnected(Bundle bundle) {
         mLocationClient.requestLocationUpdates(mLocationRequest, this);
+        mSendLocationAlarm.SetAlarm(SendLocationService.this);
     }
 
     @Override
@@ -91,10 +89,6 @@ public class SendLocationService extends Service
 
     @Override
     public void onLocationChanged(Location location) {
-        this.currentLocation = location;
-        if (isCountDownJustStarted)
-            alarm.SetAlarm(SendLocationService.this);
-
-        isCountDownJustStarted = false;
+        mCurrentLocation = location;
     }
 }

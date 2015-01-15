@@ -1,9 +1,15 @@
 package sheyko.aleksey.mapthetrip.models;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.provider.Settings;
+import android.provider.Settings.Secure;
+
 import com.orm.SugarRecord;
 
-import sheyko.aleksey.mapthetrip.utils.RegisterDeviceTask;
-import sheyko.aleksey.mapthetrip.utils.RegisterDeviceTask.OnGetTripIdListener;
+import sheyko.aleksey.mapthetrip.R;
+import sheyko.aleksey.mapthetrip.utils.tasks.RegisterDeviceTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.RegisterDeviceTask.OnTripRegistered;
 
 public class Trip extends SugarRecord<Trip> {
 
@@ -17,9 +23,18 @@ public class Trip extends SugarRecord<Trip> {
 //    ArrayList<String> stateDistances;
 //    ArrayList<String> stateDurations;
 
-    public Trip(OnGetTripIdListener listener, String deviceId, String deviceType, String isCameraAvailable) {
-        new RegisterDeviceTask(listener).execute(deviceId, deviceType, isCameraAvailable);
+    public Trip() {
     }
+
+    public void start(Context context) {
+
+        new RegisterDeviceTask(context).execute();
+
+    }
+
+
+
+
 
     public Trip(String tripId) {
         this.tripId = tripId;

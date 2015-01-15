@@ -18,13 +18,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import sheyko.aleksey.mapthetrip.R;
-import sheyko.aleksey.mapthetrip.adapters.NavigationAdapter;
+import sheyko.aleksey.mapthetrip.ui.adapters.NavigationAdapter;
 import sheyko.aleksey.mapthetrip.ui.fragments.MapPane;
-import sheyko.aleksey.mapthetrip.ui.fragments.MapPane.OnActionbarTabSelectedListener;
+import sheyko.aleksey.mapthetrip.ui.fragments.MapPane.OnTabSelectedListener;
 
 
 public class MainActivity extends Activity
-    implements OnActionbarTabSelectedListener {
+    implements OnTabSelectedListener {
 
     // Navigation drawer
     private ActionBar mActionBar;
@@ -47,7 +47,7 @@ public class MainActivity extends Activity
 
         MapPane mapFragment = new MapPane();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(R.id.fragment_container, mapFragment);
+        ft.replace(R.id.fragment_container, mapFragment);
         ft.commit();
     }
 
