@@ -1,5 +1,6 @@
 package sheyko.aleksey.mapthetrip.utils.tasks;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -11,8 +12,13 @@ import java.net.HttpURLConnection;
 import sheyko.aleksey.mapthetrip.models.Device;
 
 public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
-
     public static final String TAG = UpdateTripStatusTask.class.getSimpleName();
+
+    private Context mContext;
+
+    public UpdateTripStatusTask(Context context){
+        mContext = context;
+    }
 
     @Override
     protected Void doInBackground(String... params) {
@@ -23,6 +29,8 @@ public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
         // Will contain JSON responses as a string
         String JsonResponseStr = null;
 
+        Device mDevice = new Device(mContext);
+
         try {
             // Construct the URL for the query
             Uri.Builder builder = new Uri.Builder();
@@ -32,9 +40,9 @@ public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
                     .appendPath("TFLUpdateTripStatus")
                     .appendQueryParameter("TripId", params[0])
                     .appendQueryParameter("TripStatus", params[1])
-                    .appendQueryParameter("TripDateTime", new Device(mContext).getCurrentDateTime())
-                    .appendQueryParameter("TripTimezone", new Device(mContext).getTimeZone())
-                    .appendQueryParameter("UserId", sheyko.aleksey.mapthetrip.utils.helpers.Constants.Device.USER_ID);
+                    .appendQueryParameter("TripDateTime", mDevice.getCurrentDateTime())
+                    .appendQueryParameter("TripTimezone", mDevice.getTimeZone())
+                    .appendQueryParameter("UserId", mDevice.getUserId());
             String mUrlString = builder.build().toString();
 
             Log.i(TAG, "Service: TFLUpdateTripStatus,\n" +

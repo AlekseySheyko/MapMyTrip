@@ -165,7 +165,7 @@ public class MainActivity extends Activity
             if (position == 0) {
                 startActivity(new Intent(MainActivity.this, MainActivity.class));
             } else if (position == 4) {
-                startActivity(new Intent(MainActivity.this, StatsActivity.class));
+                comingSoonToast();
             } else {
                 comingSoonToast();
             }

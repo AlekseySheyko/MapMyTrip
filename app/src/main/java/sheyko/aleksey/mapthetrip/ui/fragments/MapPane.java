@@ -2,12 +2,15 @@ package sheyko.aleksey.mapthetrip.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,16 +19,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,7 +31,7 @@ import sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity;
 import sheyko.aleksey.mapthetrip.utils.helpers.Constants.ActionBar.Tab;
 
 public class MapPane extends Fragment
-        implements LocationListener, OnClickListener, ConnectionCallbacks {
+        implements OnClickListener {
 
     // Callback to update tabs in MainActivity
     OnTabSelectedListener mCallback;
@@ -45,11 +40,6 @@ public class MapPane extends Fragment
     private TextView durationCounter;
 
     private Trip mCurrentTrip;
-
-    // Location variables
-    private LocationClient mLocationClient;
-    private Location previousLocation;
-    private GoogleMap mMap;
 
     // Control buttons
     private Button mStartButton;
@@ -60,13 +50,11 @@ public class MapPane extends Fragment
     private TextView mStartButtonLabel;
     private TextView mPauseButtonLabel;
     private TextView mFinishButtonLabel;
-    private LocationRequest mLocationRequest;
 
     // Timer
     private TimerTask timerTask;
     private int elapsedSeconds = 0;
-    private static final int JUST_PAUSE = 0;
-    private static final int STOP = 1;
+    private LinearLayout mCountersContainer;
 
     // Required empty constructor
     public MapPane() {
@@ -81,7 +69,20 @@ public class MapPane extends Fragment
         super.onAttach(activity);
         // Actionbar tabs listener
         mCallback = (OnTabSelectedListener) activity;
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+                mMessageReceiver, new IntentFilter("GPSLocationUpdates"));
     }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            Bundle b = intent.getBundleExtra("Location");
+            Location lastKnownLoc = b.getParcelable("Location");
+            Log.i("MapPane", String.valueOf(lastKnownLoc.getLatitude()));
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,25 +94,40 @@ public class MapPane extends Fragment
     @Override
     public void onViewCreated(View rootView, Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
+        initializeViews(rootView);
 
-        mMap = disableMapUiControls(
+        disableMapUiControls(
                 getFragmentManager().findFragmentById(R.id.map));
 
-        mStartButton = (Button) rootView.findViewById(R.id.startButton);
         mStartButton.setOnClickListener(this);
-
-        mPauseButton = (Button) rootView.findViewById(R.id.pauseButton);
         mPauseButton.setOnClickListener(this);
-
-        mFinishButton = (Button) rootView.findViewById(R.id.finishButton);
         mFinishButton.setOnClickListener(this);
+    }
+
+    private void initializeViews(View rootView) {
+        mStartButton = (Button) rootView.findViewById(R.id.startButton);
+        mPauseButton = (Button) rootView.findViewById(R.id.pauseButton);
+        mFinishButton = (Button) rootView.findViewById(R.id.finishButton);
+
+        mStartButtonLabel = (TextView) rootView.findViewById(R.id.start_button_label);
+        mPauseButtonLabel = (TextView) rootView.findViewById(R.id.pause_button_label);
+        mFinishButtonLabel = (TextView) rootView.findViewById(R.id.finish_button_label);
+
+        mCountersContainer = (LinearLayout)
+                rootView.findViewById(R.id.counters_container);
+
+        // UI counters
+        durationCounter = (TextView)
+                rootView.findViewById(R.id.duration_counter);
+        distanceCounter = (TextView)
+                rootView.findViewById(R.id.distance_counter);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.startButton:
-                updateUiOnStart(view.getRootView());
+                updateUiOnStart();
 
                 if (mCurrentTrip == null) {
 
@@ -138,10 +154,7 @@ public class MapPane extends Fragment
         }
     }
 
-    private void updateUiOnStart(View rootView) {
-        createLocationClient(this.getActivity())
-                .connect();
-
+    private void updateUiOnStart() {
         mCallback.onTabSelected(Tab.REST);
 
         mStartButton.setVisibility(View.GONE);
@@ -150,33 +163,15 @@ public class MapPane extends Fragment
         mPauseButton.setVisibility(View.VISIBLE);
         mPauseButtonLabel.setVisibility(View.VISIBLE);
 
+        mCountersContainer.setVisibility(View.VISIBLE);
+
         mFinishButton.setVisibility(View.GONE);
         mFinishButtonLabel.setVisibility(View.GONE);
-
-        LinearLayout countersContainer = (LinearLayout)
-                rootView.findViewById(R.id.counters_container);
-        countersContainer.setVisibility(View.VISIBLE);
-
-        // Button labels
-        mStartButtonLabel = (TextView)
-                rootView.findViewById(R.id.start_button_label);
-        mPauseButtonLabel = (TextView)
-                rootView.findViewById(R.id.pause_button_label);
-        mFinishButtonLabel = (TextView)
-                rootView.findViewById(R.id.finish_button_label);
-
-        // UI counters
-        durationCounter = (TextView)
-                rootView.findViewById(R.id.duration_counter);
-        distanceCounter = (TextView)
-                rootView.findViewById(R.id.distance_counter);
 
         startUiStopwatch();
     }
 
     private void updateUiOnPause() {
-        stopLocationUpdates(mLocationClient);
-
         mCallback.onTabSelected(Tab.GAS);
 
         mPauseButton.setVisibility(View.GONE);
@@ -189,7 +184,7 @@ public class MapPane extends Fragment
         mFinishButton.setVisibility(View.VISIBLE);
         mFinishButtonLabel.setVisibility(View.VISIBLE);
 
-        pauseUiStopWatch();
+        pauseStopwatch();
     }
 
     private GoogleMap disableMapUiControls(Fragment fragment) {
@@ -202,62 +197,33 @@ public class MapPane extends Fragment
         return map;
     }
 
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        startLocationUpdates(mLocationClient);
-    }
-
-    private LocationClient createLocationClient(Context context) {
-        // Create location client
-        mLocationClient = new LocationClient(context, this, null);
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        int UPDATE_INTERVAL = 5 * 1000; // 5 seconds
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        return mLocationClient;
-    }
-
-    private void startLocationUpdates(LocationClient client) {
-        client.requestLocationUpdates(mLocationRequest, this);
-    }
-
-    private void stopLocationUpdates(LocationClient client) {
-        client.removeLocationUpdates(this);
-    }
-
-    @Override
-    public void onDisconnected() {
-    }
-
-    @Override
-    public void onLocationChanged(Location currentLocation) {
-
-        if (previousLocation == null)
-            previousLocation = currentLocation;
-
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-                .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
-                .bearing(previousLocation.bearingTo(currentLocation))
-                .tilt(30)
-                .zoom(17)
-                .build()));
-
-        // Draw path on map
-        mMap.addPolygon(new PolygonOptions()
-                .strokeColor(Color.parseColor("#9f5c8f"))
-                .add(new LatLng(previousLocation.getLatitude(), previousLocation.getLongitude()),
-                        new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
-
-        // Increment distance by current sector
-        mCurrentTrip.increazeDistance(getDistance(previousLocation, currentLocation));
-
-        // Update UI
-        distanceCounter.setText(String.format("%.1f", (mCurrentTrip.getDistance())));
-
-        // Current turns into previous on the next iteration
-        previousLocation = currentLocation;
-    }
+//    @Override
+//    public void onLocationChanged(Location currentLocation) {
+//
+//        if (previousLocation == null)
+//            previousLocation = currentLocation;
+//
+//    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+//            .target(new LatLng(latitude, longitude))
+//            .tilt(30)
+//    .zoom(17)
+//    .build()));
+//
+//        // Draw path on map
+//        mMap.addPolygon(new PolygonOptions()
+//                .strokeColor(Color.parseColor("#9f5c8f"))
+//                .add(new LatLng(previousLocation.getLatitude(), previousLocation.getLongitude()),
+//                        new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
+//
+//        // Increment distance by current sector
+//        //TODO        mCurrentTrip.increazeDistance(getDistance(previousLocation, currentLocation));
+//
+//        // Update UI
+//        //TODO        distanceCounter.setText(String.format("%.1f", (mCurrentTrip.getDistance())));
+//
+//        // Current turns into previous on the next iteration
+//        previousLocation = currentLocation;
+//    }
 
     private float getDistance(Location previousLocation, Location currentLocation) {
         return previousLocation.distanceTo(currentLocation) / 1000;
@@ -287,11 +253,10 @@ public class MapPane extends Fragment
         return String.format("%02d:%02d:%02d", h, m, s);
     }
 
-    public void pauseUiStopWatch(int pauseOrStop) {
+    public void pauseStopwatch() {
         if (timerTask != null) {
             timerTask.cancel();
             timerTask = null;
         }
-        if (pauseOrStop == STOP) elapsedSeconds = 0;
     }
 }

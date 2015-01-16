@@ -4,11 +4,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.orm.SugarRecord;
 
-import sheyko.aleksey.mapthetrip.utils.helpers.Constants;
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
@@ -27,7 +25,7 @@ public class Trip extends SugarRecord<Trip>
     //    ArrayList<String> states;
     //    ArrayList<String> stateDistances;
     //    ArrayList<String> stateDurations;
-    private Intent mSendIntent;
+    private Intent mLocationUpdates;
 
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent;
@@ -43,30 +41,29 @@ public class Trip extends SugarRecord<Trip>
     public void start(Context context) {
         mContext = context;
         new RegisterTripTask(context, this).execute();
-        startAlarm();
     }
 
     public void resume() {
         updateStatus(RESUME);
-        mContext.startService(mSendIntent);
+        mContext.startService(mLocationUpdates);
     }
 
     public void pause() {
         updateStatus(PAUSE);
-        mContext.stopService(mSendIntent);
+        mContext.stopService(mLocationUpdates);
     }
 
     public void finish() {
         updateStatus(FINISH);
-        mContext.stopService(mSendIntent);
+        mContext.stopService(mLocationUpdates);
     }
 
     @Override
     public void onTripRegistered(Context context, String id) {
         setTripId(id);
         // Sends location to server
-        mSendIntent = new Intent(context, LocationService.class);
-        context.startService(mSendIntent);
+        mLocationUpdates = new Intent(context, LocationService.class);
+        context.startService(mLocationUpdates);
     }
 
     private void startAlarm() {
@@ -77,14 +74,10 @@ public class Trip extends SugarRecord<Trip>
 
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis(), 1000 * 60, alarmIntent);
-
-        Intent localIntent =
-                new Intent(Constants.BROADCAST_ACTION);
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(localIntent);
     }
 
     private void updateStatus(String status) {
-        new UpdateTripStatusTask().execute(tripId, status);
+        new UpdateTripStatusTask(mContext).execute(tripId, status);
     }
 
     private void setTripId(String tripId) {
