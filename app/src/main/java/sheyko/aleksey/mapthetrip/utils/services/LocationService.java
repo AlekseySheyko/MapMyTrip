@@ -1,5 +1,7 @@
 package sheyko.aleksey.mapthetrip.utils.services;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
@@ -11,6 +13,7 @@ import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallback
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+
 
 public class LocationService extends Service
         implements ConnectionCallbacks, LocationListener {
@@ -47,6 +50,7 @@ public class LocationService extends Service
     @Override
     public void onConnected(Bundle bundle) {
         startLocationUpdates(mLocationClient);
+        startAlarm();
     }
 
     private void startLocationUpdates(LocationClient client) {
@@ -57,7 +61,14 @@ public class LocationService extends Service
     public void onDestroy() {
         super.onDestroy();
         stopLocationUpdates(mLocationClient);
+        cancelAlarm();
     }
+
+    // TODO: Start alarm
+
+    // TODO: Cancel alarm
+
+    // TODO: Register local broadcast reciever
 
     private void stopLocationUpdates(LocationClient client) {
         client.removeLocationUpdates(this);
@@ -69,15 +80,15 @@ public class LocationService extends Service
 
     @Override
     public void onLocationChanged(Location location) {
-        sendMessageToActivity(location);
+        sendLocationToFragment(location);
     }
 
-    private void sendMessageToActivity(Location location) {
-        Intent intent = new Intent("GPSLocationUpdates");
+    private void sendLocationToFragment(Location location) {
+        Intent intent = new Intent("LocationUpdates");
         // You can also include some extra data.
-        Bundle mBundle = new Bundle();
-        mBundle.putParcelable("Location", location);
-        intent.putExtra("Location", mBundle);
+        Bundle b = new Bundle();
+        b.putParcelable("Location", location);
+        intent.putExtra("Location", b);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

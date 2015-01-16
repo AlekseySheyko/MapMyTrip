@@ -18,8 +18,8 @@ public class Trip extends SugarRecord<Trip>
     private Context mContext;
     private String tripId;
     //    boolean isSaved;
-    //    float distance = 0;
-    //    int duration;
+    float distance = 0;
+    int duration = 0;
     //    String name;
     //    String note;
     //    ArrayList<String> states;
@@ -66,21 +66,27 @@ public class Trip extends SugarRecord<Trip>
         context.startService(mLocationUpdates);
     }
 
-    private void startAlarm() {
-        alarmMgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(mContext, Trip.class);
-        intent.putExtra("tripId", id);
-        alarmIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
-
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis(), 1000 * 60, alarmIntent);
-    }
-
     private void updateStatus(String status) {
         new UpdateTripStatusTask(mContext).execute(tripId, status);
     }
 
     private void setTripId(String tripId) {
         this.tripId = tripId;
+    }
+
+    public String getDistance() {
+        return String.format("%.1f", distance);
+    }
+
+    public void increazeDistance(float increment) {
+        distance = distance + increment;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void incrementDuration(int increment) {
+        duration = duration + increment;
     }
 }

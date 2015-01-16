@@ -6,11 +6,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,8 +19,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,10 +40,8 @@ public class MapPane extends Fragment
     // Callback to update tabs in MainActivity
     OnTabSelectedListener mCallback;
 
-    private TextView distanceCounter;
-    private TextView durationCounter;
-
     private Trip mCurrentTrip;
+    private GoogleMap mMap;
 
     // Control buttons
     private Button mStartButton;
@@ -52,9 +54,10 @@ public class MapPane extends Fragment
     private TextView mFinishButtonLabel;
 
     // Timer
-    private TimerTask timerTask;
-    private int elapsedSeconds = 0;
+    private TimerTask mTimerTask;
     private LinearLayout mCountersContainer;
+    private TextView mDistanceCounter;
+    private TextView mDurationCounter;
 
     // Required empty constructor
     public MapPane() {
@@ -71,18 +74,55 @@ public class MapPane extends Fragment
         mCallback = (OnTabSelectedListener) activity;
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
-                mMessageReceiver, new IntentFilter("GPSLocationUpdates"));
+                mLocationReciever, new IntentFilter("LocationUpdates"));
     }
 
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+    private Location mPreviousLocation;
+
+    private BroadcastReceiver mLocationReciever = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
             Bundle b = intent.getBundleExtra("Location");
-            Location lastKnownLoc = b.getParcelable("Location");
-            Log.i("MapPane", String.valueOf(lastKnownLoc.getLatitude()));
+            Location currentLocation = b.getParcelable("Location");
+            if (mPreviousLocation == null)
+                mPreviousLocation = currentLocation;
+
+            moveCameraFocus(currentLocation);
+
+            //Increment distance by current sector
+            mCurrentTrip.increazeDistance(
+                    getDistance(mPreviousLocation, currentLocation));
+
+            // Update UI counter
+            mDistanceCounter.setText(mCurrentTrip.getDistance());
+
+            // Current turns into previous on the next iteration
+            mPreviousLocation = currentLocation;
         }
     };
+
+    private void moveCameraFocus(Location currentLocation) {
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                new CameraPosition.Builder()
+                        .target(new LatLng(
+                                currentLocation.getLatitude(),
+                                currentLocation.getLongitude()))
+                        .tilt(30)
+                        .zoom(17)
+                        .build()));
+
+        mMap.addPolygon(new PolygonOptions()
+                .strokeColor(Color.parseColor("#9f5c8f"))
+                .add(new LatLng(mPreviousLocation.getLatitude(),
+                                mPreviousLocation.getLongitude()),
+                        new LatLng(currentLocation.getLatitude(),
+                                currentLocation.getLongitude())));
+    }
+
+    private float getDistance(Location previousLocation, Location currentLocation) {
+        return previousLocation.distanceTo(currentLocation) / 1000;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,9 +157,9 @@ public class MapPane extends Fragment
                 rootView.findViewById(R.id.counters_container);
 
         // UI counters
-        durationCounter = (TextView)
+        mDurationCounter = (TextView)
                 rootView.findViewById(R.id.duration_counter);
-        distanceCounter = (TextView)
+        mDistanceCounter = (TextView)
                 rootView.findViewById(R.id.distance_counter);
     }
 
@@ -188,62 +228,32 @@ public class MapPane extends Fragment
     }
 
     private GoogleMap disableMapUiControls(Fragment fragment) {
-        GoogleMap map = ((MapFragment) fragment).getMap();
-        map.setMyLocationEnabled(true);
-        map.getUiSettings().setCompassEnabled(false);
-        map.getUiSettings().setMyLocationButtonEnabled(false);
-        map.getUiSettings().setAllGesturesEnabled(false);
-        map.getUiSettings().setZoomControlsEnabled(false);
-        return map;
-    }
-
-//    @Override
-//    public void onLocationChanged(Location currentLocation) {
-//
-//        if (previousLocation == null)
-//            previousLocation = currentLocation;
-//
-//    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-//            .target(new LatLng(latitude, longitude))
-//            .tilt(30)
-//    .zoom(17)
-//    .build()));
-//
-//        // Draw path on map
-//        mMap.addPolygon(new PolygonOptions()
-//                .strokeColor(Color.parseColor("#9f5c8f"))
-//                .add(new LatLng(previousLocation.getLatitude(), previousLocation.getLongitude()),
-//                        new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
-//
-//        // Increment distance by current sector
-//        //TODO        mCurrentTrip.increazeDistance(getDistance(previousLocation, currentLocation));
-//
-//        // Update UI
-//        //TODO        distanceCounter.setText(String.format("%.1f", (mCurrentTrip.getDistance())));
-//
-//        // Current turns into previous on the next iteration
-//        previousLocation = currentLocation;
-//    }
-
-    private float getDistance(Location previousLocation, Location currentLocation) {
-        return previousLocation.distanceTo(currentLocation) / 1000;
+        mMap = ((MapFragment) fragment).getMap();
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setAllGesturesEnabled(false);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+        return mMap;
     }
 
     public void startUiStopwatch() {
         final Handler handler = new Handler();
         Timer mTimer = new Timer();
-        timerTask = new TimerTask() {
+        mTimerTask = new TimerTask() {
             public void run() {
                 handler.post(new Runnable() {
                     public void run() {
-                        durationCounter.setText(convertSecondsToHMmSs(elapsedSeconds));
-                        elapsedSeconds++;
+                        int ONE_SECOND = 1;
+                        mCurrentTrip.incrementDuration(ONE_SECOND);
+                        mDurationCounter.setText(
+                                convertSecondsToHMmSs(mCurrentTrip.getDuration()));
                     }
                 });
             }
 
         };
-        mTimer.schedule(timerTask, 0, 1000);
+        mTimer.schedule(mTimerTask, 0, 1000);
     }
 
     private String convertSecondsToHMmSs(long seconds) {
@@ -254,9 +264,9 @@ public class MapPane extends Fragment
     }
 
     public void pauseStopwatch() {
-        if (timerTask != null) {
-            timerTask.cancel();
-            timerTask = null;
+        if (mTimerTask != null) {
+            mTimerTask.cancel();
+            mTimerTask = null;
         }
     }
 }
