@@ -7,6 +7,9 @@ import android.os.Parcelable;
 
 import com.orm.SugarRecord;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetrieved;
@@ -15,13 +18,14 @@ import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
 public class Trip extends SugarRecord<Trip>
-        implements OnTripRegistered, OnStatesDataRetrieved, Parcelable {
+        implements OnTripRegistered, Parcelable {
 
     private Context mContext;
     private String tripId;
     //    boolean isSaved;
     float distance = 0;
     int duration = 0;
+    String startTime;
     //    String name;
     //    String note;
     String stateCodes;
@@ -57,6 +61,7 @@ public class Trip extends SugarRecord<Trip>
         dest.writeString(tripId);
         dest.writeFloat(distance);
         dest.writeInt(duration);
+        dest.writeString(startTime);
         dest.writeString(stateCodes);
         dest.writeString(stateDistances);
         dest.writeString(totalDistance);
@@ -66,6 +71,7 @@ public class Trip extends SugarRecord<Trip>
         tripId = in.readString();
         distance = in.readFloat();
         duration = in.readInt();
+        startTime = in.readString();
         stateCodes = in.readString();
         stateDistances = in.readString();
         totalDistance = in.readString();
@@ -74,15 +80,6 @@ public class Trip extends SugarRecord<Trip>
     public void start(Context context) {
         mContext = context;
         new RegisterTripTask(context, this).execute();
-    }
-
-    @Override
-    public void onTripRegistered(Context context, String id) {
-        setTripId(id);
-        // Sends location to server
-        mLocationUpdates = new Intent(context, LocationService.class);
-        mLocationUpdates.putExtra("Trip ID", getTripId());
-        context.startService(mLocationUpdates);
     }
 
     public void resume() {
@@ -98,14 +95,16 @@ public class Trip extends SugarRecord<Trip>
     public void finish() {
         updateStatus(FINISH);
         mContext.stopService(mLocationUpdates);
-        new GetSummaryInfoTask(this).execute(getTripId());
     }
 
     @Override
-    public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance) {
-        setStateCodes(stateCodes);
-        setStateDistances(stateDistances);
-        setTotalDistance(totalDistance);
+    public void onTripRegistered(Context context, String id) {
+        setTripId(id);
+        setStartTime();
+        // Sends location to server
+        mLocationUpdates = new Intent(context, LocationService.class);
+        mLocationUpdates.putExtra("Trip ID", getTripId());
+        context.startService(mLocationUpdates);
     }
 
     private void updateStatus(String status) {
@@ -136,32 +135,28 @@ public class Trip extends SugarRecord<Trip>
         duration = duration + increment;
     }
 
-    public String getStateCodes() {
-        return stateCodes;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setStateCodes(String stateCodes) {
-        this.stateCodes = stateCodes;
+    private void setStartTime() {
+        startTime = new SimpleDateFormat("dd MMM, hh:mm").format(new Date()).toLowerCase();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public String getStateCodes() {
+        return stateCodes;
     }
 
     public String getStateDistances() {
         return stateDistances;
     }
 
-    public void setStateDistances(String stateDistances) {
-        this.stateDistances = stateDistances;
-    }
-
     public String getTotalDistance() {
         return totalDistance;
-    }
-
-    public void setTotalDistance(String totalDistance) {
-        this.totalDistance = totalDistance;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 }

@@ -4,43 +4,46 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
+import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetrieved;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
 
-public class SummaryActivity extends Activity {
+public class SummaryActivity extends Activity
+        implements OnStatesDataRetrieved{
 
-    private String mTripId, mDistance, mDuration, mDateTime;
-    private Trip mCurrentTrip;
+    private String mTripId;
+    private String mDistance;
+    private int mDuration;
+    private String mStartTime;
+    String mStateCodes;
+    String mStateDistances;
+    String mTotalDistance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
-        SharedPreferences sharedPrefs =
-                PreferenceManager.getDefaultSharedPreferences(this);
 
-        Trip mCurrentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
-        Toast.makeText(this, "ID: " + mCurrentTrip.getTripId(),
-                Toast.LENGTH_SHORT).show();
+        Trip currentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
 
         // Get trip info
-        mTripId = sharedPrefs.getString("TripId", "Unspecified");
-        mDistance = sharedPrefs.getString("Distance", "Unspecified");
-        mDuration = sharedPrefs.getString("Duration", "Unspecified");
-        mDateTime = sharedPrefs.getString("DateTime", "Unspecified");
+        mTripId = currentTrip.getTripId();
+        mDistance = currentTrip.getDistance();
+        mDuration = currentTrip.getDuration();
+        mStartTime = currentTrip.getStartTime();
+
+        new GetSummaryInfoTask(this).execute(mTripId);
 
         // Update UI
         ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
-        ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mDateTime);
+        ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
     }
 
     public void saveTrip(View view) {
@@ -49,10 +52,15 @@ public class SummaryActivity extends Activity {
 
     private void saveTrip(boolean isSaved) {
         String tripName = ((EditText) findViewById(R.id.tripNameField)).getText().toString();
-        if (tripName.equals("")) tripName = "Trip on " + mDateTime;
+        if (tripName.equals("")) tripName = "Trip on " + mStartTime;
         String tripNotes = ((EditText) findViewById(R.id.tripNotesField)).getText().toString();
 
-        new SaveTripTask().execute(mTripId, isSaved + "", mDistance, mDuration, tripName, tripNotes);
+        //TODO: Сюда надо еще передавать строку времен по штатам
+        new SaveTripTask().execute(
+                mTripId, isSaved + "", mTotalDistance,
+                mDuration + "", tripName, tripNotes,
+                mStateCodes, mStateDistances
+                );
         startActivity(new Intent(this, MainActivity.class));
     }
 
@@ -77,5 +85,12 @@ public class SummaryActivity extends Activity {
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance) {
+            mStateCodes = stateCodes;
+            mStateDistances = stateDistances;
+            mTotalDistance = totalDistance;
     }
 }

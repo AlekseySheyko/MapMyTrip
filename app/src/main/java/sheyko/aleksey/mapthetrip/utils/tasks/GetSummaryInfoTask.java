@@ -22,6 +22,7 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
 
     private String mStateCodes = "";
     private String mDistances = "";
+    private String mTotalDistance;
 
     // Interface to return states data
     public interface OnStatesDataRetrieved {
@@ -84,7 +85,6 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
 
                     for (String key : keyList) {
                         if (!key.equals("total")) {
-                            Log.i(TAG, mStateDistances.getDouble(key) + "");
 
                             String distance = mStateDistances.getDouble(key) + "";
 
@@ -97,11 +97,11 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
                     }
 
                     mStateCodes = mStateCodes.replace("total, ", "");
-                    String totalDistance = mStateDistances.getDouble("total") + "";
+                    mTotalDistance = mStateDistances.getDouble("total") + "";
 
                     statesData.put("stateCodes", mStateCodes);
                     statesData.put("stateDistances", mDistances);
-                    statesData.put("totalDistance", totalDistance);
+                    statesData.put("totalDistance", mTotalDistance);
                 }
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
