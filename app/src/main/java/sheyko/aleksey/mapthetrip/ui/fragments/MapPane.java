@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -82,6 +83,9 @@ public class MapPane extends Fragment
     private BroadcastReceiver mLocationReciever = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
+            Log.i("MapPane", "Service call recieved. Action = " + intent.getStringExtra("action"));
+
             // Get extra data included in the Intent
             Bundle b = intent.getBundleExtra("Location");
             Location currentLocation = b.getParcelable("Location");

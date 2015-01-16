@@ -63,11 +63,16 @@ public class Trip extends SugarRecord<Trip>
         setTripId(id);
         // Sends location to server
         mLocationUpdates = new Intent(context, LocationService.class);
+        mLocationUpdates.putExtra("Trip ID", getTripId());
         context.startService(mLocationUpdates);
     }
 
     private void updateStatus(String status) {
         new UpdateTripStatusTask(mContext).execute(tripId, status);
+    }
+
+    public String getTripId() {
+        return tripId;
     }
 
     private void setTripId(String tripId) {

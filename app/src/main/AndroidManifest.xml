@@ -67,5 +67,7 @@
             android:name=".utils.services.LocationService"
             android:exported="false"/>
 
+        <receiver android:name=".utils.recievers.AlarmReceiver"></receiver>
+
     </application>
 </manifest>
