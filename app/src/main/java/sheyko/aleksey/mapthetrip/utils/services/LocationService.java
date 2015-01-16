@@ -42,7 +42,7 @@ public class LocationService extends Service
             mTripId = intent.getStringExtra("Trip ID");
             createLocationClient().connect();
 
-        } else if (intent.getStringExtra("Action").equals("Send Location")){
+        } else if (intent.getStringExtra("Action") != null){
             sendLocationOnServer();
         }
         return START_STICKY;

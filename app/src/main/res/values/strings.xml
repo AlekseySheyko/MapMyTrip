@@ -33,7 +33,7 @@
     <string name="total_distance_test_value">70,23</string>
     <string name="total_distance_units">miles</string>
     <string name="trip_name_default_value">Trip on 12 dec, 16:50</string>
-    <string name="distance_default_value">0.00</string>
+    <string name="distance_default_value">0.0</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>

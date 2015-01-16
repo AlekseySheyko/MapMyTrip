@@ -149,7 +149,8 @@ public class MapPane extends Fragment
 
     private void updateUiOnStart() {
         mCallback.onTabSelected(Tab.REST);
-        getActivity().setProgressBarIndeterminateVisibility(true);
+        if (mTimerTask == null && getActivity() != null)
+            getActivity().setProgressBarIndeterminateVisibility(true);
 
         mStartButton.setVisibility(View.GONE);
         mStartButtonLabel.setVisibility(View.GONE);
@@ -161,8 +162,6 @@ public class MapPane extends Fragment
 
         mFinishButton.setVisibility(View.GONE);
         mFinishButtonLabel.setVisibility(View.GONE);
-
-        startUiStopwatch();
     }
 
     private void updateUiOnPause() {
@@ -186,7 +185,11 @@ public class MapPane extends Fragment
     private BroadcastReceiver mLocationReciever = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
+            if (getActivity() != null)
+                getActivity().setProgressBarIndeterminateVisibility(false);
+
+            if (mTimerTask == null)
+                startUiStopwatch();
 
             // Get extra data included in the Intent
             Bundle b = intent.getBundleExtra("Location");

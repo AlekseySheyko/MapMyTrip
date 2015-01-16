@@ -6,10 +6,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class GetSummaryInfoTask extends AsyncTask<String, Void, Void> {
 
@@ -38,34 +35,41 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, Void> {
             Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
                     "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
-            URL mUrl = new URL(mUrlString);
 
-            // Create the request and open the connection
-            urlConnection = (HttpURLConnection) mUrl.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+            String resultJsonStr = "" +
+                    "{status:{code:OK},data:{distance:{CA:417.25203435309,NV:362.34274672353,UT:190.47643510752,ID:578.45556674095,WA:623.92654697171,total:2172.4533298968},num_points:9}}";
 
-            // Read the input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            if (inputStream == null) {
-                // Nothing to do.
-                return null;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                // But it does make debugging a *lot* easier if you print out the completed
-                // buffer for debugging.
-                buffer.append(line + "\n");
-            }
 
-            getSummaryInfoJsonResponse = buffer.toString();
 
-            Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
-                    "Result: " + java.net.URLDecoder.decode(getSummaryInfoJsonResponse, "UTF-8"));
+//            URL mUrl = new URL(mUrlString);
+//
+//            // Create the request and open the connection
+//            urlConnection = (HttpURLConnection) mUrl.openConnection();
+//            urlConnection.setRequestMethod("GET");
+//            urlConnection.connect();
+//
+//            // Read the input stream into a String
+//            InputStream inputStream = urlConnection.getInputStream();
+//            StringBuffer buffer = new StringBuffer();
+//            if (inputStream == null) {
+//                // Nothing to do.
+//                return null;
+//            }
+//            reader = new BufferedReader(new InputStreamReader(inputStream));
+//
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+//                // But it does make debugging a *lot* easier if you print out the completed
+//                // buffer for debugging.
+//                buffer.append(line + "\n");
+//            }
+//
+//            getSummaryInfoJsonResponse = buffer.toString();
+//
+//            Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
+//                    "Result: " + java.net.URLDecoder.decode(getSummaryInfoJsonResponse, "UTF-8"));
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
