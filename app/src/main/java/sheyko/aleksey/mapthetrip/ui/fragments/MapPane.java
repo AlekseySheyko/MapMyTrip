@@ -142,7 +142,8 @@ public class MapPane extends Fragment
                 mCurrentTrip.finish();
 
                 startActivity(new Intent(
-                        this.getActivity(), SummaryActivity.class));
+                        this.getActivity(), SummaryActivity.class)
+                        .putExtra("CurrentTrip", mCurrentTrip));
                 break;
         }
     }

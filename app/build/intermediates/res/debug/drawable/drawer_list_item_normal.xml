@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:bottom="3px">
+        <shape android:shape="rectangle">
+            <solid android:color="#1c5582"/>
+        </shape>
+    </item>
+
+</layer-list><!-- From: file:/D:/MapTheTrip/app/src/main/res/drawable/drawer_list_item_normal.xml -->

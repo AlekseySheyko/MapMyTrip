@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@drawable/ic_logo"
+        android:right="5dp"
+        android:left="10dp"/>
+
+
+</layer-list><!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/drawable/splash_logo.xml -->

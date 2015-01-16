@@ -16,14 +16,21 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, String>> {
-
     public static final String TAG = GetSummaryInfoTask.class.getSimpleName();
+
+    protected OnStatesDataRetrieved mCallback;
 
     private String mStateCodes = "";
     private String mDistances = "";
-    private String mTotalDistance = "";
 
-    private HashMap<String, String> mStatesInfo;
+    // Interface to return states data
+    public interface OnStatesDataRetrieved {
+        public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance);
+    }
+
+    public GetSummaryInfoTask(OnStatesDataRetrieved callback){
+        mCallback = callback;
+    }
 
     @Override
     protected HashMap<String, String> doInBackground(String... params) {
@@ -33,7 +40,7 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
 
         // Will contain JSON responses as a string
         String getSummaryInfoJsonResponse = null;
-        mStatesInfo = new HashMap<>();
+        HashMap<String, String> statesData = new HashMap<>();
 
         try {
             // Construct the URL for the query
@@ -90,15 +97,11 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
                     }
 
                     mStateCodes = mStateCodes.replace("total, ", "");
-                    mTotalDistance = mStateDistances.getDouble("total") + "";
+                    String totalDistance = mStateDistances.getDouble("total") + "";
 
-                    Log.i(TAG, "States: " + mStateCodes);
-                    Log.i(TAG, "Distances: " + mDistances);
-                    Log.i(TAG, "Total distance: " + mTotalDistance);
-
-                    mStatesInfo.put("codes", mStateCodes);
-                    mStatesInfo.put("distances", mDistances);
-                    mStatesInfo.put("total", mTotalDistance);
+                    statesData.put("stateCodes", mStateCodes);
+                    statesData.put("stateDistances", mDistances);
+                    statesData.put("totalDistance", totalDistance);
                 }
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
@@ -148,6 +151,16 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
                 }
             }
         }
-        return mStatesInfo;
+        return statesData;
+    }
+
+    @Override
+    protected void onPostExecute(HashMap<String, String> mStatesInfo) {
+        super.onPostExecute(mStatesInfo);
+
+        mCallback.onStatesDataRetrieved(
+                mStatesInfo.get("stateCodes"),
+                mStatesInfo.get("stateDistances"),
+                mStatesInfo.get("totalDistance"));
     }
 }

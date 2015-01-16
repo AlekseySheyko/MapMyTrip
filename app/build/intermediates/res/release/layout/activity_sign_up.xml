@@ -1,0 +1,48 @@
+<LinearLayout
+    style="@style/LoginBackground"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="sheyko.aleksey.mapthetrip.activities.LoginActivity">
+
+    <LinearLayout
+        style="@style/LoginFieldsContainer"
+        android:layout_marginTop="60dp">
+
+        <EditText
+            android:id="@+id/emailField"
+            style="@style/LoginEditText"
+            android:hint="@string/email_hint"
+            android:inputType="textEmailAddress"
+            android:imeOptions="actionNext"/>
+
+        <requestFocus/>
+
+        <FrameLayout
+            style="@style/SeparatorLight"/>
+
+        <EditText
+            android:id="@+id/usernameField"
+            style="@style/LoginEditText"
+            android:hint="@string/username_hint"
+            android:inputType="textNoSuggestions"
+            android:imeOptions="actionNext"/>
+
+        <FrameLayout
+            style="@style/SeparatorLight"/>
+
+        <EditText
+            android:id="@+id/passwordField"
+            style="@style/LoginEditText"
+            android:hint="@string/password_hint"
+            android:imeOptions="actionNext"/>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/signUpButton"
+        style="@style/SignUpButton"
+        android:text="@string/sign_up_button_label"/>
+
+</LinearLayout>
+<!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/layout/activity_sign_up.xml -->

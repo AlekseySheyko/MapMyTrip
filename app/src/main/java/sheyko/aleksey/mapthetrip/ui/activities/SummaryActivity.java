@@ -10,13 +10,16 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import sheyko.aleksey.mapthetrip.R;
+import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
 
 public class SummaryActivity extends Activity {
 
     private String mTripId, mDistance, mDuration, mDateTime;
+    private Trip mCurrentTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,10 @@ public class SummaryActivity extends Activity {
         setContentView(R.layout.activity_summary);
         SharedPreferences sharedPrefs =
                 PreferenceManager.getDefaultSharedPreferences(this);
+
+        Trip mCurrentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
+        Toast.makeText(this, "ID: " + mCurrentTrip.getTripId(),
+                Toast.LENGTH_SHORT).show();
 
         // Get trip info
         mTripId = sharedPrefs.getString("TripId", "Unspecified");

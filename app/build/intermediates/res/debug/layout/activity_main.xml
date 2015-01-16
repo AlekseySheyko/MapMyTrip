@@ -1,0 +1,88 @@
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- The main content view -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--Tabs container-->
+        <LinearLayout
+            android:id="@+id/actionBarTabsContainer"
+            style="@style/ActionbarTabsContainer">
+
+            <!--Tab #1-->
+            <LinearLayout
+                style="@style/ActionbarTabLayout">
+
+                <ImageView
+                    style="@style/ActionbarTabImage"
+                    android:background="@drawable/ic_travel"/>
+
+                <TextView
+                    style="@style/ActionbarTabText"
+                    android:text="@string/travel_tab_label"/>
+
+            </LinearLayout>
+
+            <!--Divider-->
+            <FrameLayout
+                style="@style/ActionbarTabDivider"/>
+
+            <!--Tab #2-->
+            <LinearLayout
+                style="@style/ActionbarTabLayout">
+
+                <ImageView
+                    style="@style/ActionbarTabImage"
+                    android:background="@drawable/ic_gas"/>
+
+                <TextView
+                    style="@style/ActionbarTabText"
+                    android:text="@string/gas_tab_label"/>
+
+            </LinearLayout>
+
+            <!--Divider-->
+            <FrameLayout
+                style="@style/ActionbarTabDivider"/>
+
+            <!--Tab #3-->
+            <LinearLayout
+                style="@style/ActionbarTabLayout">
+
+                <ImageView
+                    style="@style/ActionbarTabImage"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/ic_rest"/>
+
+                <TextView
+                    style="@style/ActionbarTabText"
+                    android:text="@string/rest_tab_label"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--Map fragment container-->
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="aleksey.sheyko.sgbp.ui.activities.MainActivity">
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!--Navigation drawer-->
+    <ListView
+        android:id="@+id/navigationDrawerList"
+        style="@style/NavigationDrawerList"/>
+
+</android.support.v4.widget.DrawerLayout><!-- From: file:/D:/MapTheTrip/app/src/main/res/layout/activity_main.xml -->
