@@ -29,6 +29,8 @@ public class LocationService extends Service
     private String mLatitude;
     private String mLongitude;
 
+    private boolean isTripJustStarted = true;
+
     public LocationService() {
     }
 
@@ -49,7 +51,6 @@ public class LocationService extends Service
     @Override
     public void onConnected(Bundle bundle) {
         startLocationUpdates(mLocationClient);
-        startAlarm(this);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class LocationService extends Service
         PendingIntent sender = PendingIntent.getBroadcast(context, 123456789, receiverIntent, 0);
 
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 10, sender); // Millisec * Second * Minute
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60, sender); // Millisec * Second * Minute
     }
 
     private static void cancelAlarm(Context context) {
@@ -101,6 +102,11 @@ public class LocationService extends Service
 
     @Override
     public void onLocationChanged(Location location) {
+        if (isTripJustStarted) {
+            startAlarm(this);
+            isTripJustStarted = false;
+        }
+
         sendLocationToFragment(location);
         mLatitude = location.getLatitude() + "";
         mLongitude = location.getLongitude() + "";
