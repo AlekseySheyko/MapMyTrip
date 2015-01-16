@@ -8,6 +8,7 @@ import android.content.Intent;
 import com.orm.SugarRecord;
 
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
+import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
@@ -56,6 +57,7 @@ public class Trip extends SugarRecord<Trip>
     public void finish() {
         updateStatus(FINISH);
         mContext.stopService(mLocationUpdates);
+        new GetSummaryInfoTask().execute(getTripId());
     }
 
     @Override

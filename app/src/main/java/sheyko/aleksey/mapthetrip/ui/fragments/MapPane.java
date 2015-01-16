@@ -77,53 +77,6 @@ public class MapPane extends Fragment
                 mLocationReciever, new IntentFilter("LocationUpdates"));
     }
 
-    private Location mPreviousLocation;
-
-    private BroadcastReceiver mLocationReciever = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            Bundle b = intent.getBundleExtra("Location");
-            Location currentLocation = b.getParcelable("Location");
-            if (mPreviousLocation == null)
-                mPreviousLocation = currentLocation;
-
-            moveCameraFocus(currentLocation);
-
-            //Increment distance by current sector
-            mCurrentTrip.increazeDistance(
-                    getDistance(mPreviousLocation, currentLocation));
-
-            // Update UI counter
-            mDistanceCounter.setText(mCurrentTrip.getDistance());
-
-            // Current turns into previous on the next iteration
-            mPreviousLocation = currentLocation;
-        }
-    };
-
-    private void moveCameraFocus(Location currentLocation) {
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                new CameraPosition.Builder()
-                        .target(new LatLng(
-                                currentLocation.getLatitude(),
-                                currentLocation.getLongitude()))
-                        .tilt(30)
-                        .zoom(17)
-                        .build()));
-
-        mMap.addPolygon(new PolygonOptions()
-                .strokeColor(Color.parseColor("#9f5c8f"))
-                .add(new LatLng(mPreviousLocation.getLatitude(),
-                                mPreviousLocation.getLongitude()),
-                        new LatLng(currentLocation.getLatitude(),
-                                currentLocation.getLongitude())));
-    }
-
-    private float getDistance(Location previousLocation, Location currentLocation) {
-        return previousLocation.distanceTo(currentLocation) / 1000;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -196,6 +149,7 @@ public class MapPane extends Fragment
 
     private void updateUiOnStart() {
         mCallback.onTabSelected(Tab.REST);
+        getActivity().setProgressBarIndeterminateVisibility(true);
 
         mStartButton.setVisibility(View.GONE);
         mStartButtonLabel.setVisibility(View.GONE);
@@ -225,6 +179,55 @@ public class MapPane extends Fragment
         mFinishButtonLabel.setVisibility(View.VISIBLE);
 
         pauseStopwatch();
+    }
+
+    private Location mPreviousLocation;
+
+    private BroadcastReceiver mLocationReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getActivity().setProgressBarIndeterminateVisibility(false);
+
+            // Get extra data included in the Intent
+            Bundle b = intent.getBundleExtra("Location");
+            Location currentLocation = b.getParcelable("Location");
+            if (mPreviousLocation == null)
+                mPreviousLocation = currentLocation;
+
+            moveCameraFocus(currentLocation);
+
+            //Increment distance by current sector
+            mCurrentTrip.increazeDistance(
+                    getDistance(mPreviousLocation, currentLocation));
+
+            // Update UI counter
+            mDistanceCounter.setText(mCurrentTrip.getDistance());
+
+            // Current turns into previous on the next iteration
+            mPreviousLocation = currentLocation;
+        }
+    };
+
+    private void moveCameraFocus(Location currentLocation) {
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                new CameraPosition.Builder()
+                        .target(new LatLng(
+                                currentLocation.getLatitude(),
+                                currentLocation.getLongitude()))
+                        .tilt(30)
+                        .zoom(17)
+                        .build()));
+
+        mMap.addPolygon(new PolygonOptions()
+                .strokeColor(Color.parseColor("#9f5c8f"))
+                .add(new LatLng(mPreviousLocation.getLatitude(),
+                                mPreviousLocation.getLongitude()),
+                        new LatLng(currentLocation.getLatitude(),
+                                currentLocation.getLongitude())));
+    }
+
+    private float getDistance(Location previousLocation, Location currentLocation) {
+        return previousLocation.distanceTo(currentLocation) / 1000;
     }
 
     private GoogleMap disableMapUiControls(Fragment fragment) {

@@ -28,6 +28,7 @@ public class LocationService extends Service
     private String mTripId;
     private String mLatitude;
     private String mLongitude;
+    private String mAltitude;
 
     private boolean isTripJustStarted = true;
 
@@ -42,10 +43,14 @@ public class LocationService extends Service
             createLocationClient().connect();
 
         } else if (intent.getStringExtra("Action").equals("Send Location")){
-            new SendLocationTask(this).execute(
-                    mTripId, mLatitude, mLongitude);
+            sendLocationOnServer();
         }
         return START_STICKY;
+    }
+
+    private void sendLocationOnServer() {
+        new SendLocationTask(this).execute(
+                mTripId, mLatitude, mLongitude, mAltitude);
     }
 
     @Override
@@ -56,6 +61,7 @@ public class LocationService extends Service
     @Override
     public void onDestroy() {
         super.onDestroy();
+        sendLocationOnServer();
         stopLocationUpdates(mLocationClient);
         cancelAlarm(this);
     }
@@ -110,6 +116,7 @@ public class LocationService extends Service
         sendLocationToFragment(location);
         mLatitude = location.getLatitude() + "";
         mLongitude = location.getLongitude() + "";
+        mAltitude = location.getAltitude() + "";
     }
 
     private void sendLocationToFragment(Location location) {

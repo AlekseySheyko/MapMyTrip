@@ -14,7 +14,6 @@ import java.net.URL;
 public class GetSummaryInfoTask extends AsyncTask<String, Void, Void> {
 
     public static final String TAG = GetSummaryInfoTask.class.getSimpleName();
-    private boolean ENABLE_LOGGING = true;
 
     @Override
     protected Void doInBackground(String... params) {
@@ -29,14 +28,13 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, Void> {
             // Construct the URL for the query
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("http")
-                    .authority("wsgis.mapthetrip.com")
+                    .authority("64.251.25.139")
                     .appendPath("trucks_app")
                     .appendPath("ws")
                     .appendPath("get-distance.php")
                     .appendQueryParameter("truck_id", params[0]);
             String mUrlString = builder.build().toString();
 
-            if (ENABLE_LOGGING)
             Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
                     "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
@@ -66,7 +64,6 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, Void> {
 
             getSummaryInfoJsonResponse = buffer.toString();
 
-            if (ENABLE_LOGGING)
             Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
                     "Result: " + java.net.URLDecoder.decode(getSummaryInfoJsonResponse, "UTF-8"));
 
