@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/arrays.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/arrays.xml -->
     <eat-comment/>
     <string-array name="action_titles">
         <item>Record my Trip</item>
@@ -38,13 +38,13 @@
         <item>Trip on 11 dec, 16:45</item>
         <item>Trip on 11 dec, 11:29</item>
     </string-array>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/is_tablet.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/is_tablet.xml -->
     <eat-comment/>
     <bool name="isTablet">false</bool>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <color name="background">#f3f5f6</color>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/common_colors.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/common_colors.xml -->
     <eat-comment/>
     <color name="common_action_bar_splitter">#d2d2d2</color>
     <color name="common_signin_btn_dark_text_default">@android:color/white</color>
@@ -56,14 +56,14 @@
     <color name="common_signin_btn_light_text_disabled">#FFAAAAAA</color>
     <color name="common_signin_btn_light_text_focused">#FF737373</color>
     <color name="common_signin_btn_light_text_pressed">@android:color/white</color>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/colors.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/colors.xml -->
     <eat-comment/>
     <color name="medium_gray">#8a8686</color>
     <color name="tab_divider">#efefef</color>
     <color name="tab_indicator_normal">#faf8f8</color>
     <color name="tab_indicator_selected">#dad7d7</color>
     <color name="tab_text">#a5a5a5</color>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_colors.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_colors.xml -->
     <eat-comment/>
     <color name="wallet_bright_foreground_disabled_holo_light">#ffb2b2b2</color>
     <color name="wallet_bright_foreground_holo_dark">#fff3f3f3</color>
@@ -78,30 +78,30 @@
     <color name="wallet_hint_foreground_holo_light">#808080</color>
     <color name="wallet_holo_blue_light">#ff33b5e5</color>
     <color name="wallet_link_text_light">#0000ee</color>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <color name="white">#ffffff</color>
     <declare-styleable name="AdsAttrs"><attr format="string" name="adSize"/><attr format="string" name="adSizes"/><attr format="string" name="adUnitId"/></declare-styleable>
     <declare-styleable name="MapAttrs"><attr format="enum" name="mapType"><enum name="none" value="0"/><enum name="normal" value="1"/><enum name="satellite" value="2"/><enum name="terrain" value="3"/><enum name="hybrid" value="4"/></attr><attr format="float" name="cameraBearing"/><attr format="float" name="cameraTargetLat"/><attr format="float" name="cameraTargetLng"/><attr format="float" name="cameraTilt"/><attr format="float" name="cameraZoom"/><attr format="boolean" name="uiCompass"/><attr format="boolean" name="uiRotateGestures"/><attr format="boolean" name="uiScrollGestures"/><attr format="boolean" name="uiTiltGestures"/><attr format="boolean" name="uiZoomControls"/><attr format="boolean" name="uiZoomGestures"/><attr format="boolean" name="useViewLifecycle"/><attr format="boolean" name="zOrderOnTop"/></declare-styleable>
     <declare-styleable name="WalletFragmentOptions"><attr format="enum" name="appTheme"><enum name="holo_dark" value="0"/><enum name="holo_light" value="1"/></attr><attr format="enum" name="environment"><enum name="production" value="1"/><enum name="sandbox" value="0"/><enum name="strict_sandbox" value="2"/></attr><attr format="reference" name="fragmentStyle"/><attr format="enum" name="fragmentMode"><enum name="buyButton" value="1"/><enum name="selectionDetails" value="2"/></attr></declare-styleable>
     <declare-styleable name="WalletFragmentStyle"><attr format="dimension" name="buyButtonHeight"><enum name="match_parent" value="-1"/><enum name="wrap_content" value="-2"/></attr><attr format="dimension" name="buyButtonWidth"><enum name="match_parent" value="-1"/><enum name="wrap_content" value="-2"/></attr><attr format="enum" name="buyButtonText"><enum name="buy_with_google" value="1"/><enum name="buy_now" value="2"/><enum name="book_now" value="3"/></attr><attr format="enum" name="buyButtonAppearance"><enum name="classic" value="1"/><enum name="grayscale" value="2"/><enum name="monochrome" value="3"/></attr><attr format="reference" name="maskedWalletDetailsTextAppearance"/><attr format="reference" name="maskedWalletDetailsHeaderTextAppearance"/><attr format="reference|color" name="maskedWalletDetailsBackground"/><attr format="reference" name="maskedWalletDetailsButtonTextAppearance"/><attr format="reference|color" name="maskedWalletDetailsButtonBackground"/><attr format="color" name="maskedWalletDetailsLogoTextColor"/><attr format="enum" name="maskedWalletDetailsLogoImageType"><enum name="classic" value="1"/><enum name="monochrome" value="2"/></attr></declare-styleable>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="action_bar_height">45dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/version.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/version.xml -->
     <eat-comment/>
     <integer name="google_play_services_version">6171000</integer>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
     <eat-comment/>
     <string name="accept">Accept</string>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="action_settings">Settings</string>
     <string name="app_name">MapTheTrip</string>
     <string name="coming_soon">Coming soon</string>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/common_strings.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/common_strings.xml -->
     <eat-comment/>
     <string name="common_android_wear_notification_needs_update_text">An application requires an update to the Android Wear app.</string>
     <string name="common_android_wear_update_text">This app won\'t run unless you update the Android Wear app.</string>
@@ -131,21 +131,21 @@
     <string name="common_open_on_phone">Open on phone</string>
     <string name="common_signin_button_text">Sign in</string>
     <string name="common_signin_button_text_long">Sign in with Google</string>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="create_account_label">Don\'t Have An Account? Sign Up!</string>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
     <eat-comment/>
     <string name="create_calendar_message">Allow Ad to create a calendar event?</string>
     <string name="create_calendar_title">Create calendar event</string>
     <string name="decline">Decline</string>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="discard">Discard</string>
     <string name="discard_button_label">Discard</string>
     <string name="discard_trip_dialog_message">You\'ll lose the data about it.</string>
     <string name="discard_trip_dialog_title">Discard the trip?</string>
-    <string name="distance_default_value">0.00</string>
+    <string name="distance_default_value">0.0</string>
     <string name="distance_label">Distance</string>
     <string name="distance_units">miles</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -158,6 +158,7 @@
     <string name="finish_trip_button_label">Slide to Finish</string>
     <string name="gas_tab_label">Gas</string>
     <string name="got_it">Got it</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hello_world">Hello world!</string>
     <string name="install_google_services_message">Please install the latest Google Play Services to use this app</string>
     <string name="install_google_services_title">Install Google Play Services</string>
@@ -168,7 +169,6 @@
     <string name="pause_label">Paused</string>
     <string name="pause_trip_button_label">Pause Trip</string>
     <string name="pref_units_title">Units</string>
-    <string name="preference_file_key">sheyko.aleksey.mapmytrip.PREFERENCE_FILE_KEY</string>
     <string name="record_trip">Record Trip</string>
     <string name="recording_label">Recording</string>
     <string name="rest_tab_label">Rest</string>
@@ -176,11 +176,11 @@
     <string name="save_trip_button_label">Save Trip</string>
     <string name="sign_up_button_label">Sign Up</string>
     <string name="start_trip_button_label">Start Trip</string>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
     <eat-comment/>
     <string name="store_picture_message">"Allow Ad to store image in Picture gallery?"</string>
     <string name="store_picture_title">Save image</string>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="title_activity_input">Record Trip</string>
     <string name="title_activity_login">LoginActivity</string>
@@ -197,11 +197,44 @@
     <string name="units_miles">Miles</string>
     <string name="username_hint">Username</string>
     <string name="username_missing">Please enter your Username</string>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_strings.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_strings.xml -->
     <eat-comment/>
     <string name="wallet_buy_button_place_holder" translation_description="Text on a button that allows a user to make a payment with Google Wallet [CHAR LIMIT=30]">Buy with Google</string>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/styles.xml -->
     <eat-comment/>
+    <style name="ActionbarTabDivider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/tab_indicator_normal</item>
+    </style>
+    <style name="ActionbarTabImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">5dp</item>
+    </style>
+    <style name="ActionbarTabLayout">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    <style name="ActionbarTabText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">@color/tab_text</item>
+    </style>
+    <style name="ActionbarTabsContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:visibility">gone</item>
+    </style>
     <style name="AppTheme" parent="@android:style/Theme.Holo">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:windowBackground">@color/background</item>
@@ -215,6 +248,13 @@
         <item name="android:shadowDx">1</item>
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">1</item>
+    </style>
+    <style name="CountersContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">#f6f7f9</item>
+        <item name="android:visibility">gone</item>
     </style>
     <style name="InputBackground">
         <item name="android:layout_width">match_parent</item>
@@ -294,6 +334,15 @@
     <style name="MyActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
     </style>
+    <style name="NavigationDrawerList">
+        <item name="android:layout_width">240dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:background">#204562</item>
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">0dp</item>
+    </style>
     <style name="SeparatorLight">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
@@ -317,7 +366,7 @@
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingTop">@dimen/activity_vertical_margin</item>
     </style>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_iap_style.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_iap_style.xml -->
     <eat-comment/>
     <style name="Theme.IAPTheme" parent="android:Theme">
     <item name="android:windowIsTranslucent">true</item>
@@ -327,7 +376,7 @@
     <item name="android:windowIsFloating">true</item>
     <item name="android:backgroundDimEnabled">false</item>
   </style>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="TotalDistanceValueContainer">
         <item name="android:layout_width">match_parent</item>
@@ -367,7 +416,7 @@
         <item name="android:divider">@null</item>
         <item name="android:dividerHeight">0dp</item>
     </style>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_styles.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_styles.xml -->
     <eat-comment/>
     <style name="WalletFragmentDefaultButtonTextAppearance">
         <item name="android:textColor">@color/wallet_primary_text_holo_light</item>
@@ -401,8 +450,81 @@
         <item name="maskedWalletDetailsLogoTextColor">@color/wallet_bright_foreground_holo_dark</item>
         <item name="maskedWalletDetailsLogoImageType">classic</item>
     </style>
-    <!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/D:/MapTheTrip/app/src/main/res/values/styles.xml -->
     <eat-comment/>
+    <style name="countersDivider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">#fff</item>
+    </style>
+    <style name="countersSeparator">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">#e2e4e7</item>
+    </style>
+    <style name="distanceCounter">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@+id/distance_label</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">#38404c</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="distanceCounterContainer">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:visibility">visible</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+    <style name="distanceLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">-4dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">#6b737e</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+    <style name="distanceUnits">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@+id/distance_counter</item>
+        <item name="android:layout_marginTop">-4dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textColor">#6b737e</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+    <style name="durationCounter">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@+id/duration_label</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">#38404c</item>
+        <item name="android:textSize">35sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="durationLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">-8dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">#6b737e</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="durationUnits">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@+id/duration_counter</item>
+        <item name="android:layout_marginTop">-8dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textColor">#6b737e</item>
+        <item name="android:textSize">18sp</item>
+    </style>
     <style name="total_distance_bar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

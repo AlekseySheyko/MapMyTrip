@@ -12,4 +12,4 @@
         android:layout_gravity="center"
         android:src="@drawable/splash_image"/>
 
-</LinearLayout><!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/layout/splash_screen.xml -->
+</LinearLayout><!-- From: file:/D:/MapTheTrip/app/src/main/res/layout/splash_screen.xml -->

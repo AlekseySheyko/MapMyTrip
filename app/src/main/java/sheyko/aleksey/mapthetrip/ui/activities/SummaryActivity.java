@@ -16,7 +16,7 @@ import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetr
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
 
 public class SummaryActivity extends Activity
-        implements OnStatesDataRetrieved{
+        implements OnStatesDataRetrieved {
 
     private String mTripId;
     private String mDistance;
@@ -25,6 +25,8 @@ public class SummaryActivity extends Activity
     String mStateCodes;
     String mStateDistances;
     String mTotalDistance;
+    String mStateDurations = "";
+    int mStatesCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +57,19 @@ public class SummaryActivity extends Activity
         if (tripName.equals("")) tripName = "Trip on " + mStartTime;
         String tripNotes = ((EditText) findViewById(R.id.tripNotesField)).getText().toString();
 
-        //TODO: Сюда надо еще передавать строку времен по штатам
+        for (int i = 0; i <= mStatesCount; i++) {
+            if (mStateDurations.equals("")) {
+                mStateDurations = mStateDurations + "0";
+            } else {
+                mStateDurations = mStateDurations + ", " + "0";
+            }
+        }
+
         new SaveTripTask().execute(
                 mTripId, isSaved + "", mTotalDistance,
                 mDuration + "", tripName, tripNotes,
-                mStateCodes, mStateDistances
-                );
+                mStateCodes, mStateDistances, mStateDurations
+        );
         startActivity(new Intent(this, MainActivity.class));
     }
 
@@ -88,9 +97,10 @@ public class SummaryActivity extends Activity
     }
 
     @Override
-    public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance) {
-            mStateCodes = stateCodes;
-            mStateDistances = stateDistances;
-            mTotalDistance = totalDistance;
+    public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesCount) {
+        mStateCodes = stateCodes;
+        mStateDistances = stateDistances;
+        mTotalDistance = totalDistance;
+        mStatesCount = Integer.parseInt(statesCount);
     }
 }

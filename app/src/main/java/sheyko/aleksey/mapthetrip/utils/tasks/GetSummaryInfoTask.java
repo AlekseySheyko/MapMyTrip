@@ -9,7 +9,10 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,14 +25,13 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
 
     private String mStateCodes = "";
     private String mDistances = "";
-    private String mTotalDistance;
 
     // Interface to return states data
     public interface OnStatesDataRetrieved {
-        public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance);
+        public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesCount);
     }
 
-    public GetSummaryInfoTask(OnStatesDataRetrieved callback){
+    public GetSummaryInfoTask(OnStatesDataRetrieved callback) {
         mCallback = callback;
     }
 
@@ -40,7 +42,7 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
         BufferedReader reader = null;
 
         // Will contain JSON responses as a string
-        String getSummaryInfoJsonResponse = null;
+        String resultJsonStr = null;
         HashMap<String, String> statesData = new HashMap<>();
 
         try {
@@ -57,9 +59,31 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
             Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
                     "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
+            URL mUrl = new URL(mUrlString);
 
-            String resultJsonStr = "" +
-                    "{status:{code:OK},data:{distance:{CA:417.25203435309,NV:362.34274672353,UT:190.47643510752,ID:578.45556674095,WA:623.92654697171,total:2172.4533298968},num_points:9}}";
+            // Create the request and open the connection
+            urlConnection = (HttpURLConnection) mUrl.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            // Read the input stream into a String
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+            if (inputStream == null) {
+                // Nothing to do.
+                return null;
+            }
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                // But it does make debugging a *lot* easier if you print out the completed
+                // buffer for debugging.
+                buffer.append(line + "\n");
+            }
+
+            resultJsonStr = buffer.toString();
 
             try {
                 JSONObject mResponseObject = new JSONObject(resultJsonStr);
@@ -72,9 +96,11 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
 
                     List<String> keyList = new ArrayList<>();
 
+                    int statesCount = 0;
                     while (keys.hasNext()) {
                         String state = (String) keys.next();
                         keyList.add(state);
+                        statesCount++;
 
                         if (mStateCodes.equals("")) {
                             mStateCodes = mStateCodes + state;
@@ -97,45 +123,19 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
                     }
 
                     mStateCodes = mStateCodes.replace("total, ", "");
-                    mTotalDistance = mStateDistances.getDouble("total") + "";
+                    String totalDistance = mStateDistances.getDouble("total") + "";
 
                     statesData.put("stateCodes", mStateCodes);
                     statesData.put("stateDistances", mDistances);
-                    statesData.put("totalDistance", mTotalDistance);
+                    statesData.put("totalDistance", totalDistance);
+                    statesData.put("statesCount", statesCount + "");
                 }
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
             }
 
-
-            //            URL mUrl = new URL(mUrlString);
-            //
-            //            // Create the request and open the connection
-            //            urlConnection = (HttpURLConnection) mUrl.openConnection();
-            //            urlConnection.setRequestMethod("GET");
-            //            urlConnection.connect();
-            //
-            //            // Read the input stream into a String
-            //            InputStream inputStream = urlConnection.getInputStream();
-            //            StringBuffer buffer = new StringBuffer();
-            //            if (inputStream == null) {
-            //                // Nothing to do.
-            //                return null;
-            //            }
-            //            reader = new BufferedReader(new InputStreamReader(inputStream));
-            //
-            //            String line;
-            //            while ((line = reader.readLine()) != null) {
-            //                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-            //                // But it does make debugging a *lot* easier if you print out the completed
-            //                // buffer for debugging.
-            //                buffer.append(line + "\n");
-            //            }
-            //
-            //            getSummaryInfoJsonResponse = buffer.toString();
-            //
-            //            Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
-            //                    "Result: " + java.net.URLDecoder.decode(getSummaryInfoJsonResponse, "UTF-8"));
+            Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
+                    "Result: " + java.net.URLDecoder.decode(resultJsonStr, "UTF-8"));
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
@@ -161,6 +161,7 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
         mCallback.onStatesDataRetrieved(
                 mStatesInfo.get("stateCodes"),
                 mStatesInfo.get("stateDistances"),
-                mStatesInfo.get("totalDistance"));
+                mStatesInfo.get("totalDistance"),
+                mStatesInfo.get("statesCount"));
     }
 }

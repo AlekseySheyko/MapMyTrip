@@ -124,7 +124,7 @@ public final class R {
 		public static final int selectionDetails = 0x7f0c000b;
 		public static final int strict_sandbox = 0x7f0c0009;
 		public static final int terrain = 0x7f0c0004;
-		public static final int text1 = 0x7f0c003a;
+		public static final int text1 = 0x7f0c002f;
 		public static final int wrap_content = 0x7f0c000d;
 	}
 	public static final class integer {
@@ -168,11 +168,11 @@ public final class R {
 		public static final int wallet_buy_button_place_holder = 0x7f090058;
 	}
 	public static final class style {
-		public static final int Theme_IAPTheme = 0x7f0a0012;
-		public static final int WalletFragmentDefaultButtonTextAppearance = 0x7f0a0018;
-		public static final int WalletFragmentDefaultDetailsHeaderTextAppearance = 0x7f0a0019;
-		public static final int WalletFragmentDefaultDetailsTextAppearance = 0x7f0a001a;
-		public static final int WalletFragmentDefaultStyle = 0x7f0a001b;
+		public static final int Theme_IAPTheme = 0x7f0a0019;
+		public static final int WalletFragmentDefaultButtonTextAppearance = 0x7f0a001f;
+		public static final int WalletFragmentDefaultDetailsHeaderTextAppearance = 0x7f0a0020;
+		public static final int WalletFragmentDefaultDetailsTextAppearance = 0x7f0a0021;
+		public static final int WalletFragmentDefaultStyle = 0x7f0a0022;
 	}
 	public static final class styleable {
 		public static final int[] AdsAttrs = { 0x7f010000, 0x7f010001, 0x7f010002 };

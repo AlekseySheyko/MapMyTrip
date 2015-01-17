@@ -6,4 +6,4 @@
           android:state_pressed="false"
           android:drawable="@drawable/tab_selected" />
 
-</selector><!-- From: file:/D:/Android/Projects/MapTheTrip/app/src/main/res/drawable/action_bar_tab_indicator.xml -->
+</selector><!-- From: file:/D:/MapTheTrip/app/src/main/res/drawable/action_bar_tab_indicator.xml -->
