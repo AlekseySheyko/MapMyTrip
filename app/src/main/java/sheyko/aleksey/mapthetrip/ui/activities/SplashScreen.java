@@ -19,7 +19,6 @@ public class SplashScreen extends Activity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
         setContentView(R.layout.splash_screen);
 
         if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this)
@@ -38,24 +37,15 @@ public class SplashScreen extends Activity {
             return;
         }
 
-
-        /* New Handler to start the Menu-Activity
+        /* New Handler to start the MainActivity
          * and close this Splash-Screen after some seconds.*/
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                ParseUser currentUser = ParseUser.getCurrentUser();
-//                if (currentUser != null) {
                     /* Create an Intent that will start the Main-Activity. */
                     Intent mainIntent = new Intent(SplashScreen.this, MainActivity.class);
                     SplashScreen.this.startActivity(mainIntent);
                     SplashScreen.this.finish();
-//                } else {
-//                    /* Start Login-Activity. */
-//                    Intent loginIntent = new Intent(SplashScreen.this, LoginActivity.class);
-//                    SplashScreen.this.startActivity(loginIntent);
-//                    SplashScreen.this.finish();
-//                }
             }
         }, SPLASH_DISPLAY_LENGTH);
     }

@@ -32,5 +32,5 @@ public class NavigationAdapter extends ArrayAdapter<String> {
         txtTitle.setText(itemname[position]);
         imageView.setImageResource(imgid[position]);
         return rowView;
-    };
+    }
 }

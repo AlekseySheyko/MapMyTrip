@@ -19,7 +19,6 @@ public class SummaryActivity extends Activity
         implements OnStatesDataRetrieved {
 
     private String mTripId;
-    private String mDistance;
     private int mDuration;
     private String mStartTime;
     String mStateCodes;
@@ -37,14 +36,14 @@ public class SummaryActivity extends Activity
 
         // Get trip info
         mTripId = currentTrip.getTripId();
-        mDistance = currentTrip.getDistance();
+        String distance = currentTrip.getDistance();
         mDuration = currentTrip.getDuration();
         mStartTime = currentTrip.getStartTime();
 
         new GetSummaryInfoTask(this).execute(mTripId);
 
         // Update UI
-        ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
+        ((TextView) findViewById(R.id.TripLabelDistance)).setText(distance);
         ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
     }
 

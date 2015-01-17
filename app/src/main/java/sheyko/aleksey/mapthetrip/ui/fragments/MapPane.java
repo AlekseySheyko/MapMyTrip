@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -141,14 +142,27 @@ public class MapPane extends Fragment
 
                 mCurrentTrip.finish();
 
+                if (mTimerTask != null) {
+                // Start Summary Activity
+                // on «Finish» button pressed
                 startActivity(new Intent(
                         this.getActivity(), SummaryActivity.class)
+                        // Passing current instance of Trip class,
+                        // containing id, distance, duration, etc.
                         .putExtra("CurrentTrip", mCurrentTrip));
+                } else {
+                    Toast.makeText(this.getActivity(), "Does the trip even started?",
+                            Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
 
     private void updateUiOnStart() {
+        if (getActivity() != null && getActivity().getActionBar() != null)
+        getActivity().getActionBar()
+                .setTitle(getString(R.string.recording_label));
+
         mCallback.onTabSelected(Tab.REST);
         if (mTimerTask == null && getActivity() != null)
             getActivity().setProgressBarIndeterminateVisibility(true);
@@ -166,6 +180,10 @@ public class MapPane extends Fragment
     }
 
     private void updateUiOnPause() {
+        if (getActivity() != null && getActivity().getActionBar() != null)
+            getActivity().getActionBar()
+                    .setTitle(getString(R.string.pause_label));
+
         mCallback.onTabSelected(Tab.GAS);
 
         mPauseButton.setVisibility(View.GONE);

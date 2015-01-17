@@ -42,7 +42,7 @@ public class LocationService extends Service
             mTripId = intent.getStringExtra("Trip ID");
             createLocationClient().connect();
 
-        } else if (intent.getStringExtra("Action") != null){
+        } else if (intent.getStringExtra("Action") != null) {
             sendLocationOnServer();
         }
         return START_STICKY;
@@ -62,7 +62,9 @@ public class LocationService extends Service
     public void onDestroy() {
         super.onDestroy();
         sendLocationOnServer();
-        stopLocationUpdates(mLocationClient);
+        if (mLocationClient != null) {
+            stopLocationUpdates(mLocationClient);
+        }
         cancelAlarm(this);
     }
 
@@ -70,15 +72,15 @@ public class LocationService extends Service
         Intent receiverIntent = new Intent(context, AlarmReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 123456789, receiverIntent, 0);
 
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60, sender); // Millisec * Second * Minute
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 30, sender); // Millisec * Second * Minute
     }
 
     private static void cancelAlarm(Context context) {
         Intent receiverIntent = new Intent(context, AlarmReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 123456789, receiverIntent, 0);
 
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
     }
 
@@ -99,7 +101,8 @@ public class LocationService extends Service
     }
 
     private void stopLocationUpdates(LocationClient client) {
-        client.removeLocationUpdates(this);
+        if (mLocationClient.isConnected())
+            client.removeLocationUpdates(this);
     }
 
     @Override

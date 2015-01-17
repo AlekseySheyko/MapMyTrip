@@ -99,7 +99,8 @@ public class MainActivity extends Activity
         // Setup action bar for tabs
         if (mActionBar != null) {
             mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+            // Required tab listener
+            // (we don't need to listen tabs, so just leave it empty)
             TabListener tabListener = new TabListener() {
                 @Override
                 public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -146,13 +147,11 @@ public class MainActivity extends Activity
 
         switch (position) {
             case 1:
-                mActionBar.setTitle(getString(R.string.recording_label));
                 mActionBar.addTab(tab1, 0, false);
                 mActionBar.addTab(tab2, 1, true);
                 mActionBar.addTab(tab3, 2, false);
                 break;
             case 2:
-                mActionBar.setTitle(getString(R.string.pause_label));
                 mActionBar.addTab(tab1, 0, false);
                 mActionBar.addTab(tab2, 1, false);
                 mActionBar.addTab(tab3, 2, true);
@@ -166,8 +165,6 @@ public class MainActivity extends Activity
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (position == 0) {
                 startActivity(new Intent(MainActivity.this, MainActivity.class));
-            } else if (position == 4) {
-                comingSoonToast();
             } else {
                 comingSoonToast();
             }

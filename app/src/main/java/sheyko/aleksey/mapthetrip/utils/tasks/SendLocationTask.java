@@ -1,6 +1,8 @@
 package sheyko.aleksey.mapthetrip.utils.tasks;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -19,7 +21,7 @@ public class SendLocationTask extends AsyncTask<String, Void, Void> {
 
     private Context mContext;
 
-    public SendLocationTask(Context context){
+    public SendLocationTask(Context context) {
         mContext = context;
     }
 
@@ -89,7 +91,7 @@ public class SendLocationTask extends AsyncTask<String, Void, Void> {
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
-        } finally{
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -126,7 +128,12 @@ public class SendLocationTask extends AsyncTask<String, Void, Void> {
             // Create the request and open the connection
             urlConnection = (HttpURLConnection) mUrl.openConnection();
             urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+
+            if (isNetworkAvailable()) {
+                urlConnection.connect();
+            } else {
+                return null;
+            }
 
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
@@ -151,7 +158,7 @@ public class SendLocationTask extends AsyncTask<String, Void, Void> {
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
-        } finally{
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -164,5 +171,12 @@ public class SendLocationTask extends AsyncTask<String, Void, Void> {
             }
         }
         return null;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
