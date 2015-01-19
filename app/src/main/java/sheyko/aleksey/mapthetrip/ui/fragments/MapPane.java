@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -141,7 +140,6 @@ public class MapPane extends Fragment
 
                 mCurrentTrip.finish();
 
-                if (mTimerTask != null) {
                 // Start Summary Activity
                 // on «Finish» button pressed
                 startActivity(new Intent(
@@ -149,10 +147,6 @@ public class MapPane extends Fragment
                         // Passing current instance of Trip class,
                         // containing id, distance, duration, etc.
                         .putExtra("CurrentTrip", mCurrentTrip));
-                } else {
-                    Toast.makeText(this.getActivity(), "Does the trip even started?",
-                            Toast.LENGTH_SHORT).show();
-                }
                 break;
         }
     }

@@ -13,7 +13,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import sheyko.aleksey.mapthetrip.R;
 
 public class SplashScreen extends Activity {
-
     private static final int SPLASH_DISPLAY_LENGTH = 1000;
 
     @Override

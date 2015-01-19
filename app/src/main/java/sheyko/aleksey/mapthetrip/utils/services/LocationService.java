@@ -29,6 +29,7 @@ public class LocationService extends Service
     private String mLatitude;
     private String mLongitude;
     private String mAltitude;
+    private String mAccuracy;
 
     private boolean isTripJustStarted = true;
 
@@ -50,7 +51,7 @@ public class LocationService extends Service
 
     private void sendLocationOnServer() {
         new SendLocationTask(this).execute(
-                mTripId, mLatitude, mLongitude, mAltitude);
+                mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class LocationService extends Service
         PendingIntent sender = PendingIntent.getBroadcast(context, 123456789, receiverIntent, 0);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 30, sender); // Millisec * Second * Minute
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 10, sender); // Millisec * Second * Minute
     }
 
     private static void cancelAlarm(Context context) {
@@ -120,6 +121,7 @@ public class LocationService extends Service
         mLatitude = location.getLatitude() + "";
         mLongitude = location.getLongitude() + "";
         mAltitude = location.getAltitude() + "";
+        mAccuracy = location.getAccuracy() + "";
     }
 
     private void sendLocationToFragment(Location location) {
