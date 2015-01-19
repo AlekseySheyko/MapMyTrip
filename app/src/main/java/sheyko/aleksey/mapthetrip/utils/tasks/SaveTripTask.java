@@ -6,7 +6,10 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class SaveTripTask extends AsyncTask<String, Void, Void> {
     public static final String TAG = SaveTripTask.class.getSimpleName();
@@ -44,34 +47,34 @@ public class SaveTripTask extends AsyncTask<String, Void, Void> {
             Log.i(TAG, "Service: TFLSaveTripandSummaryInfo,\n" +
                     "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
-//            URL mUrl = new URL(mUrlString);
-//
-//            // Create the request and open the connection
-//            urlConnection = (HttpURLConnection) mUrl.openConnection();
-//            urlConnection.setRequestMethod("GET");
-//            urlConnection.connect();
-//
-//            // Read the input stream into a String
-//            InputStream inputStream = urlConnection.getInputStream();
-//            StringBuffer buffer = new StringBuffer();
-//            if (inputStream == null) {
-//                // Nothing to do.
-//                return null;
-//            }
-//            reader = new BufferedReader(new InputStreamReader(inputStream));
-//
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-//                // But it does make debugging a *lot* easier if you print out the completed
-//                // buffer for debugging.
-//                buffer.append(line + "\n");
-//            }
-//
-//            saveTripJsonResponse = buffer.toString();
-//
-//            Log.i(TAG, "Service: TFLSaveTripandSummaryInfo,\n" +
-//                    "Result: " + java.net.URLDecoder.decode(saveTripJsonResponse, "UTF-8"));
+            URL mUrl = new URL(mUrlString);
+
+            // Create the request and open the connection
+            urlConnection = (HttpURLConnection) mUrl.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            // Read the input stream into a String
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+            if (inputStream == null) {
+                // Nothing to do.
+                return null;
+            }
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                // But it does make debugging a *lot* easier if you print out the completed
+                // buffer for debugging.
+                buffer.append(line + "\n");
+            }
+
+            saveTripJsonResponse = buffer.toString();
+
+            Log.i(TAG, "Service: TFLSaveTripandSummaryInfo,\n" +
+                    "Result: " + java.net.URLDecoder.decode(saveTripJsonResponse, "UTF-8"));
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
