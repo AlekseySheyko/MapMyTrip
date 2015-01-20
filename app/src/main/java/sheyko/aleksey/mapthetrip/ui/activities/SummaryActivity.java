@@ -55,7 +55,7 @@ public class SummaryActivity extends Activity
         // Get trip info
         mTripId = currentTrip.getTripId();
         if (mTripId == null)
-            PreferenceManager.getDefaultSharedPreferences(this).getString("trip_id", "");
+            mTripId = PreferenceManager.getDefaultSharedPreferences(this).getString("trip_id", "");
         mDistance = currentTrip.getDistance();
         mDuration = currentTrip.getDuration();
         mStartTime = currentTrip.getStartTime();
@@ -71,10 +71,13 @@ public class SummaryActivity extends Activity
 
     private void finishSession(boolean isSaved) {
 
-        if (mTripId != null) {
+        if (mTripId != null && isConnected()) {
             sendCoordinates();
             getSummaryInfo();
             saveTrip(isSaved);
+
+            PreferenceManager.getDefaultSharedPreferences(this).edit()
+                    .putString("trip_id", null);
 
             startActivity(new Intent(this, MainActivity.class));
         } else {
@@ -87,22 +90,24 @@ public class SummaryActivity extends Activity
             receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    ConnectivityManager cm =
-                            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                    boolean isConnected = activeNetwork != null &&
-                            activeNetwork.isConnectedOrConnecting();
-
-                    if (isConnected)
+                    if (isConnected() && mTripId != null) {
                         Toast.makeText(SummaryActivity.this, "Now you can save trip",
                                 Toast.LENGTH_SHORT).show();
+                    }
                 }
             };
             registerReceiver(receiver, filter);
+        }
     }
 
-}
+    private boolean isConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+    }
 
     private void sendCoordinates() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
