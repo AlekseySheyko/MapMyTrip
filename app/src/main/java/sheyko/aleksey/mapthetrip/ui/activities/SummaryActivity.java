@@ -63,6 +63,8 @@ public class SummaryActivity extends Activity
         // Update UI
         ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
         ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
+
+        sendCoordinates();
     }
 
     public void finishSession(View view) {
@@ -72,7 +74,6 @@ public class SummaryActivity extends Activity
     private void finishSession(boolean isSaved) {
 
         if (mTripId != null && isConnected()) {
-            sendCoordinates();
             getSummaryInfo();
             saveTrip(isSaved);
 

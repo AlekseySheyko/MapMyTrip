@@ -92,13 +92,11 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
             StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) return null;
-
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
             String line;
             while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
+                buffer.append(line);
             }
             resultJsonStr = buffer.toString();
 
