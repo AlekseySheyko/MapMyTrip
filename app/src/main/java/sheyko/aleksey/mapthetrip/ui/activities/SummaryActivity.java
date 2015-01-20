@@ -5,9 +5,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
@@ -30,6 +37,7 @@ public class SummaryActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Parse.initialize(this, "w7h87LOw8fzK84g0noTS1b4nZhWYXBbRCendV756", "0uzaKEj3Q9R0kTRlq6pg4vawar1HkMTrWFeZ46Yb");
         setContentView(R.layout.activity_summary);
 
         Trip currentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
@@ -39,6 +47,18 @@ public class SummaryActivity extends Activity
         String distance = currentTrip.getDistance();
         mDuration = currentTrip.getDuration();
         mStartTime = currentTrip.getStartTime();
+
+        // Retrieve saved coordinates from local database
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
+        query.getInBackground("DAvrPDtr2e", new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    Log.i("SummaryActivity", "Object retrieved! " + object);
+                } else {
+                    Log.i("SummaryActivity", "something went wrong");
+                }
+            }
+        });
 
         new GetSummaryInfoTask(this).execute(mTripId);
 
@@ -100,6 +120,6 @@ public class SummaryActivity extends Activity
         mStateCodes = stateCodes;
         mStateDistances = stateDistances;
         mTotalDistance = totalDistance;
-        mStatesCount = Integer.parseInt(statesCount);
+        mStatesCount = 0;
     }
 }

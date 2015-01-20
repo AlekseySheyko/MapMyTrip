@@ -52,8 +52,6 @@ public class LocationService extends Service
     @Override
     public void onCreate() {
         super.onCreate();
-        // Enable Local Datastore.
-        Parse.enableLocalDatastore(this);
         Parse.initialize(this, "w7h87LOw8fzK84g0noTS1b4nZhWYXBbRCendV756", "0uzaKEj3Q9R0kTRlq6pg4vawar1HkMTrWFeZ46Yb");
     }
 
@@ -65,10 +63,7 @@ public class LocationService extends Service
         coordinates.put("longitude", mLongitude);
         coordinates.put("altitude", mAltitude);
         coordinates.put("accuracy", mAccuracy);
-        coordinates.pinInBackground();
-
-//        new SendLocationTask(this).execute(
-//                mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
+        coordinates.saveInBackground();
     }
 
     @Override

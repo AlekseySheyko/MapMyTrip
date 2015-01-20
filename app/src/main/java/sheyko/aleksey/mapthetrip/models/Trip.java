@@ -4,16 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
@@ -94,21 +87,9 @@ public class Trip implements OnTripRegistered, Parcelable {
     }
 
     public void finish() {
-
-        // Retrieve saved coordinates from local database
-        //TODO: and send it to server
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
-        query.fromLocalDatastore();
-        query.whereEqualTo("trip_id", getTripId());
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> coordinatesList, ParseException e) {
-                if (e == null) {
-                    Log.d("score", "Retrieved " + coordinatesList.size() + " scores");
-                } else {
-                    Log.d("score", "Error: " + e.getMessage());
-                }
-            }
-        });
+        // TODO: Send coordinates on server
+        // new SendLocationTask(this).execute(
+        // mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
 
                 updateStatus(FINISH);
         mContext.stopService(mLocationUpdates);
