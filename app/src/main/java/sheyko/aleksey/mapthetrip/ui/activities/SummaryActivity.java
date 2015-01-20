@@ -2,8 +2,13 @@ package sheyko.aleksey.mapthetrip.ui.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
@@ -38,6 +43,7 @@ public class SummaryActivity extends Activity
     String mTotalDistance;
     String mStateDurations = "";
     int mStatesCount;
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +78,31 @@ public class SummaryActivity extends Activity
 
             startActivity(new Intent(this, MainActivity.class));
         } else {
-            // TODO: RegTripTask
             Toast.makeText(this, "А интернет где, блять?",
                     Toast.LENGTH_SHORT).show();
-        }
+
+            IntentFilter filter = new IntentFilter("ac");
+            filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+
+            receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    ConnectivityManager cm =
+                            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                    boolean isConnected = activeNetwork != null &&
+                            activeNetwork.isConnectedOrConnecting();
+
+                    if (isConnected)
+                        Toast.makeText(SummaryActivity.this, "Now you can save trip",
+                                Toast.LENGTH_SHORT).show();
+                }
+            };
+            registerReceiver(receiver, filter);
     }
+
+}
 
     private void sendCoordinates() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");

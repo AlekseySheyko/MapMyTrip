@@ -12,9 +12,10 @@ import java.util.Date;
 
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
-public class Trip implements Parcelable {
+public class Trip implements OnTripRegistered, Parcelable {
 
     private Context mContext;
     private String tripId;
@@ -26,7 +27,7 @@ public class Trip implements Parcelable {
     String totalDistance;
 
     // Listens for location service
-    private Intent mSaveCoordinatesIntent;
+    private Intent mPinCoordinatesIntent;
 
     // Trip status constants
     private static final String RESUME = "Resume";
@@ -76,28 +77,33 @@ public class Trip implements Parcelable {
         setStartTime();
 
         if (isNetworkAvailable())
-            new RegisterTripTask(mContext).execute();
+            new RegisterTripTask(mContext, this).execute();
 
-        // Service to save data in local database
-        mSaveCoordinatesIntent = new Intent(context, LocationService.class);
-        context.startService(mSaveCoordinatesIntent);
+        // Sends location to server
+        mPinCoordinatesIntent = new Intent(context, LocationService.class);
+        context.startService(mPinCoordinatesIntent);
+    }
+
+    @Override
+    public void onTripRegistered(Context context, String id) {
+        tripId = id;
     }
 
     public void resume() {
         updateStatus(RESUME);
-        mContext.startService(mSaveCoordinatesIntent);
+        mContext.startService(mPinCoordinatesIntent);
     }
 
     public void pause() {
         updateStatus(PAUSE);
-        if (mSaveCoordinatesIntent != null) {
-            mContext.stopService(mSaveCoordinatesIntent);
+        if (mPinCoordinatesIntent != null) {
+            mContext.stopService(mPinCoordinatesIntent);
         }
     }
 
     public void finish() {
         updateStatus(FINISH);
-        mContext.stopService(mSaveCoordinatesIntent);
+        mContext.stopService(mPinCoordinatesIntent);
     }
 
     private void updateStatus(String status) {
