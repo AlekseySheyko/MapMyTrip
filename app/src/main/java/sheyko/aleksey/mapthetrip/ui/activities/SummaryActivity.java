@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -30,6 +31,7 @@ public class SummaryActivity extends Activity
 
     private String mTripId;
     private int mDuration;
+    private String mDistance;
     private String mStartTime;
     String mStateCodes;
     String mStateDistances;
@@ -47,14 +49,36 @@ public class SummaryActivity extends Activity
         // Get trip info
         mTripId = currentTrip.getTripId();
         if (mTripId == null)
-            PreferenceManager.getDefaultSharedPreferences(this).
-                    getString("trip_id", "");
-
-        String mDistance = currentTrip.getDistance();
+            PreferenceManager.getDefaultSharedPreferences(this).getString("trip_id", "");
+        mDistance = currentTrip.getDistance();
         mDuration = currentTrip.getDuration();
         mStartTime = currentTrip.getStartTime();
 
-        // Retrieve saved coordinates from local database
+        // Update UI
+        ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
+        ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
+    }
+
+    public void finishSession(View view) {
+        finishSession(true);
+    }
+
+    private void finishSession(boolean isSaved) {
+
+        if (mTripId != null) {
+            sendCoordinates();
+            getSummaryInfo();
+            saveTrip(isSaved);
+
+            startActivity(new Intent(this, MainActivity.class));
+        } else {
+            // TODO: RegTripTask
+            Toast.makeText(this, "А интернет где, блять?",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void sendCoordinates() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
         query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -69,16 +93,10 @@ public class SummaryActivity extends Activity
                 }
             }
         });
-
-        new GetSummaryInfoTask(this).execute(mTripId);
-
-        // Update UI
-        ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
-        ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
     }
 
-    public void saveTrip(View view) {
-        saveTrip(true);
+    private void getSummaryInfo() {
+        new GetSummaryInfoTask(this).execute(mTripId);
     }
 
     private void saveTrip(boolean isSaved) {
@@ -99,7 +117,6 @@ public class SummaryActivity extends Activity
                 mDuration + "", tripName, tripNotes,
                 mStateCodes, mStateDistances, mStateDurations
         );
-        startActivity(new Intent(this, MainActivity.class));
     }
 
     public void cancelTrip(View view) {
@@ -115,7 +132,7 @@ public class SummaryActivity extends Activity
         builder.setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User confirm exit
-                saveTrip(false);
+                finishSession(false);
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

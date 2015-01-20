@@ -26,7 +26,7 @@ public class Trip implements Parcelable {
     String totalDistance;
 
     // Listens for location service
-    private Intent mPinCoordinatesIntent;
+    private Intent mSaveCoordinatesIntent;
 
     // Trip status constants
     private static final String RESUME = "Resume";
@@ -75,30 +75,29 @@ public class Trip implements Parcelable {
         mContext = context;
         setStartTime();
 
-        if (isNetworkAvailable()) {
+        if (isNetworkAvailable())
             new RegisterTripTask(mContext).execute();
-        }
 
-        // Sends location to server
-        mPinCoordinatesIntent = new Intent(context, LocationService.class);
-        context.startService(mPinCoordinatesIntent);
+        // Service to save data in local database
+        mSaveCoordinatesIntent = new Intent(context, LocationService.class);
+        context.startService(mSaveCoordinatesIntent);
     }
 
     public void resume() {
         updateStatus(RESUME);
-        mContext.startService(mPinCoordinatesIntent);
+        mContext.startService(mSaveCoordinatesIntent);
     }
 
     public void pause() {
         updateStatus(PAUSE);
-        if (mPinCoordinatesIntent != null) {
-            mContext.stopService(mPinCoordinatesIntent);
+        if (mSaveCoordinatesIntent != null) {
+            mContext.stopService(mSaveCoordinatesIntent);
         }
     }
 
     public void finish() {
         updateStatus(FINISH);
-        mContext.stopService(mPinCoordinatesIntent);
+        mContext.stopService(mSaveCoordinatesIntent);
     }
 
     private void updateStatus(String status) {
