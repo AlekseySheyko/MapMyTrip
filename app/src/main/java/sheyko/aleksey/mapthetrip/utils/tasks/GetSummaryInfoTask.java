@@ -24,7 +24,7 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
 
     private String mStateCodes = "";
     private String mDistances = "";
-    private String mStatesCount = "";
+    private String mStatesDurations = "";
 
     // Interface to return states data
     public interface OnStatesDataRetrieved {
@@ -58,81 +58,79 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
             Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
                     "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
-                        URL mUrl = new URL(mUrlString);
+            URL mUrl = new URL(mUrlString);
 
-                        // Create the request and open the connection
-                        urlConnection = (HttpURLConnection) mUrl.openConnection();
-                        urlConnection.setRequestMethod("GET");
-                        urlConnection.connect();
+            // Create the request and open the connection
+            urlConnection = (HttpURLConnection) mUrl.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
 
-                        // Read the input stream into a String
-                        InputStream inputStream = urlConnection.getInputStream();
-                        StringBuffer buffer = new StringBuffer();
-                        reader = new BufferedReader(new InputStreamReader(inputStream));
+            // Read the input stream into a String
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+            reader = new BufferedReader(new InputStreamReader(inputStream));
 
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            buffer.append(line);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line);
+            }
+
+            try {
+                JSONObject mResponseObject = new JSONObject(buffer.toString());
+                String mQueryStatus = mResponseObject.getJSONObject("status").getString("code");
+                if (mQueryStatus.equals("OK")) {
+                    JSONObject mDataObject = mResponseObject.getJSONObject("data");
+                    JSONObject mStateDistances = mDataObject.getJSONObject("distance");
+
+                    Iterator<?> keys = mStateDistances.keys();
+
+                    List<String> keyList = new ArrayList<>();
+
+                    while (keys.hasNext()) {
+                        String state = (String) keys.next();
+                        keyList.add(state);
+
+                        if (!state.equals("total"))
+                        if (mStatesDurations.equals("")) {
+                            mStatesDurations = mStatesDurations + "0";
+                        } else {
+                            mStatesDurations = mStatesDurations + ", " + "0";
                         }
 
-                        try {
-                            JSONObject mResponseObject = new JSONObject(buffer.toString());
-                            String mQueryStatus = mResponseObject.getJSONObject("status").getString("code");
-                            if (mQueryStatus.equals("OK")) {
-                                JSONObject mDataObject = mResponseObject.getJSONObject("data");
-                                JSONObject mStateDistances = mDataObject.getJSONObject("distance");
+                        if (mStateCodes.equals("")) {
+                            mStateCodes = mStateCodes + state;
+                        } else {
+                            mStateCodes = mStateCodes + "," + state;
+                        }
+                    }
 
-                                Iterator<?> keys = mStateDistances.keys();
+                    for (String key : keyList) {
+                        if (!key.equals("total")) {
 
-                                List<String> keyList = new ArrayList<>();
+                            String distance = mStateDistances.getDouble(key) + "";
 
-                                int statesCounter = 0;
-                                while (keys.hasNext()) {
-                                        String state = (String) keys.next();
-                                        keyList.add(state);
-                                        statesCounter++;
-
-                                        if (mStateCodes.equals("")) {
-                                            mStateCodes = mStateCodes + state;
-                                        } else {
-                                            mStateCodes = mStateCodes + ", " + state;
-                                        }
-                                }
-
-                                for (int i = 0; i <= statesCounter; i++) {
-                                    if (mStatesCount.equals("")) {
-                                        mStatesCount = mStatesCount + "0";
-                                    } else {
-                                        mStatesCount = mStatesCount + ", " + "0";
-                                    }
-                                }
-
-                                for (String key : keyList) {
-                                    if (!key.equals("total")) {
-
-                                        String distance = mStateDistances.getDouble(key) + "";
-
-                                        if (mDistances.equals("")) {
-                                            mDistances = mDistances + distance;
-                                        } else {
-                                            mDistances = mDistances + ", " + distance;
-                                        }
-                                    }
-                                }
-                                mStateCodes = mStateCodes.replace("total, ", "");
-                                String totalDistance = mStateDistances.getDouble("total") + "";
-
-                                statesData.put("stateCodes", mStateCodes);
-                                statesData.put("stateDistances", mDistances);
-                                statesData.put("totalDistance", totalDistance);
-                                statesData.put("statesCount", mStatesCount);
+                            if (mDistances.equals("")) {
+                                mDistances = mDistances + distance;
+                            } else {
+                                mDistances = mDistances + ", " + distance;
                             }
-                        } catch (Exception e) {
-                            Log.e(TAG, e.getMessage());
                         }
+                    }
+                    mStateCodes = mStateCodes.replace("total,", "");
+                    String totalDistance = mStateDistances.getDouble("total") + "";
+                    if (mStatesDurations.equals("")) mStatesDurations = "0";
 
-                        Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
-                                "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
+                    statesData.put("stateCodes", mStateCodes);
+                    statesData.put("stateDistances", mDistances);
+                    statesData.put("totalDistance", totalDistance);
+                    statesData.put("stateDurations", mStatesDurations);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
+
+            Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
+                    "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
@@ -159,6 +157,6 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
                 mStatesInfo.get("stateCodes"),
                 mStatesInfo.get("stateDistances"),
                 mStatesInfo.get("totalDistance"),
-                mStatesInfo.get("statesCount"));
+                mStatesInfo.get("stateDurations"));
     }
 }

@@ -43,7 +43,6 @@ public class SummaryActivity extends Activity
     private String mStateDistances;
     private String mTotalDistance;
     private String mStateDurations;
-    private String mStatesCount;
     private SharedPreferences sharedPrefs;
 
     @Override
@@ -155,11 +154,11 @@ public class SummaryActivity extends Activity
     }
 
     @Override
-    public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesCount) {
+    public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesDurations) {
         mStateCodes = stateCodes;
         mStateDistances = stateDistances;
         mTotalDistance = totalDistance;
-        mStatesCount = statesCount;
+        mStateDurations = statesDurations;
 
         saveTrip(sharedPrefs.getBoolean("is_saved", true));
     }
