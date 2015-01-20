@@ -14,7 +14,6 @@ import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallback
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.parse.Parse;
 import com.parse.ParseObject;
 
 import sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver;
@@ -49,12 +48,6 @@ public class LocationService extends Service
         return START_STICKY;
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Parse.initialize(this, "w7h87LOw8fzK84g0noTS1b4nZhWYXBbRCendV756", "0uzaKEj3Q9R0kTRlq6pg4vawar1HkMTrWFeZ46Yb");
-    }
-
     private void sendLocationOnServer() {
         // Save to local database
         ParseObject coordinates = new ParseObject("Coordinates");
@@ -63,7 +56,7 @@ public class LocationService extends Service
         coordinates.put("longitude", mLongitude);
         coordinates.put("altitude", mAltitude);
         coordinates.put("accuracy", mAccuracy);
-        coordinates.saveInBackground();
+        coordinates.pinInBackground();
     }
 
     @Override
