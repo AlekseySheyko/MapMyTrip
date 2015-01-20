@@ -45,8 +45,10 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         // Enable Local Datastore.
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "w7h87LOw8fzK84g0noTS1b4nZhWYXBbRCendV756", "0uzaKEj3Q9R0kTRlq6pg4vawar1HkMTrWFeZ46Yb");
+        try {
+            Parse.enableLocalDatastore(this);
+            Parse.initialize(this, "w7h87LOw8fzK84g0noTS1b4nZhWYXBbRCendV756", "0uzaKEj3Q9R0kTRlq6pg4vawar1HkMTrWFeZ46Yb");
+        } catch (Exception ignored) {}
 
         setContentView(R.layout.activity_main);
 

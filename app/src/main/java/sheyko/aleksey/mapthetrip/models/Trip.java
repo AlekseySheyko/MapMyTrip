@@ -41,8 +41,9 @@ public class Trip implements OnTripRegistered, Parcelable {
 
     public static final Parcelable.Creator CREATOR = new Creator<Trip>() {
         public Trip createFromParcel(Parcel in) {
-            return new Trip( in );
+            return new Trip(in);
         }
+
         public Trip[] newArray(int size) {
             return new Trip[size];
         }
@@ -87,11 +88,7 @@ public class Trip implements OnTripRegistered, Parcelable {
     }
 
     public void finish() {
-        // TODO: Send coordinates on server
-        // new SendLocationTask(this).execute(
-        // mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
-
-                updateStatus(FINISH);
+        updateStatus(FINISH);
         mContext.stopService(mLocationUpdates);
     }
 

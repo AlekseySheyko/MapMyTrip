@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +21,7 @@ import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetrieved;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
 public class SummaryActivity extends Activity
         implements OnStatesDataRetrieved {
@@ -50,14 +50,12 @@ public class SummaryActivity extends Activity
 
         // Retrieve saved coordinates from local database
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
-        query.whereEqualTo("trip_id", "270");
+        query.whereEqualTo("trip_id", mTripId);
         query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                for (ParseObject object : parseObjects) {
-                    Log.i("Summary", "КАВАБУНГА!!! *----> " + object);
-                }
+            public void done(List<ParseObject> coordinates, ParseException e) {
+                    new SendLocationTask(SummaryActivity.this).execute(coordinates);
             }
         });
 
