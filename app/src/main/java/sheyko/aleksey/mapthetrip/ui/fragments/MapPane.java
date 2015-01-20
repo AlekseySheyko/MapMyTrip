@@ -121,13 +121,14 @@ public class MapPane extends Fragment
             case R.id.startButton:
                 updateUiOnStart();
 
-//TODO                if (mCurrentTrip == null) {
-
+                if (mCurrentTrip == null) {
+                    // If button label is «Start»
                     mCurrentTrip = new Trip();
                     mCurrentTrip.start(this.getActivity());
-//                } else {
-//                    mCurrentTrip.resume();
-//                }
+                } else {
+                    // If button label is «Resume»
+                    mCurrentTrip.resume();
+                }
 
                 break;
             case R.id.pauseButton:
@@ -153,8 +154,8 @@ public class MapPane extends Fragment
 
     private void updateUiOnStart() {
         if (getActivity() != null && getActivity().getActionBar() != null)
-        getActivity().getActionBar()
-                .setTitle(getString(R.string.recording_label));
+            getActivity().getActionBar()
+                    .setTitle(getString(R.string.recording_label));
 
         mCallback.onTabSelected(Tab.REST);
         if (mTimerTask == null && getActivity() != null)

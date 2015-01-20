@@ -38,18 +38,24 @@ public class LocationService extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getStringExtra("Trip ID") != null) {
-            mTripId = intent.getStringExtra("Trip ID");
+        if (intent.getStringExtra("Trip ID") != null ||
+                intent.getStringExtra("Action") == null) {
+            // Request to start sending location updates catched,
+            // so we need to connect Location Client
             createLocationClient().connect();
+            // Set trip ID from onTripRegistered() callback
+            mTripId = intent.getStringExtra("Trip ID");
 
         } else if (intent.getStringExtra("Action") != null) {
-            sendLocationOnServer();
+            // Location client connected, and we get a callback here.
+            // In case there's no network available, we will store data in
+            // local database (and then send it «SummaryActivity»)
+            pinCurrentCoordinates();
         }
         return START_STICKY;
     }
 
-    private void sendLocationOnServer() {
-        // Save to local database
+    private void pinCurrentCoordinates() {
         ParseObject coordinates = new ParseObject("Coordinates");
         coordinates.put("trip_id", mTripId);
         coordinates.put("latitude", mLatitude);
@@ -67,10 +73,8 @@ public class LocationService extends Service
     @Override
     public void onDestroy() {
         super.onDestroy();
-        sendLocationOnServer();
-        if (mLocationClient != null) {
-            stopLocationUpdates(mLocationClient);
-        }
+        pinCurrentCoordinates();
+        stopLocationUpdates(mLocationClient);
         cancelAlarm(this);
     }
 
@@ -121,15 +125,15 @@ public class LocationService extends Service
             startAlarm(this);
             isTripJustStarted = false;
         }
+        updateMapFragment(location);
 
-        sendLocationToFragment(location);
         mLatitude = location.getLatitude() + "";
         mLongitude = location.getLongitude() + "";
         mAltitude = location.getAltitude() + "";
         mAccuracy = location.getAccuracy() + "";
     }
 
-    private void sendLocationToFragment(Location location) {
+    private void updateMapFragment(Location location) {
         Intent intent = new Intent("LocationUpdates");
         // You can also include some extra data.
         Bundle b = new Bundle();
