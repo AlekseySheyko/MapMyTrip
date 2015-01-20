@@ -64,7 +64,7 @@ public class Device {
     }
 
     public String getCurrentDateTime() {
-        return new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date());
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US).format(new Date());
     }
 
     public String getModelNumber() {
