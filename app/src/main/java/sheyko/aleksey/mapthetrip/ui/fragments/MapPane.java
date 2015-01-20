@@ -33,6 +33,7 @@ import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity;
 import sheyko.aleksey.mapthetrip.utils.helpers.Constants.ActionBar.Tab;
+import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 
 public class MapPane extends Fragment
         implements OnClickListener {
@@ -60,6 +61,7 @@ public class MapPane extends Fragment
     private TextView mDurationCounter;
     private BroadcastReceiver receiver;
     private Intent mTripStartedIntent;
+    private int isTripStarted = 0;
 
     // Required empty constructor
     public MapPane() {
@@ -83,19 +85,14 @@ public class MapPane extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        IntentFilter filter = new IntentFilter("");
+        IntentFilter filter = new IntentFilter("ac");
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
 
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
-                if (intent.filterEquals(mTripStartedIntent)) {
-
-
-                } else if (intent.filterEquals(networkIntent)) {
-                    // getAction().equals("android.net.conn.CONNECTIVITY_CHANGE"
-                }
+                if (isTripStarted == 1)
+                    new RegisterTripTask(MapPane.this.getActivity()).execute();
             }
         };
         getActivity().registerReceiver(receiver, filter);
@@ -143,11 +140,6 @@ public class MapPane extends Fragment
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.startButton:
-
-                mTripStartedIntent = new Intent("TripStarted");
-                LocalBroadcastManager.getInstance(MapPane.this.getActivity())
-                        .sendBroadcast(mTripStartedIntent);
-
                 updateUiOnStart();
 
                 if (mCurrentTrip == null) {
@@ -182,6 +174,10 @@ public class MapPane extends Fragment
     }
 
     private void updateUiOnStart() {
+        if (isTripStarted < 2) {
+            isTripStarted++;
+        }
+
         if (getActivity() != null && getActivity().getActionBar() != null)
             getActivity().getActionBar()
                     .setTitle(getString(R.string.recording_label));
