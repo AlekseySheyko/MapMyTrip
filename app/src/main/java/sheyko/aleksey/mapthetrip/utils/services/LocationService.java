@@ -14,10 +14,10 @@ import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallback
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.parse.Parse;
+import com.parse.ParseObject;
 
-import sheyko.aleksey.mapthetrip.models.Coordinate;
 import sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver;
-import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
 
 public class LocationService extends Service
@@ -39,7 +39,6 @@ public class LocationService extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         if (intent.getStringExtra("Trip ID") != null) {
             mTripId = intent.getStringExtra("Trip ID");
             createLocationClient().connect();
@@ -50,13 +49,26 @@ public class LocationService extends Service
         return START_STICKY;
     }
 
-    private void sendLocationOnServer() {
-        // Save to SQLite database
-        Coordinate coordinate = new Coordinate(mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
-        coordinate.save();
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        // Enable Local Datastore.
+        Parse.enableLocalDatastore(this);
+        Parse.initialize(this, "w7h87LOw8fzK84g0noTS1b4nZhWYXBbRCendV756", "0uzaKEj3Q9R0kTRlq6pg4vawar1HkMTrWFeZ46Yb");
+    }
 
-        new SendLocationTask(this).execute(
-                mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
+    private void sendLocationOnServer() {
+        // Save to local database
+        ParseObject coordinates = new ParseObject("Coordinates");
+        coordinates.put("trip_id", mTripId);
+        coordinates.put("latitude", mLatitude);
+        coordinates.put("longitude", mLongitude);
+        coordinates.put("altitude", mAltitude);
+        coordinates.put("accuracy", mAccuracy);
+        coordinates.pinInBackground();
+
+//        new SendLocationTask(this).execute(
+//                mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
     }
 
     @Override

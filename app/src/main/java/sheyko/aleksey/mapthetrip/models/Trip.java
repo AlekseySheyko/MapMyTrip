@@ -6,7 +6,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.orm.SugarRecord;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,8 +20,7 @@ import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
-public class Trip extends SugarRecord<Trip>
-        implements OnTripRegistered, Parcelable {
+public class Trip implements OnTripRegistered, Parcelable {
 
     private Context mContext;
     private String tripId;
@@ -48,7 +50,6 @@ public class Trip extends SugarRecord<Trip>
         public Trip createFromParcel(Parcel in) {
             return new Trip( in );
         }
-
         public Trip[] newArray(int size) {
             return new Trip[size];
         }
@@ -94,20 +95,28 @@ public class Trip extends SugarRecord<Trip>
 
     public void finish() {
 
-        List<Coordinate> coordinates = Coordinate.findWithQuery(Coordinate.class,
-                "Select * from Coordinate where trip_id = ?", getTripId());
+        // Retrieve saved coordinates from local database
+        //TODO: and send it to server
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
+        query.fromLocalDatastore();
+        query.whereEqualTo("trip_id", getTripId());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> coordinatesList, ParseException e) {
+                if (e == null) {
+                    Log.d("score", "Retrieved " + coordinatesList.size() + " scores");
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+            }
+        });
 
-        for (Coordinate coordinate : coordinates) {
-            Log.i("Trip", "Trip with ID + " + getTripId() + ". Latitude: " + coordinate.getLatitude());
-        }
-
-        updateStatus(FINISH);
+                updateStatus(FINISH);
         mContext.stopService(mLocationUpdates);
     }
 
     @Override
     public void onTripRegistered(Context context, String id) {
-        setTripId(id);
+        tripId = id;
         setStartTime();
         // Sends location to server
         mLocationUpdates = new Intent(context, LocationService.class);
@@ -121,10 +130,6 @@ public class Trip extends SugarRecord<Trip>
 
     public String getTripId() {
         return tripId;
-    }
-
-    private void setTripId(String tripId) {
-        this.tripId = tripId;
     }
 
     public String getDistance() {
@@ -154,17 +159,5 @@ public class Trip extends SugarRecord<Trip>
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    public String getStateCodes() {
-        return stateCodes;
-    }
-
-    public String getStateDistances() {
-        return stateDistances;
-    }
-
-    public String getTotalDistance() {
-        return totalDistance;
     }
 }
