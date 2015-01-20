@@ -56,7 +56,14 @@
         <service
             android:name=".utils.services.LocationService"
             android:exported="false"/>
+
         <receiver android:name=".utils.recievers.AlarmReceiver"/>
+        <receiver
+            android:name=".utils.recievers.NetworkReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 </manifest>

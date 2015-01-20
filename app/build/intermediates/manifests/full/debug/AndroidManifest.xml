@@ -63,6 +63,11 @@
             android:exported="false" />
 
         <receiver android:name="sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver" />
+        <receiver android:name="sheyko.aleksey.mapthetrip.utils.recievers.NetworkReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

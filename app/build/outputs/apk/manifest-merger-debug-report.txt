@@ -121,9 +121,19 @@ ADDED from AndroidManifest.xml:56:9
 	android:name
 		ADDED from AndroidManifest.xml:57:13
 receiver#sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver
-ADDED from AndroidManifest.xml:59:9
+ADDED from AndroidManifest.xml:60:9
 	android:name
-		ADDED from AndroidManifest.xml:59:19
+		ADDED from AndroidManifest.xml:60:19
+receiver#sheyko.aleksey.mapthetrip.utils.recievers.NetworkReceiver
+ADDED from AndroidManifest.xml:61:9
+	android:name
+		ADDED from AndroidManifest.xml:62:13
+intent-filter#android.net.conn.CONNECTIVITY_CHANGE
+ADDED from AndroidManifest.xml:63:13
+action#android.net.conn.CONNECTIVITY_CHANGE
+ADDED from AndroidManifest.xml:64:17
+	android:name
+		ADDED from AndroidManifest.xml:64:25
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.google.android.gms:play-services:6.1.71:15:5

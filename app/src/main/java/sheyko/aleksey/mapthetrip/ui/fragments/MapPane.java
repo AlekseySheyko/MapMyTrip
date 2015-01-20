@@ -121,13 +121,13 @@ public class MapPane extends Fragment
             case R.id.startButton:
                 updateUiOnStart();
 
-                if (mCurrentTrip == null) {
+//TODO                if (mCurrentTrip == null) {
 
                     mCurrentTrip = new Trip();
                     mCurrentTrip.start(this.getActivity());
-                } else {
-                    mCurrentTrip.resume();
-                }
+//                } else {
+//                    mCurrentTrip.resume();
+//                }
 
                 break;
             case R.id.pauseButton:

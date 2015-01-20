@@ -27,6 +27,10 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
         mCallback = callback;
     }
 
+    public RegisterTripTask(Context context) {
+        mContext = context;
+    }
+
     @Override
     protected String doInBackground(String... params) {
 
@@ -127,6 +131,9 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String mTripId) {
         super.onPostExecute(mTripId);
 
+        // Callback can be null if we register trip later,
+        // on network broadcast reciever triggered
+        if (mCallback != null)
         mCallback.onTripRegistered(mContext, mTripId);
     }
 }

@@ -2,6 +2,8 @@ package sheyko.aleksey.mapthetrip.models;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -72,7 +74,16 @@ public class Trip implements OnTripRegistered, Parcelable {
 
     public void start(Context context) {
         mContext = context;
-        new RegisterTripTask(context, this).execute();
+
+        if (isNetworkAvailable())
+            new RegisterTripTask(context, this).execute();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager cm =
+                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnected();
     }
 
     public void resume() {
