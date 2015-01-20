@@ -52,12 +52,14 @@ public class LocationService extends Service
     }
 
     private void pinCurrentCoordinates() {
-        ParseObject coordinates = new ParseObject("Coordinates");
-        coordinates.put("latitude", mLatitude);
-        coordinates.put("longitude", mLongitude);
-        coordinates.put("altitude", mAltitude);
-        coordinates.put("accuracy", mAccuracy);
-        coordinates.pinInBackground();
+        try {
+            ParseObject coordinates = new ParseObject("Coordinates");
+            coordinates.put("latitude", mLatitude);
+            coordinates.put("longitude", mLongitude);
+            coordinates.put("altitude", mAltitude);
+            coordinates.put("accuracy", mAccuracy);
+            coordinates.pinInBackground();
+        } catch (Exception ignored) {}
     }
 
     @Override
@@ -102,6 +104,7 @@ public class LocationService extends Service
     }
 
     private void startLocationUpdates(LocationClient client) {
+        if (mLocationClient.isConnected())
         client.requestLocationUpdates(mLocationRequest, this);
     }
 

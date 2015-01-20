@@ -102,7 +102,11 @@ public class SummaryActivity extends Activity
         startActivity(new Intent(this, MainActivity.class));
     }
 
-    public void cancelTrip() {
+    public void cancelTrip(View view) {
+        cancelTrip();
+    }
+
+    private void cancelTrip() {
         AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
         builder.setTitle(R.string.discard_trip_dialog_title);
         builder.setMessage(R.string.discard_trip_dialog_message);

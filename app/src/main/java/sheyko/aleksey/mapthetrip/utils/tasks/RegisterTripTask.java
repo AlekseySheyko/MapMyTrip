@@ -14,19 +14,7 @@ import sheyko.aleksey.mapthetrip.models.Device;
 
 public class RegisterTripTask extends AsyncTask<String, Void, String> {
     private static final String TAG = RegisterTripTask.class.getSimpleName();
-
-    protected OnTripRegistered mCallback;
     private Context mContext;
-
-    // Interface to return trip ID
-    public interface OnTripRegistered {
-        public void onTripRegistered(Context context, String tripId);
-    }
-
-    public RegisterTripTask(Context context, OnTripRegistered callback){
-        mContext = context;
-        mCallback = callback;
-    }
 
     public RegisterTripTask(Context context) {
         mContext = context;
@@ -131,11 +119,6 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String mTripId) {
         super.onPostExecute(mTripId);
-
-        // Callback can be null if we register trip later,
-        // on network broadcast reciever triggered
-        if (mCallback != null)
-        mCallback.onTripRegistered(mContext, mTripId);
 
         PreferenceManager.getDefaultSharedPreferences(mContext).edit()
                 .putString("trip_id", mTripId);

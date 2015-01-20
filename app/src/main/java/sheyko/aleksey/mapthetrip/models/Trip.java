@@ -1,6 +1,5 @@
 package sheyko.aleksey.mapthetrip.models;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -13,10 +12,9 @@ import java.util.Date;
 
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
-public class Trip implements OnTripRegistered, Parcelable {
+public class Trip implements Parcelable {
 
     private Context mContext;
     private String tripId;
@@ -34,8 +32,6 @@ public class Trip implements OnTripRegistered, Parcelable {
     private static final String RESUME = "Resume";
     private static final String PAUSE = "Pause";
     private static final String FINISH = "Finish";
-
-    private BroadcastReceiver receiver;
 
     public Trip() {
     }
@@ -80,17 +76,12 @@ public class Trip implements OnTripRegistered, Parcelable {
         setStartTime();
 
         if (isNetworkAvailable()) {
-            new RegisterTripTask(mContext, this).execute();
+            new RegisterTripTask(mContext).execute();
         }
 
         // Sends location to server
         mPinCoordinatesIntent = new Intent(context, LocationService.class);
         context.startService(mPinCoordinatesIntent);
-    }
-
-    @Override
-    public void onTripRegistered(Context context, String id) {
-        tripId = id;
     }
 
     public void resume() {
