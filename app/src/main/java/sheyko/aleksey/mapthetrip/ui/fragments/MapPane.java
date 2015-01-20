@@ -14,6 +14,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,6 +67,9 @@ public class MapPane extends Fragment
     private BroadcastReceiver receiver;
     private Intent mTripStartedIntent;
     private int isTripStarted = 0;
+    private Builder mNotifyBuilder;
+    private NotificationManager mNotificationManager;
+    private int notifyID;
 
     // Required empty constructor
     public MapPane() {
@@ -102,23 +106,36 @@ public class MapPane extends Fragment
                 boolean isConnected = activeNetwork != null &&
                         activeNetwork.isConnectedOrConnecting();
 
-
                 if (isConnected) {
-                    if (isTripStarted == 1)
+                    if (isTripStarted == 1) {
                         new RegisterTripTask(MapPane.this.getActivity()).execute();
-
+                    }
+                    if (mNotificationManager != null)
+                        mNotificationManager.cancel(notifyID);
                 } else {
-                    NotificationCompat.Builder mBuilder =
-                            new NotificationCompat.Builder(MapPane.this.getActivity())
-                                    .setContentTitle("Offline mode")
-                                    .setContentText("Coordinates are collected, but trip isn't registered yet.");
-                    NotificationManager mNotificationManager =
+                    mNotificationManager =
                             (NotificationManager) MapPane.this.getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                    mNotificationManager.notify(123, mBuilder.build());
+                    // Sets an ID for the notification, so it can be updated
+                    notifyID = 1;
+                    mNotifyBuilder = new NotificationCompat.Builder(MapPane.this.getActivity())
+                            .setContentTitle("Offline mode")
+                            .setContentText("Trip isn't on server yet.")
+                            .setSmallIcon(android.R.drawable.ic_menu_info_details);
+                    // Because the ID remains unchanged, the existing notification is
+                    // updated.
+                    mNotificationManager.notify(
+                            notifyID,
+                            mNotifyBuilder.build());
                 }
             }
         };
         getActivity().registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.getActivity().unregisterReceiver(receiver);
     }
 
     @Override

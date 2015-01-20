@@ -47,11 +47,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb7d208a-9f29-48ba-9f4c-bcdf016b593c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/services/LocationService.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/services/LocationService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/RegisterTripTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/RegisterTripTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/activities/SummaryActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/activities/SummaryActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Trip.java" afterPath="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Trip.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Map My Trip.iws" />
@@ -103,11 +99,20 @@
       <file leaf-file-name="MapPane.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.77147764" vertical-offset="843" max-vertical-offset="5100">
-              <caret line="113" column="109" selection-start-line="113" selection-start-column="109" selection-end-line="113" selection-end-column="109" />
+            <state vertical-scroll-proportion="0.49312714" vertical-offset="1158" max-vertical-offset="5508">
+              <caret line="123" column="58" selection-start-line="123" selection-start-column="58" selection-end-line="123" selection-end-column="58" />
               <folding>
-                <element signature="e#2999#4278#0" expanded="true" />
-                <element signature="e#4267#4268#0" expanded="true" />
+                <element signature="e#3173#4854#0" expanded="true" />
+                <element signature="e#4843#4844#0" expanded="true" />
+                <element signature="e#8053#8088#0" expanded="true" />
+                <element signature="e#8818#8849#0" expanded="true" />
+                <element signature="e#9135#9168#0" expanded="true" />
+                <element signature="e#9404#10418#0" expanded="true" />
+                <element signature="e#10411#10412#0" expanded="true" />
+                <element signature="e#11967#12415#0" expanded="true" />
+                <element signature="e#12046#12388#0" expanded="true" />
+                <element signature="e#12369#12370#0" expanded="true" />
+                <element signature="e#12403#12404#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1151,8 +1156,8 @@
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/tasks/RegisterTripTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/activities/SummaryActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/services/LocationService.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/models/Trip.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java" />
       </list>
     </option>
   </component>
@@ -2547,17 +2552,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="1173">
-          <caret line="3" column="62" selection-start-line="3" selection-start-column="62" selection-end-line="3" selection-end-column="62" />
-          <folding>
-            <element signature="e#944#983#0" expanded="true" />
-            <element signature="e#1886#1916#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/services/LocationService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="850" max-vertical-offset="1122">
@@ -2930,13 +2924,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://D:/android-sdk/platforms/android-21/data/res/drawable-ldpi/popup_full_dark.9.png">
+      <provider selected="true" editor-type-id="ninepatcheditor">
+        <state />
+      </provider>
+      <provider editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="jar://D:/android-sdk/platforms/android-21/android.jar!/android/R.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="15905" max-vertical-offset="42296">
+          <caret line="948" column="30" selection-start-line="948" selection-start-column="30" selection-end-line="948" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.77147764" vertical-offset="843" max-vertical-offset="5100">
-          <caret line="113" column="109" selection-start-line="113" selection-start-column="109" selection-end-line="113" selection-end-column="109" />
+        <state vertical-scroll-proportion="0.49312714" vertical-offset="1158" max-vertical-offset="5508">
+          <caret line="123" column="58" selection-start-line="123" selection-start-column="58" selection-end-line="123" selection-end-column="58" />
           <folding>
-            <element signature="e#2999#4278#0" expanded="true" />
-            <element signature="e#4267#4268#0" expanded="true" />
+            <element signature="e#3173#4854#0" expanded="true" />
+            <element signature="e#4843#4844#0" expanded="true" />
+            <element signature="e#8053#8088#0" expanded="true" />
+            <element signature="e#8818#8849#0" expanded="true" />
+            <element signature="e#9135#9168#0" expanded="true" />
+            <element signature="e#9404#10418#0" expanded="true" />
+            <element signature="e#10411#10412#0" expanded="true" />
+            <element signature="e#11967#12415#0" expanded="true" />
+            <element signature="e#12046#12388#0" expanded="true" />
+            <element signature="e#12369#12370#0" expanded="true" />
+            <element signature="e#12403#12404#0" expanded="true" />
           </folding>
         </state>
       </provider>
