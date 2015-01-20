@@ -103,4 +103,11 @@ public class SaveTripTask extends AsyncTask<String, Void, Void> {
         }
         return null;
     }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        PreferenceManager.getDefaultSharedPreferences(mContext)
+                .edit().putString("trip_id", null);
+    }
 }

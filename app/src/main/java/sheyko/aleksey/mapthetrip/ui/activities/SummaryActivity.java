@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -38,33 +39,32 @@ public class SummaryActivity extends Activity
     private int mDuration;
     private String mDistance;
     private String mStartTime;
-    String mStateCodes;
-    String mStateDistances;
-    String mTotalDistance;
-    String mStateDurations = "";
-    int mStatesCount;
-    private BroadcastReceiver receiver;
+    private String mStateCodes;
+    private String mStateDistances;
+    private String mTotalDistance;
+    private String mStateDurations;
+    private String mStatesCount;
+    private SharedPreferences sharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
-
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
+        sendCoordinatesToServer();
+        
         Trip currentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
-
         // Get trip info
-        mTripId = currentTrip.getTripId();
-        if (mTripId == null)
-            mTripId = PreferenceManager.getDefaultSharedPreferences(this).getString("trip_id", "");
         mDistance = currentTrip.getDistance();
         mDuration = currentTrip.getDuration();
         mStartTime = currentTrip.getStartTime();
+        mTripId = currentTrip.getTripId();
+        if (mTripId == null) mTripId = sharedPrefs.getString("trip_id", "");
 
         // Update UI
         ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
         ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
-
-        sendCoordinates();
     }
 
     public void finishSession(View view) {
@@ -74,13 +74,10 @@ public class SummaryActivity extends Activity
     private void finishSession(boolean isSaved) {
 
         if (mTripId != null && isConnected()) {
-            getSummaryInfo();
-            saveTrip(isSaved);
-
-            PreferenceManager.getDefaultSharedPreferences(this).edit()
-                    .putString("trip_id", null);
-
+            sharedPrefs.edit().putBoolean("is_saved", isSaved);
+            new GetSummaryInfoTask(this).execute(mTripId);
             startActivity(new Intent(this, MainActivity.class));
+
         } else {
             Toast.makeText(this, "Waiting for network...",
                     Toast.LENGTH_SHORT).show();
@@ -88,7 +85,7 @@ public class SummaryActivity extends Activity
             IntentFilter filter = new IntentFilter("ac");
             filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
 
-            receiver = new BroadcastReceiver() {
+            BroadcastReceiver receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     if (isConnected() && mTripId != null) {
@@ -101,16 +98,7 @@ public class SummaryActivity extends Activity
         }
     }
 
-    private boolean isConnected() {
-        ConnectivityManager cm =
-                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-    }
-
-    private void sendCoordinates() {
+    private void sendCoordinatesToServer() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
         query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -127,22 +115,10 @@ public class SummaryActivity extends Activity
         });
     }
 
-    private void getSummaryInfo() {
-        new GetSummaryInfoTask(this).execute(mTripId);
-    }
-
     private void saveTrip(boolean isSaved) {
         String tripName = ((EditText) findViewById(R.id.tripNameField)).getText().toString();
         if (tripName.equals("")) tripName = "Trip on " + mStartTime;
         String tripNotes = ((EditText) findViewById(R.id.tripNotesField)).getText().toString();
-
-        for (int i = 0; i <= mStatesCount; i++) {
-            if (mStateDurations.equals("")) {
-                mStateDurations = mStateDurations + "0";
-            } else {
-                mStateDurations = mStateDurations + ", " + "0";
-            }
-        }
 
         new SaveTripTask(this).execute(
                 mTripId, isSaved + "", mTotalDistance,
@@ -183,7 +159,9 @@ public class SummaryActivity extends Activity
         mStateCodes = stateCodes;
         mStateDistances = stateDistances;
         mTotalDistance = totalDistance;
-        mStatesCount = 0;
+        mStatesCount = statesCount;
+
+        saveTrip(sharedPrefs.getBoolean("is_saved", true));
     }
 
     @Override
@@ -195,5 +173,14 @@ public class SummaryActivity extends Activity
                 return (true);
         }
         return (super.onOptionsItemSelected(item));
+    }
+
+    private boolean isConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
     }
 }

@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -25,6 +24,7 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
 
     private String mStateCodes = "";
     private String mDistances = "";
+    private String mStatesCount = "";
 
     // Interface to return states data
     public interface OnStatesDataRetrieved {
@@ -42,7 +42,6 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
         BufferedReader reader = null;
 
         // Will contain JSON responses as a string
-        String resultJsonStr = null;
         HashMap<String, String> statesData = new HashMap<>();
 
         try {
@@ -69,24 +68,15 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
                         // Read the input stream into a String
                         InputStream inputStream = urlConnection.getInputStream();
                         StringBuffer buffer = new StringBuffer();
-                        if (inputStream == null) {
-                            // Nothing to do.
-                            return null;
-                        }
                         reader = new BufferedReader(new InputStreamReader(inputStream));
 
                         String line;
                         while ((line = reader.readLine()) != null) {
-                            // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                            // But it does make debugging a *lot* easier if you print out the completed
-                            // buffer for debugging.
-                            buffer.append(line + "\n");
+                            buffer.append(line);
                         }
 
-                        resultJsonStr = buffer.toString();
-
                         try {
-                            JSONObject mResponseObject = new JSONObject(resultJsonStr);
+                            JSONObject mResponseObject = new JSONObject(buffer.toString());
                             String mQueryStatus = mResponseObject.getJSONObject("status").getString("code");
                             if (mQueryStatus.equals("OK")) {
                                 JSONObject mDataObject = mResponseObject.getJSONObject("data");
@@ -96,18 +86,24 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
 
                                 List<String> keyList = new ArrayList<>();
 
-                                int statesCount = 0;
+                                int statesCounter = 0;
                                 while (keys.hasNext()) {
-                                    if (!keys.next().equals("total")) {
                                         String state = (String) keys.next();
                                         keyList.add(state);
-                                        statesCount++;
+                                        statesCounter++;
 
                                         if (mStateCodes.equals("")) {
                                             mStateCodes = mStateCodes + state;
                                         } else {
                                             mStateCodes = mStateCodes + ", " + state;
                                         }
+                                }
+
+                                for (int i = 0; i <= statesCounter; i++) {
+                                    if (mStatesCount.equals("")) {
+                                        mStatesCount = mStatesCount + "0";
+                                    } else {
+                                        mStatesCount = mStatesCount + ", " + "0";
                                     }
                                 }
 
@@ -123,20 +119,20 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
                                         }
                                     }
                                 }
-
+                                mStateCodes = mStateCodes.replace("total, ", "");
                                 String totalDistance = mStateDistances.getDouble("total") + "";
 
                                 statesData.put("stateCodes", mStateCodes);
                                 statesData.put("stateDistances", mDistances);
                                 statesData.put("totalDistance", totalDistance);
-                                statesData.put("statesCount", statesCount + "");
+                                statesData.put("statesCount", mStatesCount);
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             Log.e(TAG, e.getMessage());
                         }
 
                         Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
-                                "Result: " + java.net.URLDecoder.decode(resultJsonStr, "UTF-8"));
+                                "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
