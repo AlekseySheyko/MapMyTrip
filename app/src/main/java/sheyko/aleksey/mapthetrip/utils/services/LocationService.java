@@ -15,6 +15,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 
+import sheyko.aleksey.mapthetrip.models.Coordinate;
 import sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
@@ -50,6 +51,10 @@ public class LocationService extends Service
     }
 
     private void sendLocationOnServer() {
+        // Save to SQLite database
+        Coordinate coordinate = new Coordinate(mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
+        coordinate.save();
+
         new SendLocationTask(this).execute(
                 mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
     }

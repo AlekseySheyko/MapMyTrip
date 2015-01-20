@@ -1,18 +1,13 @@
 package sheyko.aleksey.mapthetrip.utils.tasks;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 import sheyko.aleksey.mapthetrip.models.Device;
 
@@ -62,33 +57,33 @@ public class SendLocationTask extends AsyncTask<String, Void, Void> {
             Log.i(TAG, "Service: TFLRecordTripCoordinates,\n" +
                     "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
-            URL mUrl = new URL(mUrlString);
-
-            // Create the request and open the connection
-            urlConnection = (HttpURLConnection) mUrl.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            // Read the input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            if (inputStream == null) {
-                // Nothing to do.
-                return null;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                // But it does make debugging a *lot* easier if you print out the completed
-                // buffer for debugging.
-                buffer.append(line + "\n");
-            }
-
-            firstServerJsonResponse = buffer.toString();
-            Log.i(TAG, "Service: TFLRecordTripCoordinates,\n" +
-                    "Result: " + java.net.URLDecoder.decode(firstServerJsonResponse, "UTF-8"));
+//            URL mUrl = new URL(mUrlString);
+//
+//            // Create the request and open the connection
+//            urlConnection = (HttpURLConnection) mUrl.openConnection();
+//            urlConnection.setRequestMethod("GET");
+//            urlConnection.connect();
+//
+//            // Read the input stream into a String
+//            InputStream inputStream = urlConnection.getInputStream();
+//            StringBuffer buffer = new StringBuffer();
+//            if (inputStream == null) {
+//                // Nothing to do.
+//                return null;
+//            }
+//            reader = new BufferedReader(new InputStreamReader(inputStream));
+//
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+//                // But it does make debugging a *lot* easier if you print out the completed
+//                // buffer for debugging.
+//                buffer.append(line + "\n");
+//            }
+//
+//            firstServerJsonResponse = buffer.toString();
+//            Log.i(TAG, "Service: TFLRecordTripCoordinates,\n" +
+//                    "Result: " + java.net.URLDecoder.decode(firstServerJsonResponse, "UTF-8"));
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
@@ -126,37 +121,37 @@ public class SendLocationTask extends AsyncTask<String, Void, Void> {
             Log.i(TAG, "Service: record-position.php,\n" +
                     "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
-            URL mUrl = new URL(mUrlString);
-            // Create the request and open the connection
-            urlConnection = (HttpURLConnection) mUrl.openConnection();
-            urlConnection.setRequestMethod("GET");
-
-            if (isNetworkAvailable()) {
-                urlConnection.connect();
-            } else {
-                return null;
-            }
-
-            // Read the input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            if (inputStream == null) {
-                // Nothing to do.
-                return null;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                // But it does make debugging a *lot* easier if you print out the completed
-                // buffer for debugging.
-                buffer.append(line + "\n");
-            }
-
-            secondServerJsonResponse = buffer.toString();
-            Log.i(TAG, "Service: record-position.php,\n" +
-                    "Result: " + java.net.URLDecoder.decode(secondServerJsonResponse, "UTF-8"));
+//            URL mUrl = new URL(mUrlString);
+//            // Create the request and open the connection
+//            urlConnection = (HttpURLConnection) mUrl.openConnection();
+//            urlConnection.setRequestMethod("GET");
+//
+//            if (isNetworkAvailable()) {
+//                urlConnection.connect();
+//            } else {
+//                return null;
+//            }
+//
+//            // Read the input stream into a String
+//            InputStream inputStream = urlConnection.getInputStream();
+//            StringBuffer buffer = new StringBuffer();
+//            if (inputStream == null) {
+//                // Nothing to do.
+//                return null;
+//            }
+//            reader = new BufferedReader(new InputStreamReader(inputStream));
+//
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+//                // But it does make debugging a *lot* easier if you print out the completed
+//                // buffer for debugging.
+//                buffer.append(line + "\n");
+//            }
+//
+//            secondServerJsonResponse = buffer.toString();
+//            Log.i(TAG, "Service: record-position.php,\n" +
+//                    "Result: " + java.net.URLDecoder.decode(secondServerJsonResponse, "UTF-8"));
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
@@ -173,12 +168,5 @@ public class SendLocationTask extends AsyncTask<String, Void, Void> {
             }
         }
         return null;
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

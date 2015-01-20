@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <size android:width="2dp" android:height="@dimen/action_bar_height"/>
-
-    <solid android:color="@color/tab_divider"/>
-
-</shape><!-- From: file:/D:/MapTheTrip/app/src/main/res/drawable/action_bar_tab_divider.xml -->

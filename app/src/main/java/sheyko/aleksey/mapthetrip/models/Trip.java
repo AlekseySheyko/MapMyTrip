@@ -4,15 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.orm.SugarRecord;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
-import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetrieved;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
@@ -22,16 +22,14 @@ public class Trip extends SugarRecord<Trip>
 
     private Context mContext;
     private String tripId;
-    //    boolean isSaved;
     float distance = 0;
     int duration = 0;
     String startTime;
-    //    String name;
-    //    String note;
     String stateCodes;
     String stateDistances;
     String totalDistance;
 
+    // Listens for location service
     private Intent mLocationUpdates;
 
     // Trip status constants
@@ -43,7 +41,7 @@ public class Trip extends SugarRecord<Trip>
     }
 
     public Trip(Parcel in) {
-        readFromParcel( in );
+        readFromParcel(in);
     }
 
     public static final Parcelable.Creator CREATOR = new Creator<Trip>() {
@@ -89,10 +87,20 @@ public class Trip extends SugarRecord<Trip>
 
     public void pause() {
         updateStatus(PAUSE);
-        mContext.stopService(mLocationUpdates);
+        if (mLocationUpdates != null) {
+            mContext.stopService(mLocationUpdates);
+        }
     }
 
     public void finish() {
+
+        List<Coordinate> coordinates = Coordinate.findWithQuery(Coordinate.class,
+                "Select * from Coordinate where trip_id = ?", getTripId());
+
+        for (Coordinate coordinate : coordinates) {
+            Log.i("Trip", "Trip with ID + " + getTripId() + ". Latitude: " + coordinate.getLatitude());
+        }
+
         updateStatus(FINISH);
         mContext.stopService(mLocationUpdates);
     }
