@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -55,6 +56,9 @@ public class SummaryActivity extends Activity
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
+                for (ParseObject coordinate : coordinates) {
+                    coordinate.put("trip_id", mTripId);
+                }
                 new SendLocationTask(SummaryActivity.this).execute(coordinates);
                 for (ParseObject coordinate : coordinates) {
                     coordinate.unpinInBackground();
@@ -94,7 +98,7 @@ public class SummaryActivity extends Activity
         startActivity(new Intent(this, MainActivity.class));
     }
 
-    public void cancelTrip(View view) {
+    public void cancelTrip() {
         AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
         builder.setTitle(R.string.discard_trip_dialog_title);
         builder.setMessage(R.string.discard_trip_dialog_message);
@@ -123,5 +127,16 @@ public class SummaryActivity extends Activity
         mStateDistances = stateDistances;
         mTotalDistance = totalDistance;
         mStatesCount = 0;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // do something useful
+                cancelTrip();
+                return (true);
+        }
+        return (super.onOptionsItemSelected(item));
     }
 }

@@ -6,10 +6,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.location.LocationClient;
@@ -121,9 +122,6 @@ public class LocationService extends Service
 
     @Override
     public void onLocationChanged(Location location) {
-
-        Toast.makeText(this, location.getLatitude() + "", Toast.LENGTH_SHORT).show();
-
         if (isTripJustStarted) {
             startAlarm(this);
             isTripJustStarted = false;

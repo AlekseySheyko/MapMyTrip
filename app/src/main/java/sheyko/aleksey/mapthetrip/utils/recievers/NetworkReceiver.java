@@ -17,15 +17,17 @@ public class NetworkReceiver extends BroadcastReceiver {
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-        if (activeNetwork != null && activeNetwork.isConnected()) {
+        boolean isActiveNetwork = activeNetwork != null && activeNetwork.isConnected();
+
+        if (isActiveNetwork) {
             new RegisterTripTask(context).execute();
 
+            // Disable this reciever, since we need to register trip only one time
             ComponentName receiver = new ComponentName(context, NetworkReceiver.class);
-
             PackageManager pm = context.getPackageManager();
-
             pm.setComponentEnabledSetting(receiver,
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         }
     }
+}
 }
