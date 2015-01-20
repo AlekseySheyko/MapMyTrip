@@ -1,7 +1,9 @@
 package sheyko.aleksey.mapthetrip.utils.tasks;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -10,6 +12,11 @@ import java.net.HttpURLConnection;
 
 public class SaveTripTask extends AsyncTask<String, Void, Void> {
     public static final String TAG = SaveTripTask.class.getSimpleName();
+    private Context mContext;
+
+    public SaveTripTask(Context context) {
+        mContext = context;
+    }
 
     @Override
     protected Void doInBackground(String... params) {
@@ -19,6 +26,10 @@ public class SaveTripTask extends AsyncTask<String, Void, Void> {
 
         // Will contain JSON responses as a string
         String saveTripJsonResponse;
+        String tripId = params[0];
+        if (tripId == null) {
+            tripId = PreferenceManager.getDefaultSharedPreferences(mContext).getString("trip_id", "");
+        }
 
         try {
             // Construct the URL for the query
@@ -27,7 +38,7 @@ public class SaveTripTask extends AsyncTask<String, Void, Void> {
                     .authority("wsapp.mapthetrip.com")
                     .appendPath("TrucFuelLog.svc")
                     .appendPath("TFLSaveTripandSummaryInfo")
-                    .appendQueryParameter("TripId", params[0])
+                    .appendQueryParameter("TripId", tripId)
                     .appendQueryParameter("IsTripSaved", params[1])
                     .appendQueryParameter("TotalDistanceTraveled", "" + params[2])
                     .appendQueryParameter("TotalTripDuration", params[3])

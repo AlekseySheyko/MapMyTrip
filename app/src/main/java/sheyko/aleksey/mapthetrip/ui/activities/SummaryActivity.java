@@ -81,7 +81,7 @@ public class SummaryActivity extends Activity
 
             startActivity(new Intent(this, MainActivity.class));
         } else {
-            Toast.makeText(this, "А интернет где, блять?",
+            Toast.makeText(this, "Waiting for network...",
                     Toast.LENGTH_SHORT).show();
 
             IntentFilter filter = new IntentFilter("ac");
@@ -91,7 +91,7 @@ public class SummaryActivity extends Activity
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     if (isConnected() && mTripId != null) {
-                        Toast.makeText(SummaryActivity.this, "Now you can save trip",
+                        Toast.makeText(SummaryActivity.this, "Now you can save the trip",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -143,7 +143,7 @@ public class SummaryActivity extends Activity
             }
         }
 
-        new SaveTripTask().execute(
+        new SaveTripTask(this).execute(
                 mTripId, isSaved + "", mTotalDistance,
                 mDuration + "", tripName, tripNotes,
                 mStateCodes, mStateDistances, mStateDurations

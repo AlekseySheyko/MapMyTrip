@@ -107,7 +107,7 @@ public class MapPane extends Fragment
                         activeNetwork.isConnectedOrConnecting();
 
                 if (isConnected) {
-                    if (isTripStarted == 1) {
+                    if (isTripStarted == 1 && mCurrentTrip.getTripId() == null) {
                         new RegisterTripTask(MapPane.this.getActivity()).execute();
                     }
                     if (mNotificationManager != null)
