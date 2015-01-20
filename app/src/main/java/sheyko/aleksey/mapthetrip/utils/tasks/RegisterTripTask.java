@@ -29,7 +29,7 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
         public void onTripRegistered(Context context, String tripId);
     }
 
-    public RegisterTripTask(Context context, OnTripRegistered callback){
+    public RegisterTripTask(Context context, OnTripRegistered callback) {
         mContext = context;
         mCallback = callback;
     }
@@ -92,11 +92,13 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
             StringBuilder buffer = new StringBuilder();
+            if (inputStream == null) return null;
+
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
             String line;
             while ((line = reader.readLine()) != null) {
-                buffer.append(line);
+                buffer.append(line).append("\n");
             }
             resultJsonStr = buffer.toString();
 
@@ -139,7 +141,7 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
         // Callback can be null if we register trip later,
         // on network broadcast reciever triggered
         if (mCallback != null)
-        mCallback.onTripRegistered(mContext, mTripId);
+            mCallback.onTripRegistered(mContext, mTripId);
 
         PreferenceManager.getDefaultSharedPreferences(mContext).edit()
                 .putString("trip_id", mTripId);

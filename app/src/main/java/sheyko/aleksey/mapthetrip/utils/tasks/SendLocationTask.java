@@ -32,7 +32,6 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
         BufferedReader reader = null;
         Device mDevice = new Device(mContext);
 
-        // Request to first server
         try {
             for (List<ParseObject> coordinates : coordinatesList) {
                 for (ParseObject coordinate : coordinates) {
@@ -42,7 +41,7 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
                     String altitude = coordinate.getString("altitude");
                     String accuracy = coordinate.getString("accuracy");
 
-                    // Construct the URL for the query
+                    // Construct the URL for the first query
                     Uri.Builder builder = new Uri.Builder();
                     builder.scheme("http")
                             .authority("wsapp.mapthetrip.com")
@@ -85,16 +84,15 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
                     Log.i(TAG, "Service: TFLRecordTripCoordinates,\n" +
                             "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
 
+                    // urlConnection.disconnect();
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(TAG, "Error closing stream", e);
+                    }
 
-                    // Request to second server
-                    String tripId = coordinate.getString("trip_id");
-                    String latitude = coordinate.getString("latitude");
-                    String longitude = coordinate.getString("longitude");
-                    String altitude = coordinate.getString("altitude");
-                    String accuracy = coordinate.getString("accuracy");
-
-                    // Construct the URL for the query
-                    Uri.Builder builder = new Uri.Builder();
+                    // Construct the URL for the second query
+                    builder = new Uri.Builder();
                     builder.scheme("http")
                             .authority("64.251.25.139")
                             .appendPath("trucks_app")
@@ -107,29 +105,35 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
                             .appendQueryParameter("datetime", mDevice.getCurrentDateTime())
                             .appendQueryParameter("timezone", mDevice.getTimeZone())
                             .appendQueryParameter("accuracy", accuracy);
-                    String mUrlString = builder.build().toString();
+                    mUrlString = builder.build().toString();
 
                     Log.i(TAG, "Service: record-position.php,\n" +
                             "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
-                    URL mUrl = new URL(mUrlString);
+                    mUrl = new URL(mUrlString);
                     // Create the request and open the connection
                     urlConnection = (HttpURLConnection) mUrl.openConnection();
                     urlConnection.setRequestMethod("GET");
                     urlConnection.connect();
 
                     // Read the input stream into a String
-                    InputStream inputStream = urlConnection.getInputStream();
-                    StringBuilder buffer = new StringBuilder();
+                    inputStream = urlConnection.getInputStream();
+                    buffer = new StringBuilder();
                     reader = new BufferedReader(new InputStreamReader(inputStream));
 
-                    String line;
                     while ((line = reader.readLine()) != null) {
                         buffer.append(line);
                     }
 
                     Log.i(TAG, "Service: record-position.php,\n" +
                             "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
+
+                    // urlConnection.disconnect();
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(TAG, "Error closing stream", e);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -137,13 +141,6 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(TAG, "Error closing stream", e);
-                }
             }
         }
         return null;
