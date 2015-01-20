@@ -3,6 +3,7 @@ package sheyko.aleksey.mapthetrip.utils.tasks;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -135,5 +136,8 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
         // on network broadcast reciever triggered
         if (mCallback != null)
         mCallback.onTripRegistered(mContext, mTripId);
+
+        PreferenceManager.getDefaultSharedPreferences(mContext).edit()
+                .putString("trip_id", mTripId);
     }
 }

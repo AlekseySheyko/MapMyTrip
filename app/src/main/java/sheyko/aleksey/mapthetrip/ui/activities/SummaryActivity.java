@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -45,13 +46,16 @@ public class SummaryActivity extends Activity
 
         // Get trip info
         mTripId = currentTrip.getTripId();
-        String distance = currentTrip.getDistance();
+        if (mTripId == null)
+            PreferenceManager.getDefaultSharedPreferences(this).
+                    getString("trip_id", "");
+
+        String mDistance = currentTrip.getDistance();
         mDuration = currentTrip.getDuration();
         mStartTime = currentTrip.getStartTime();
 
         // Retrieve saved coordinates from local database
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
-        query.whereEqualTo("trip_id", mTripId);
         query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -69,7 +73,7 @@ public class SummaryActivity extends Activity
         new GetSummaryInfoTask(this).execute(mTripId);
 
         // Update UI
-        ((TextView) findViewById(R.id.TripLabelDistance)).setText(distance);
+        ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
         ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
     }
 

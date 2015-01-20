@@ -25,7 +25,6 @@ public class LocationService extends Service
     private LocationClient mLocationClient;
     private LocationRequest mLocationRequest;
 
-    private String mTripId;
     private String mLatitude;
     private String mLongitude;
     private String mAltitude;
@@ -38,13 +37,10 @@ public class LocationService extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getStringExtra("Trip ID") != null ||
-                intent.getStringExtra("Action") == null) {
+        if (intent.getStringExtra("Action") == null) {
             // Request to start sending location updates catched,
             // so we need to connect Location Client
             createLocationClient().connect();
-            // Set trip ID from onTripRegistered() callback
-            mTripId = intent.getStringExtra("Trip ID");
 
         } else if (intent.getStringExtra("Action") != null) {
             // Location client connected, and we get a callback here.

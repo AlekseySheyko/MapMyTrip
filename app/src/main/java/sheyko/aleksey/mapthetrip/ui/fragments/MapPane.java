@@ -2,14 +2,18 @@ package sheyko.aleksey.mapthetrip.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,8 +95,27 @@ public class MapPane extends Fragment
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (isTripStarted == 1)
-                    new RegisterTripTask(MapPane.this.getActivity()).execute();
+                ConnectivityManager cm =
+                        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                boolean isConnected = activeNetwork != null &&
+                        activeNetwork.isConnectedOrConnecting();
+
+
+                if (isConnected) {
+                    if (isTripStarted == 1)
+                        new RegisterTripTask(MapPane.this.getActivity()).execute();
+
+                } else {
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(MapPane.this.getActivity())
+                                    .setContentTitle("Offline mode")
+                                    .setContentText("Coordinates are collected, but trip isn't registered yet.");
+                    NotificationManager mNotificationManager =
+                            (NotificationManager) MapPane.this.getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                    mNotificationManager.notify(123, mBuilder.build());
+                }
             }
         };
         getActivity().registerReceiver(receiver, filter);

@@ -81,13 +81,10 @@ public class Trip implements OnTripRegistered, Parcelable {
 
         if (isNetworkAvailable()) {
             new RegisterTripTask(mContext, this).execute();
-        } else {
-            // TODO: Enable network broadcast reciever
         }
 
         // Sends location to server
         mPinCoordinatesIntent = new Intent(context, LocationService.class);
-        mPinCoordinatesIntent.putExtra("Trip ID", getTripId());
         context.startService(mPinCoordinatesIntent);
     }
 
