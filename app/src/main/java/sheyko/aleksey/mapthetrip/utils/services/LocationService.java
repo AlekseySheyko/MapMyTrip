@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.location.LocationClient;
@@ -57,7 +58,6 @@ public class LocationService extends Service
 
     private void pinCurrentCoordinates() {
         ParseObject coordinates = new ParseObject("Coordinates");
-        coordinates.put("trip_id", mTripId);
         coordinates.put("latitude", mLatitude);
         coordinates.put("longitude", mLongitude);
         coordinates.put("altitude", mAltitude);
@@ -121,6 +121,9 @@ public class LocationService extends Service
 
     @Override
     public void onLocationChanged(Location location) {
+
+        Toast.makeText(this, location.getLatitude() + "", Toast.LENGTH_SHORT).show();
+
         if (isTripJustStarted) {
             startAlarm(this);
             isTripJustStarted = false;

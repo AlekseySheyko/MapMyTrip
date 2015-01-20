@@ -55,7 +55,10 @@ public class SummaryActivity extends Activity
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
-                    new SendLocationTask(SummaryActivity.this).execute(coordinates);
+                new SendLocationTask(SummaryActivity.this).execute(coordinates);
+                for (ParseObject coordinate : coordinates) {
+                    coordinate.unpinInBackground();
+                }
             }
         });
 
