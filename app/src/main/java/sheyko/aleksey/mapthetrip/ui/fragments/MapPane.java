@@ -58,6 +58,8 @@ public class MapPane extends Fragment
     private LinearLayout mCountersContainer;
     private TextView mDistanceCounter;
     private TextView mDurationCounter;
+    private BroadcastReceiver receiver;
+    private Intent mTripStartedIntent;
 
     // Required empty constructor
     public MapPane() {
@@ -75,6 +77,28 @@ public class MapPane extends Fragment
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                 mLocationReciever, new IntentFilter("LocationUpdates"));
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        IntentFilter filter = new IntentFilter("");
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                if (intent.filterEquals(mTripStartedIntent)) {
+
+
+                } else if (intent.filterEquals(networkIntent)) {
+                    // getAction().equals("android.net.conn.CONNECTIVITY_CHANGE"
+                }
+            }
+        };
+        getActivity().registerReceiver(receiver, filter);
     }
 
     @Override
@@ -119,6 +143,11 @@ public class MapPane extends Fragment
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.startButton:
+
+                mTripStartedIntent = new Intent("TripStarted");
+                LocalBroadcastManager.getInstance(MapPane.this.getActivity())
+                        .sendBroadcast(mTripStartedIntent);
+
                 updateUiOnStart();
 
                 if (mCurrentTrip == null) {

@@ -1,5 +1,6 @@
 package sheyko.aleksey.mapthetrip.models;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -33,6 +34,8 @@ public class Trip implements OnTripRegistered, Parcelable {
     private static final String RESUME = "Resume";
     private static final String PAUSE = "Pause";
     private static final String FINISH = "Finish";
+
+    private BroadcastReceiver receiver;
 
     public Trip() {
     }
