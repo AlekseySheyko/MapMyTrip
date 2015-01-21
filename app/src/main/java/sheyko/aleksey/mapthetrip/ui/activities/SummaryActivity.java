@@ -29,10 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import sheyko.aleksey.mapthetrip.R;
-import sheyko.aleksey.mapthetrip.models.Device;
 import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.utils.helpers.VolleySingleton;
-import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
 
 public class SummaryActivity extends Activity {
 
@@ -65,8 +63,6 @@ public class SummaryActivity extends Activity {
     }
 
     private void getSummaryInfo() {
-        Device mDevice = new Device(this);
-
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
                 .authority("64.251.25.139")
@@ -92,9 +88,9 @@ public class SummaryActivity extends Activity {
 
                             if (mQueryStatus.equals("OK")) {
                                 JSONObject mDataObject = jsonRoot.getJSONObject("data");
-                                JSONObject mStateDistances = mDataObject.getJSONObject("distance");
+                                JSONObject mDistances = mDataObject.getJSONObject("distance");
 
-                                Iterator<?> keys = mStateDistances.keys();
+                                Iterator<?> keys = mDistances.keys();
 
                                 List<String> keyList = new ArrayList<>();
 
@@ -119,19 +115,18 @@ public class SummaryActivity extends Activity {
                                 for (String key : keyList) {
                                     if (!key.equals("total")) {
 
-                                        String distance = mStateDistances.getDouble(key) + "";
+                                        String distance = mDistances.getDouble(key) + "";
 
                                         if (mStateDistances.equals("")) {
-                                            mDistances = mDistances + distance;
+                                            mStateDistances = mStateDistances + distance;
                                         } else {
-                                            mDistances = mDistances + ", " + distance;
+                                            mStateDistances = mStateDistances + ", " + distance;
                                         }
                                     }
                                 }
                                 mStateCodes = mStateCodes.replace("total,", "");
-                                String totalDistance = mStateDistances.getDouble("total") + "";
-                                if (mStatesDurations.equals("")) mStatesDurations = "0";
-
+                                mTotalDistance = mDistances.getDouble("total") + "";
+                                if (mStateDurations.equals("")) mStateDurations = "0";
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
