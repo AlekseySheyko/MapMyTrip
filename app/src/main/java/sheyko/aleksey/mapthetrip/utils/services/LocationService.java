@@ -55,14 +55,17 @@ public class LocationService extends Service
             public void onReceive(Context context, Intent intent) {
                 if (isConnected()) {
                     if (intent.getStringExtra("Action") == null) {
-                        // Request to start sending location updates catched,
-                        // so we need to connect Location Client
-                        new RegisterTripTask(LocationService.this).execute();
+                        // Request to start getting location updates
                         createLocationClient().connect();
+                        new RegisterTripTask(
+                                LocationService.this, // Context
+                                LocationService.this) // Callback listener
+                                .execute();
+                        // We've register Trip, so don't need to listen for network
                         LocationService.this.unregisterReceiver(networkReceiver);
 
                     } else if (intent.getStringExtra("Action") != null) {
-                        // Location client connected, and we get a callback here.
+                        // Location client connected, now we'll send it to server periodically
                         new SendLocationTask(LocationService.this).execute(
                                 mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
                     }

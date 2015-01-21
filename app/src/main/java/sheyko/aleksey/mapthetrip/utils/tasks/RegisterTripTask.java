@@ -3,7 +3,6 @@ package sheyko.aleksey.mapthetrip.utils.tasks;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -32,10 +31,6 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
     public RegisterTripTask(Context context, OnTripRegistered callback) {
         mContext = context;
         mCallback = callback;
-    }
-
-    public RegisterTripTask(Context context) {
-        mContext = context;
     }
 
     @Override
@@ -137,13 +132,6 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String mTripId) {
         super.onPostExecute(mTripId);
-
-        // Callback can be null if we register trip later,
-        // on network broadcast reciever triggered
-        if (mCallback != null)
             mCallback.onTripRegistered(mContext, mTripId);
-
-        PreferenceManager.getDefaultSharedPreferences(mContext).edit()
-                .putString("trip_id", mTripId);
     }
 }

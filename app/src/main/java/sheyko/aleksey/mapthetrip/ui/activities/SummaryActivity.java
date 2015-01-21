@@ -2,126 +2,73 @@ package sheyko.aleksey.mapthetrip.ui.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-
-import java.util.List;
 
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetrieved;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
 public class SummaryActivity extends Activity
         implements OnStatesDataRetrieved {
 
+    private Trip mCurrentTrip;
     private String mTripId;
-    private int mDuration;
-    private String mDistance;
-    private String mStartTime;
     private String mStateCodes;
     private String mStateDistances;
     private String mTotalDistance;
     private String mStateDurations;
-    private SharedPreferences sharedPrefs;
+    private boolean mIsSaved = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        
-        sendCoordinatesToServer();
-        
-        Trip currentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
-        // Get trip info
-        mDistance = currentTrip.getDistance();
-        mDuration = currentTrip.getDuration();
-        mStartTime = currentTrip.getStartTime();
-        mTripId = currentTrip.getId();
-        if (mTripId == null) mTripId = sharedPrefs.getString("trip_id", "");
+
+        mCurrentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
+        mTripId = mCurrentTrip.getId();
 
         // Update UI
-        ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
-        ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
+        ((TextView) findViewById(R.id.TripLabelDistance))
+                .setText(mCurrentTrip.getDistance());
+        ((EditText) findViewById(R.id.tripNameField))
+                .setHint("Trip on " + mCurrentTrip.getStartTime());
     }
 
-    public void finishSession(View view) {
-        finishSession(true);
+    public void saveButtonPressed(View view) {
+        getSummaryInfo();
     }
 
-    private void finishSession(boolean isSaved) {
+    private void getSummaryInfo() {
 
         if (mTripId != null && isConnected()) {
-            sharedPrefs.edit().putBoolean("is_saved", isSaved);
             new GetSummaryInfoTask(this).execute(mTripId);
             startActivity(new Intent(this, MainActivity.class));
 
-        } else {
-            Toast.makeText(this, "Waiting for network...",
-                    Toast.LENGTH_SHORT).show();
-
-            IntentFilter filter = new IntentFilter("ac");
-            filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-
-            BroadcastReceiver receiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    if (isConnected() && mTripId != null) {
-                        Toast.makeText(SummaryActivity.this, "Now you can save the trip",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            };
-            registerReceiver(receiver, filter);
         }
     }
 
-    private void sendCoordinatesToServer() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
-        query.fromLocalDatastore();
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> coordinates, ParseException e) {
-                for (ParseObject coordinate : coordinates) {
-                    coordinate.put("trip_id", mTripId);
-                }
-                new SendLocationTask(SummaryActivity.this).execute(coordinates);
-                for (ParseObject coordinate : coordinates) {
-                    coordinate.unpinInBackground();
-                }
-            }
-        });
-    }
-
-    private void saveTrip(boolean isSaved) {
-        String tripName = ((EditText) findViewById(R.id.tripNameField)).getText().toString();
-        if (tripName.equals("")) tripName = "Trip on " + mStartTime;
-        String tripNotes = ((EditText) findViewById(R.id.tripNotesField)).getText().toString();
+    private void saveTrip() {
+        String tripName = ((EditText)
+                findViewById(R.id.tripNameField)).getText().toString();
+        String tripNotes = ((EditText)
+                findViewById(R.id.tripNotesField)).getText().toString();
+        if (tripName.equals("")) tripName =
+                "Trip on " + mCurrentTrip.getStartTime();
 
         new SaveTripTask(this).execute(
-                mTripId, isSaved + "", mTotalDistance,
-                mDuration + "", tripName, tripNotes,
+                mTripId, mIsSaved + "", mTotalDistance,
+                mCurrentTrip.getDuration() + "", tripName, tripNotes,
                 mStateCodes, mStateDistances, mStateDurations
         );
     }
@@ -139,7 +86,8 @@ public class SummaryActivity extends Activity
         builder.setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User confirm exit
-                finishSession(false);
+                mIsSaved = false;
+                getSummaryInfo();
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -160,14 +108,13 @@ public class SummaryActivity extends Activity
         mTotalDistance = totalDistance;
         mStateDurations = statesDurations;
 
-        saveTrip(sharedPrefs.getBoolean("is_saved", true));
+        saveTrip();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // do something useful
                 cancelTrip();
                 return (true);
         }
