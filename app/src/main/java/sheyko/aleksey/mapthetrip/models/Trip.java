@@ -11,6 +11,7 @@ import android.util.Log;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +21,6 @@ import java.util.Date;
 
 import sheyko.aleksey.mapthetrip.utils.helpers.VolleySingleton;
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
-import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
 public class Trip implements Parcelable {
 
@@ -69,10 +69,6 @@ public class Trip implements Parcelable {
     public void finish() {
         updateStatus(FINISH);
         mContext.stopService(mLocationIntent);
-    }
-
-    private void updateStatus(String status) {
-        new UpdateTripStatusTask(mContext).execute(tripId, status);
     }
 
     public String getId() {
@@ -202,5 +198,37 @@ public class Trip implements Parcelable {
                         }
                     }
                 }, null));
+    }
+
+    private void updateStatus(final String status) {
+        Device mDevice = new Device(mContext);
+
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority("wsapp.mapthetrip.com")
+                .appendPath("TrucFuelLog.svc")
+                .appendPath("TFLUpdateTripStatus")
+                .appendQueryParameter("TripId", tripId)
+                .appendQueryParameter("TripStatus", status)
+                .appendQueryParameter("TripDateTime", mDevice.getCurrentDateTime())
+                .appendQueryParameter("TripTimezone", mDevice.getTimeZone())
+                .appendQueryParameter("UserId", mDevice.getUserId());
+        String url = builder.build().toString();
+
+        Log.i("Trip.java", "Service: TFLUpdateTripStatus,\n" +
+                "Query: " + url);
+
+        RequestQueue queue = VolleySingleton.getInstance(mContext.getApplicationContext()).
+                getRequestQueue();
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(url, new Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Trip.java", "Service: TFLUpdateTripStatus " + "(" + status + " trip)" + ",\n" +
+                        "Result: " + response);
+            }
+        }, null);
+        queue.add(stringRequest);
     }
 }
