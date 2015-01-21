@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import sheyko.aleksey.mapthetrip.utils.helpers.MySingleton;
+import sheyko.aleksey.mapthetrip.utils.helpers.VolleySingleton;
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
@@ -170,7 +170,7 @@ public class Trip implements Parcelable {
                 .appendQueryParameter("EntityId", mDevice.getEntityId());
         String url = builder.build().toString();
 
-        RequestQueue queue = MySingleton.getInstance(mContext.getApplicationContext()).
+        RequestQueue queue = VolleySingleton.getInstance(mContext.getApplicationContext()).
                 getRequestQueue();
 
         queue.add(new JsonObjectRequest(url, null,
@@ -183,7 +183,6 @@ public class Trip implements Parcelable {
                             String mParseStatus = mServerResponseObject.getString("Status");
                             if (mParseStatus.equals("Success")) {
                                 tripId = mServerResponseObject.getString("TripId");
-                                Log.i("TripId", "Trip ID: " + tripId);
 
                                 setStartTime();
                                 // Sends location to server

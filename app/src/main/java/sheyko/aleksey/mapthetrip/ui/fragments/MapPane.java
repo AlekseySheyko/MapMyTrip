@@ -121,6 +121,8 @@ public class MapPane extends Fragment
         switch (view.getId()) {
             case R.id.startButton:
                 if (mCurrentTrip == null) {
+                    updateUiOnStart();
+
                     // If start button label is «Start»
                     mCurrentTrip = new Trip();
                     mCurrentTrip.start(this.getActivity());
