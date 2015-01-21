@@ -123,7 +123,6 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
 //
 //            Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
 //                    "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
-
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
         } finally {

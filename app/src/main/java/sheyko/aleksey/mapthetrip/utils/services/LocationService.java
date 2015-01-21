@@ -43,7 +43,7 @@ public class LocationService extends Service
             mTripId = intent.getStringExtra("Trip ID");
             createLocationClient().connect();
 
-        } else if (intent.getStringExtra("Action") != null) {
+        } else {
             sendLocationOnServer();
         }
         return START_STICKY;
@@ -62,8 +62,6 @@ public class LocationService extends Service
     @Override
     public void onDestroy() {
         super.onDestroy();
-        new SendLocationTask(LocationService.this).execute(
-                mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
         if (mLocationClient != null && mLocationClient.isConnected())
             stopLocationUpdates(mLocationClient);
         cancelAlarm(this);

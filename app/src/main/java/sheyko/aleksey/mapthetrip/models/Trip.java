@@ -42,7 +42,12 @@ public class Trip implements OnTripRegistered, Parcelable {
 
     public void start(Context context) {
         mContext = context;
-        new RegisterTripTask(context, this).execute();
+
+
+            new RegisterTripTask(context, this).execute();
+
+
+
     }
 
     @Override

@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -98,12 +101,6 @@ public class MapPane extends Fragment
         mFinishButton.setOnClickListener(this);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        this.getActivity().unregisterReceiver(receiver);
-    }
-
     private void initializeViews(View rootView) {
         mStartButton = (Button) rootView.findViewById(R.id.startButton);
         mPauseButton = (Button) rootView.findViewById(R.id.pauseButton);
@@ -126,17 +123,23 @@ public class MapPane extends Fragment
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.startButton:
-                updateUiOnStart();
-
                 if (mCurrentTrip == null) {
-                    // If button label is «Start»
-                    mCurrentTrip = new Trip();
-                    mCurrentTrip.start(this.getActivity());
+                    ConnectivityManager connMgr = (ConnectivityManager)
+                            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        updateUiOnStart();
+                        // If start button label is «Start»
+                        mCurrentTrip = new Trip();
+                        mCurrentTrip.start(this.getActivity());
+                    } else {
+                        Toast.makeText(MapPane.this.getActivity(), "Please connect to a network",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    // If button label is «Resume»
+                    // If start button label is «Resume»
                     mCurrentTrip.resume();
                 }
-
                 break;
             case R.id.pauseButton:
                 updateUiOnPause();
