@@ -27,7 +27,7 @@ public class Trip implements OnTripRegistered, Parcelable {
     String totalDistance;
 
     // Listens for location service
-    private Intent mPinCoordinatesIntent;
+    private Intent mLocationIntent;
 
     // Trip status constants
     private static final String RESUME = "Resume";
@@ -79,9 +79,9 @@ public class Trip implements OnTripRegistered, Parcelable {
         if (isNetworkAvailable())
             new RegisterTripTask(mContext, this).execute();
 
-        // Sends location to server
-        mPinCoordinatesIntent = new Intent(context, LocationService.class);
-        context.startService(mPinCoordinatesIntent);
+        // Sends location updates
+        mLocationIntent = new Intent(context, LocationService.class);
+        context.startService(mLocationIntent);
     }
 
     @Override
@@ -91,19 +91,19 @@ public class Trip implements OnTripRegistered, Parcelable {
 
     public void resume() {
         updateStatus(RESUME);
-        mContext.startService(mPinCoordinatesIntent);
+        mContext.startService(mLocationIntent);
     }
 
     public void pause() {
         updateStatus(PAUSE);
-        if (mPinCoordinatesIntent != null) {
-            mContext.stopService(mPinCoordinatesIntent);
+        if (mLocationIntent != null) {
+            mContext.stopService(mLocationIntent);
         }
     }
 
     public void finish() {
         updateStatus(FINISH);
-        mContext.stopService(mPinCoordinatesIntent);
+        mContext.stopService(mLocationIntent);
     }
 
     private void updateStatus(String status) {

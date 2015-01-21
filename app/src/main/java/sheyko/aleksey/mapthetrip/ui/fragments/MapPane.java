@@ -35,7 +35,6 @@ import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity;
 import sheyko.aleksey.mapthetrip.utils.helpers.Constants.ActionBar.Tab;
-import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 
 public class MapPane extends Fragment
         implements OnClickListener {
@@ -82,30 +81,6 @@ public class MapPane extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (isConnected() && mCurrentTrip.getId() == null) {
-                        new RegisterTripTask(MapPane.this.getActivity()).execute();
-                }
-            }
-        };
-        getActivity().registerReceiver(receiver, filter);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        this.getActivity().unregisterReceiver(receiver);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -123,6 +98,12 @@ public class MapPane extends Fragment
         mStartButton.setOnClickListener(this);
         mPauseButton.setOnClickListener(this);
         mFinishButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.getActivity().unregisterReceiver(receiver);
     }
 
     private void initializeViews(View rootView) {

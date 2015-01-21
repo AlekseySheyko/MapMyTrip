@@ -18,14 +18,15 @@ import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallback
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.parse.ParseObject;
 
 import sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver;
+import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
 
 public class LocationService extends Service
-        implements ConnectionCallbacks, LocationListener {
+        implements ConnectionCallbacks, LocationListener, OnTripRegistered {
 
     private LocationClient mLocationClient;
     private LocationRequest mLocationRequest;
@@ -36,34 +37,46 @@ public class LocationService extends Service
     private String mAccuracy;
 
     private boolean isTripJustStarted = true;
+    private BroadcastReceiver networkReceiver;
+    private IntentFilter filter;
+    private String mTripId;
 
     public LocationService() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getStringExtra("Action") == null) {
-            // Request to start sending location updates catched,
-            // so we need to connect Location Client
-            createLocationClient().connect();
 
-        } else if (intent.getStringExtra("Action") != null) {
-            // Location client connected, and we get a callback here.
-            IntentFilter filter = new IntentFilter("ac");
-            filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
 
-            BroadcastReceiver receiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    if (isConnected()) {
+        networkReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (isConnected()) {
+                    if (intent.getStringExtra("Action") == null) {
+                        // Request to start sending location updates catched,
+                        // so we need to connect Location Client
+                        new RegisterTripTask(LocationService.this).execute();
+                        createLocationClient().connect();
+                        LocationService.this.unregisterReceiver(networkReceiver);
+
+                    } else if (intent.getStringExtra("Action") != null) {
+                        // Location client connected, and we get a callback here.
                         new SendLocationTask(LocationService.this).execute(
                                 mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
                     }
                 }
-            };
-            this.registerReceiver(receiver, filter);
-        }
+            }
+        };
+        this.registerReceiver(networkReceiver, filter);
         return START_STICKY;
+    }
+
+    @Override
+    public void onTripRegistered(Context context, String id) {
+        this.registerReceiver(networkReceiver, filter);
+        mTripId = id;
     }
 
     private boolean isConnected() {
@@ -83,7 +96,7 @@ public class LocationService extends Service
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // TODO Also send location here
+        // Also we'll send location here
         new SendLocationTask(LocationService.this).execute(
                 mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
         stopLocationUpdates(mLocationClient);
@@ -111,7 +124,6 @@ public class LocationService extends Service
         mLocationClient = new LocationClient(this, this, null);
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
         int UPDATE_INTERVAL = 5 * 1000; // 5 seconds
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(UPDATE_INTERVAL);
