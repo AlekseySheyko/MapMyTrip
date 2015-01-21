@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -134,7 +135,9 @@ public class SummaryActivity extends Activity {
                             saveTrip();
                         }
                     }
-                }, null));
+                }, null))
+                .setRetryPolicy(new DefaultRetryPolicy(
+                        1000, 30, 2));
         startActivity(new Intent(this, MainActivity.class));
     }
 
@@ -179,6 +182,8 @@ public class SummaryActivity extends Activity {
                         "Result: " + response);
             }
         }, null);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                1000, 30, 2));
         queue.add(stringRequest);
     }
 

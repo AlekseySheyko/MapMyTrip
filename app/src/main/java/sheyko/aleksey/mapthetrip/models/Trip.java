@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -197,7 +198,9 @@ public class Trip implements Parcelable {
                             e.printStackTrace();
                         }
                     }
-                }, null));
+                }, null))
+                .setRetryPolicy(new DefaultRetryPolicy(
+                        1000, 30, 2));
     }
 
     private void updateStatus(final String status) {
@@ -229,6 +232,8 @@ public class Trip implements Parcelable {
                         "Result: " + response);
             }
         }, null);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                1000, 30, 2));
         queue.add(stringRequest);
     }
 }

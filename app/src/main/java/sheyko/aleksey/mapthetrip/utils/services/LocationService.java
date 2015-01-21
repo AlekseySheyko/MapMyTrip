@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.StringRequest;
@@ -173,6 +174,8 @@ public class LocationService extends Service
                         "Result: " + response);
             }
         }, null);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                1000, 30, 2));
         queue.add(stringRequest);
 
         builder = new Uri.Builder();
