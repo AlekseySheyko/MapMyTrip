@@ -4,18 +4,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, String>> {
     public static final String TAG = GetSummaryInfoTask.class.getSimpleName();
@@ -58,79 +50,79 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
             Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
                     "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
-            URL mUrl = new URL(mUrlString);
-
-            // Create the request and open the connection
-            urlConnection = (HttpURLConnection) mUrl.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            // Read the input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line);
-            }
-
-            try {
-                JSONObject mResponseObject = new JSONObject(buffer.toString());
-                String mQueryStatus = mResponseObject.getJSONObject("status").getString("code");
-                if (mQueryStatus.equals("OK")) {
-                    JSONObject mDataObject = mResponseObject.getJSONObject("data");
-                    JSONObject mStateDistances = mDataObject.getJSONObject("distance");
-
-                    Iterator<?> keys = mStateDistances.keys();
-
-                    List<String> keyList = new ArrayList<>();
-
-                    while (keys.hasNext()) {
-                        String state = (String) keys.next();
-                        keyList.add(state);
-
-                        if (!state.equals("total"))
-                        if (mStatesDurations.equals("")) {
-                            mStatesDurations = mStatesDurations + "0";
-                        } else {
-                            mStatesDurations = mStatesDurations + ", " + "0";
-                        }
-
-                        if (mStateCodes.equals("")) {
-                            mStateCodes = mStateCodes + state;
-                        } else {
-                            mStateCodes = mStateCodes + "," + state;
-                        }
-                    }
-
-                    for (String key : keyList) {
-                        if (!key.equals("total")) {
-
-                            String distance = mStateDistances.getDouble(key) + "";
-
-                            if (mDistances.equals("")) {
-                                mDistances = mDistances + distance;
-                            } else {
-                                mDistances = mDistances + ", " + distance;
-                            }
-                        }
-                    }
-                    mStateCodes = mStateCodes.replace("total,", "");
-                    String totalDistance = mStateDistances.getDouble("total") + "";
-                    if (mStatesDurations.equals("")) mStatesDurations = "0";
-
-                    statesData.put("stateCodes", mStateCodes);
-                    statesData.put("stateDistances", mDistances);
-                    statesData.put("totalDistance", totalDistance);
-                    statesData.put("stateDurations", mStatesDurations);
-                }
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
-
-            Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
-                    "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
+//            URL mUrl = new URL(mUrlString);
+//
+//            // Create the request and open the connection
+//            urlConnection = (HttpURLConnection) mUrl.openConnection();
+//            urlConnection.setRequestMethod("GET");
+//            urlConnection.connect();
+//
+//            // Read the input stream into a String
+//            InputStream inputStream = urlConnection.getInputStream();
+//            StringBuffer buffer = new StringBuffer();
+//            reader = new BufferedReader(new InputStreamReader(inputStream));
+//
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                buffer.append(line);
+//            }
+//
+//            try {
+//                JSONObject mResponseObject = new JSONObject(buffer.toString());
+//                String mQueryStatus = mResponseObject.getJSONObject("status").getString("code");
+//                if (mQueryStatus.equals("OK")) {
+//                    JSONObject mDataObject = mResponseObject.getJSONObject("data");
+//                    JSONObject mStateDistances = mDataObject.getJSONObject("distance");
+//
+//                    Iterator<?> keys = mStateDistances.keys();
+//
+//                    List<String> keyList = new ArrayList<>();
+//
+//                    while (keys.hasNext()) {
+//                        String state = (String) keys.next();
+//                        keyList.add(state);
+//
+//                        if (!state.equals("total"))
+//                        if (mStatesDurations.equals("")) {
+//                            mStatesDurations = mStatesDurations + "0";
+//                        } else {
+//                            mStatesDurations = mStatesDurations + ", " + "0";
+//                        }
+//
+//                        if (mStateCodes.equals("")) {
+//                            mStateCodes = mStateCodes + state;
+//                        } else {
+//                            mStateCodes = mStateCodes + "," + state;
+//                        }
+//                    }
+//
+//                    for (String key : keyList) {
+//                        if (!key.equals("total")) {
+//
+//                            String distance = mStateDistances.getDouble(key) + "";
+//
+//                            if (mDistances.equals("")) {
+//                                mDistances = mDistances + distance;
+//                            } else {
+//                                mDistances = mDistances + ", " + distance;
+//                            }
+//                        }
+//                    }
+//                    mStateCodes = mStateCodes.replace("total,", "");
+//                    String totalDistance = mStateDistances.getDouble("total") + "";
+//                    if (mStatesDurations.equals("")) mStatesDurations = "0";
+//
+//                    statesData.put("stateCodes", mStateCodes);
+//                    statesData.put("stateDistances", mDistances);
+//                    statesData.put("totalDistance", totalDistance);
+//                    statesData.put("stateDurations", mStatesDurations);
+//                }
+//            } catch (Exception e) {
+//                Log.e(TAG, e.getMessage());
+//            }
+//
+//            Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
+//                    "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);

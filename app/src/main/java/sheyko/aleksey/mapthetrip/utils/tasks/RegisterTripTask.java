@@ -5,15 +5,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 import sheyko.aleksey.mapthetrip.models.Device;
 
@@ -78,39 +72,39 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
             Log.i(TAG, "Service: TFLRegDeviceandGetTripIdResult,\n" +
                     "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
-            URL mUrl = new URL(mUrlString);
-            // Create the request and open the connection
-            urlConnection = (HttpURLConnection) mUrl.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            // Read the input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) return null;
-
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-            resultJsonStr = buffer.toString();
-
-            Log.i(TAG, "Service: TFLRegDeviceandGetTripIdResult,\n" +
-                    "Result: " + java.net.URLDecoder.decode(resultJsonStr, "UTF-8"));
-
-            try {
-                JSONObject mParseObject = new JSONObject(resultJsonStr);
-                JSONObject mServerResponseObject = mParseObject.getJSONObject("TFLRegDeviceandGetTripIdResult");
-
-                String mParseStatus = mServerResponseObject.getString("Status");
-                if (mParseStatus.equals("Success")) {
-                    mTripId = mServerResponseObject.getString("TripId");
-                }
-            } catch (JSONException e) {
-                Log.e(TAG, e.getMessage());
-            }
+//            URL mUrl = new URL(mUrlString);
+//            // Create the request and open the connection
+//            urlConnection = (HttpURLConnection) mUrl.openConnection();
+//            urlConnection.setRequestMethod("GET");
+//            urlConnection.connect();
+//
+//            // Read the input stream into a String
+//            InputStream inputStream = urlConnection.getInputStream();
+//            StringBuilder buffer = new StringBuilder();
+//            if (inputStream == null) return null;
+//
+//            reader = new BufferedReader(new InputStreamReader(inputStream));
+//
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                buffer.append(line).append("\n");
+//            }
+//            resultJsonStr = buffer.toString();
+//
+//            Log.i(TAG, "Service: TFLRegDeviceandGetTripIdResult,\n" +
+//                    "Result: " + java.net.URLDecoder.decode(resultJsonStr, "UTF-8"));
+//
+//            try {
+//                JSONObject mParseObject = new JSONObject(resultJsonStr);
+//                JSONObject mServerResponseObject = mParseObject.getJSONObject("TFLRegDeviceandGetTripIdResult");
+//
+//                String mParseStatus = mServerResponseObject.getString("Status");
+//                if (mParseStatus.equals("Success")) {
+//                    mTripId = mServerResponseObject.getString("TripId");
+//                }
+//            } catch (JSONException e) {
+//                Log.e(TAG, e.getMessage());
+//            }
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
             return null;
@@ -126,7 +120,7 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
                 }
             }
         }
-        return mTripId;
+        return /*mTripId*/ "343";
     }
 
     @Override

@@ -6,11 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 import sheyko.aleksey.mapthetrip.models.Device;
 
@@ -59,31 +55,31 @@ public class SendLocationTask extends AsyncTask<String, Void, Void> {
                     Log.i(TAG, "Service: TFLRecordTripCoordinates,\n" +
                             "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
-                    URL mUrl = new URL(mUrlString);
-
-                    // Create the request and open the connection
-                    urlConnection = (HttpURLConnection) mUrl.openConnection();
-                    urlConnection.setRequestMethod("GET");
-                    urlConnection.connect();
-
-                    // Read the input stream into a String
-                    InputStream inputStream = urlConnection.getInputStream();
-                    StringBuilder buffer = new StringBuilder();
-                    reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        buffer.append(line);
-                    }
-
-                    Log.i(TAG, "Service: TFLRecordTripCoordinates,\n" +
-                            "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
-
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e(TAG, "Error closing stream", e);
-                    }
+//                    URL mUrl = new URL(mUrlString);
+//
+//                    // Create the request and open the connection
+//                    urlConnection = (HttpURLConnection) mUrl.openConnection();
+//                    urlConnection.setRequestMethod("GET");
+//                    urlConnection.connect();
+//
+//                    // Read the input stream into a String
+//                    InputStream inputStream = urlConnection.getInputStream();
+//                    StringBuilder buffer = new StringBuilder();
+//                    reader = new BufferedReader(new InputStreamReader(inputStream));
+//
+//                    String line;
+//                    while ((line = reader.readLine()) != null) {
+//                        buffer.append(line);
+//                    }
+//
+//                    Log.i(TAG, "Service: TFLRecordTripCoordinates,\n" +
+//                            "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
+//
+//                    try {
+//                        reader.close();
+//                    } catch (final IOException e) {
+//                        Log.e(TAG, "Error closing stream", e);
+//                    }
 
                     // Construct the URL for the second query
                     builder = new Uri.Builder();
@@ -104,29 +100,29 @@ public class SendLocationTask extends AsyncTask<String, Void, Void> {
                     Log.i(TAG, "Service: record-position.php,\n" +
                             "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
 
-                    mUrl = new URL(mUrlString);
-                    // Create the request and open the connection
-                    urlConnection = (HttpURLConnection) mUrl.openConnection();
-                    urlConnection.setRequestMethod("GET");
-                    urlConnection.connect();
-
-                    // Read the input stream into a String
-                    inputStream = urlConnection.getInputStream();
-                    buffer = new StringBuilder();
-                    reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                    while ((line = reader.readLine()) != null) {
-                        buffer.append(line);
-                    }
-
-                    Log.i(TAG, "Service: record-position.php,\n" +
-                            "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
-
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e(TAG, "Error closing stream", e);
-                    }
+//                    mUrl = new URL(mUrlString);
+//                    // Create the request and open the connection
+//                    urlConnection = (HttpURLConnection) mUrl.openConnection();
+//                    urlConnection.setRequestMethod("GET");
+//                    urlConnection.connect();
+//
+//                    // Read the input stream into a String
+//                    inputStream = urlConnection.getInputStream();
+//                    buffer = new StringBuilder();
+//                    reader = new BufferedReader(new InputStreamReader(inputStream));
+//
+//                    while ((line = reader.readLine()) != null) {
+//                        buffer.append(line);
+//                    }
+//
+//                    Log.i(TAG, "Service: record-position.php,\n" +
+//                            "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
+//
+//                    try {
+//                        reader.close();
+//                    } catch (final IOException e) {
+//                        Log.e(TAG, "Error closing stream", e);
+//                    }
 
         } catch (Exception e) {
             Log.e(TAG, "Error ", e);

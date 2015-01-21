@@ -1,7 +1,5 @@
 D:\MapTheTrip\app\build\intermediates\classes\debug
 D:\android-sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar
-D:\MapTheTrip\app\libs\bolts-android-1.1.4.jar
 D:\MapTheTrip\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar
 D:\MapTheTrip\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar
-D:\MapTheTrip\app\libs\Parse-1.8.1.jar
 D:\MapTheTrip\app\build\intermediates\exploded-aar\com.google.android.gms\play-services\6.1.71\classes.jar

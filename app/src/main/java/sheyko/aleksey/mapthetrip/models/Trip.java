@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
-import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
@@ -41,45 +40,12 @@ public class Trip implements OnTripRegistered, Parcelable {
         readFromParcel(in);
     }
 
-    public static final Parcelable.Creator CREATOR = new Creator<Trip>() {
-        public Trip createFromParcel(Parcel in) {
-            return new Trip(in);
-        }
-
-        public Trip[] newArray(int size) {
-            return new Trip[size];
-        }
-    };
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(tripId);
-        dest.writeFloat(distance);
-        dest.writeInt(duration);
-        dest.writeString(startTime);
-        dest.writeString(stateCodes);
-        dest.writeString(stateDistances);
-        dest.writeString(totalDistance);
-    }
-
-    private void readFromParcel(Parcel in) {
-        tripId = in.readString();
-        distance = in.readFloat();
-        duration = in.readInt();
-        startTime = in.readString();
-        stateCodes = in.readString();
-        stateDistances = in.readString();
-        totalDistance = in.readString();
-    }
-
     public void start(Context context) {
         mContext = context;
         setStartTime();
 
-        if (isNetworkAvailable())
-            new RegisterTripTask(mContext, this).execute();
-
         // Sends location updates
+        // (and register trip ID)
         mLocationIntent = new Intent(context, LocationService.class);
         context.startService(mLocationIntent);
     }
@@ -136,6 +102,36 @@ public class Trip implements OnTripRegistered, Parcelable {
 
     private void setStartTime() {
         startTime = new SimpleDateFormat("dd MMM, hh:mm").format(new Date()).toLowerCase();
+    }
+
+    public static final Parcelable.Creator CREATOR = new Creator<Trip>() {
+        public Trip createFromParcel(Parcel in) {
+            return new Trip(in);
+        }
+        public Trip[] newArray(int size) {
+            return new Trip[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(tripId);
+        dest.writeFloat(distance);
+        dest.writeInt(duration);
+        dest.writeString(startTime);
+        dest.writeString(stateCodes);
+        dest.writeString(stateDistances);
+        dest.writeString(totalDistance);
+    }
+
+    private void readFromParcel(Parcel in) {
+        tripId = in.readString();
+        distance = in.readFloat();
+        duration = in.readInt();
+        startTime = in.readString();
+        stateCodes = in.readString();
+        stateDistances = in.readString();
+        totalDistance = in.readString();
     }
 
     @Override

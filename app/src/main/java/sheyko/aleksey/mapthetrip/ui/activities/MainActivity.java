@@ -18,8 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.parse.Parse;
-
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.ui.adapters.NavigationAdapter;
 import sheyko.aleksey.mapthetrip.ui.fragments.MapPane;
@@ -44,12 +42,6 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        // Enable Local Datastore.
-        try {
-            Parse.enableLocalDatastore(this);
-            Parse.initialize(this, "w7h87LOw8fzK84g0noTS1b4nZhWYXBbRCendV756", "0uzaKEj3Q9R0kTRlq6pg4vawar1HkMTrWFeZ46Yb");
-        } catch (Exception ignored) {}
-
         setContentView(R.layout.activity_main);
 
         addSideNavigation();
