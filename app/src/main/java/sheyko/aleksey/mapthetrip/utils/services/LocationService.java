@@ -3,13 +3,9 @@ package sheyko.aleksey.mapthetrip.utils.services;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -20,13 +16,11 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 
 import sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver;
-import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
 
 public class LocationService extends Service
-        implements ConnectionCallbacks, LocationListener, OnTripRegistered {
+        implements ConnectionCallbacks, LocationListener {
 
     private LocationClient mLocationClient;
     private LocationRequest mLocationRequest;
@@ -37,8 +31,6 @@ public class LocationService extends Service
     private String mAccuracy;
 
     private boolean isTripJustStarted = true;
-    private BroadcastReceiver networkReceiver;
-    private IntentFilter filter;
     private String mTripId;
 
     public LocationService() {
@@ -47,47 +39,19 @@ public class LocationService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        filter = new IntentFilter();
-        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        if (intent.getStringExtra("Trip ID") != null) {
+            mTripId = intent.getStringExtra("Trip ID");
+            createLocationClient().connect();
 
-        networkReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (isConnected()) {
-                    if (intent.getStringExtra("Action") == null) {
-                            // Request to start getting location updates
-                            createLocationClient().connect();
-                            new RegisterTripTask(
-                                    LocationService.this, // Context
-                                    LocationService.this) // Callback listener
-                                    .execute();
-                            // We've register Trip, so don't need to listen for network
-                            LocationService.this.unregisterReceiver(networkReceiver);
-                    } else if (intent.getStringExtra("Action") != null) {
-                        // Location client connected, now we'll send it to server periodically
-                        new SendLocationTask(LocationService.this).execute(
-                                mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
-                    }
-                }
-            }
-        };
-        this.registerReceiver(networkReceiver, filter);
+        } else if (intent.getStringExtra("Action") != null) {
+            sendLocationOnServer();
+        }
         return START_STICKY;
     }
 
-    @Override
-    public void onTripRegistered(Context context, String id) {
-        this.registerReceiver(networkReceiver, filter);
-        mTripId = id;
-    }
-
-    private boolean isConnected() {
-        ConnectivityManager cm =
-                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
+    private void sendLocationOnServer() {
+        new SendLocationTask(this).execute(
+                mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
     }
 
     @Override
@@ -98,14 +62,11 @@ public class LocationService extends Service
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Also we'll send location here
         new SendLocationTask(LocationService.this).execute(
                 mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
-        stopLocationUpdates(mLocationClient);
+        if (mLocationClient != null && mLocationClient.isConnected())
+            stopLocationUpdates(mLocationClient);
         cancelAlarm(this);
-        try {
-            unregisterReceiver(networkReceiver);
-        } catch (Exception ignored) {}
     }
 
     private static void startAlarm(Context context) {
@@ -137,7 +98,7 @@ public class LocationService extends Service
 
     private void startLocationUpdates(LocationClient client) {
         if (mLocationClient.isConnected())
-        client.requestLocationUpdates(mLocationRequest, this);
+            client.requestLocationUpdates(mLocationRequest, this);
     }
 
     private void stopLocationUpdates(LocationClient client) {

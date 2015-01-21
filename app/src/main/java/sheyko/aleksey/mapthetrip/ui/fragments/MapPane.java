@@ -250,7 +250,7 @@ public class MapPane extends Fragment
     }
 
     private float getDistance(Location previousLocation, Location currentLocation) {
-        return previousLocation.distanceTo(currentLocation) / 1000;
+        return previousLocation.distanceTo(currentLocation) * 0.000621371f;
     }
 
     private GoogleMap disableMapUiControls(Fragment fragment) {

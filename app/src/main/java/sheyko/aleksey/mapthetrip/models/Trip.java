@@ -2,15 +2,15 @@ package sheyko.aleksey.mapthetrip.models;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
+import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
@@ -42,17 +42,20 @@ public class Trip implements OnTripRegistered, Parcelable {
 
     public void start(Context context) {
         mContext = context;
-        setStartTime();
-
-        // Sends location updates
-        // (and register trip ID)
-        mLocationIntent = new Intent(context, LocationService.class);
-        context.startService(mLocationIntent);
+        new RegisterTripTask(context, this).execute();
     }
 
     @Override
     public void onTripRegistered(Context context, String id) {
         tripId = id;
+        setStartTime();
+        // Sends location to server
+        mLocationIntent = new Intent(context, LocationService.class);
+        mLocationIntent.putExtra("Trip ID", tripId);
+        context.startService(mLocationIntent);
+
+        PreferenceManager.getDefaultSharedPreferences(mContext).edit()
+                .putString("trip_id", tripId).apply();
     }
 
     public void resume() {
@@ -137,12 +140,5 @@ public class Trip implements OnTripRegistered, Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager cm =
-                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnected();
     }
 }

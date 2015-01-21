@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -36,7 +37,8 @@ public class SummaryActivity extends Activity
         setContentView(R.layout.activity_summary);
 
         mCurrentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
-        mTripId = mCurrentTrip.getId();
+        mTripId = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("trip_id", "-1");
 
         // Update UI
         ((TextView) findViewById(R.id.TripLabelDistance))
