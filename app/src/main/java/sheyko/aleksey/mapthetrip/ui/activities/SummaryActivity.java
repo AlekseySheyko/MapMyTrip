@@ -7,21 +7,34 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import sheyko.aleksey.mapthetrip.R;
+import sheyko.aleksey.mapthetrip.models.Device;
 import sheyko.aleksey.mapthetrip.models.Trip;
-import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetrieved;
+import sheyko.aleksey.mapthetrip.utils.helpers.VolleySingleton;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
 
-public class SummaryActivity extends Activity
-        implements OnStatesDataRetrieved {
+public class SummaryActivity extends Activity {
 
     private Trip mCurrentTrip;
     private String mTripId;
@@ -52,12 +65,82 @@ public class SummaryActivity extends Activity
     }
 
     private void getSummaryInfo() {
+        Device mDevice = new Device(this);
 
-        if (mTripId != null && isConnected()) {
-            new GetSummaryInfoTask(this).execute(mTripId);
-            startActivity(new Intent(this, MainActivity.class));
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority("64.251.25.139")
+                .appendPath("trucks_app")
+                .appendPath("ws")
+                .appendPath("get-distance.php")
+                .appendQueryParameter("truck_id", mTripId);
+        String url = builder.build().toString();
 
-        }
+        Log.i("SummaryActivity", "Service: " + "GetSummaryInfo" + ",\n" +
+                "Query: " + url);
+
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).
+                getRequestQueue();
+
+        queue.add(new JsonObjectRequest(url, null,
+                new Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonRoot) {
+
+                        try {
+                            String mQueryStatus = jsonRoot.getJSONObject("status").getString("code");
+
+                            if (mQueryStatus.equals("OK")) {
+                                JSONObject mDataObject = jsonRoot.getJSONObject("data");
+                                JSONObject mStateDistances = mDataObject.getJSONObject("distance");
+
+                                Iterator<?> keys = mStateDistances.keys();
+
+                                List<String> keyList = new ArrayList<>();
+
+                                while (keys.hasNext()) {
+                                    String state = (String) keys.next();
+                                    keyList.add(state);
+
+                                    if (!state.equals("total"))
+                                        if (mStateDurations.equals("")) {
+                                            mStateDurations = mStateDurations + "0";
+                                        } else {
+                                            mStateDurations = mStateDurations + ", " + "0";
+                                        }
+
+                                    if (mStateCodes.equals("")) {
+                                        mStateCodes = mStateCodes + state;
+                                    } else {
+                                        mStateCodes = mStateCodes + "," + state;
+                                    }
+                                }
+
+                                for (String key : keyList) {
+                                    if (!key.equals("total")) {
+
+                                        String distance = mStateDistances.getDouble(key) + "";
+
+                                        if (mStateDistances.equals("")) {
+                                            mDistances = mDistances + distance;
+                                        } else {
+                                            mDistances = mDistances + ", " + distance;
+                                        }
+                                    }
+                                }
+                                mStateCodes = mStateCodes.replace("total,", "");
+                                String totalDistance = mStateDistances.getDouble("total") + "";
+                                if (mStatesDurations.equals("")) mStatesDurations = "0";
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } finally {
+                            saveTrip();
+                        }
+                    }
+                }, null));
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     private void saveTrip() {
@@ -68,11 +151,40 @@ public class SummaryActivity extends Activity
         if (tripName.equals("")) tripName =
                 "Trip on " + mCurrentTrip.getStartTime();
 
-        new SaveTripTask(this).execute(
-                mTripId, mIsSaved + "", mTotalDistance,
-                mCurrentTrip.getDuration() + "", tripName, tripNotes,
-                mStateCodes, mStateDistances, mStateDurations
-        );
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority("wsapp.mapthetrip.com")
+                .appendPath("TrucFuelLog.svc")
+                .appendPath("TFLSaveTripandSummaryInfo")
+                .appendQueryParameter("TripId", mTripId)
+                .appendQueryParameter("IsTripSaved", mIsSaved + "")
+                .appendQueryParameter("TotalDistanceTraveled", mTotalDistance)
+                .appendQueryParameter("TotalTripDuration", mCurrentTrip.getDuration() + "")
+                .appendQueryParameter("TripName", "" + tripName)
+                .appendQueryParameter("TripDesc", "" + tripName)
+                .appendQueryParameter("TripNotes", "" + tripNotes)
+                .appendQueryParameter("StateCd", mStateCodes)
+                .appendQueryParameter("TotalStateDistanceTraveled", mStateDistances)
+                .appendQueryParameter("Total_State_Trip_Duration", "" + mStateDurations)
+                .appendQueryParameter("EntityId", "1")
+                .appendQueryParameter("UserId", "1");
+        String url = builder.build().toString();
+
+        Log.i("SummaryActivity", "Service: TFLSaveTripandSummaryInfo,\n" +
+                "Query: " + url);
+
+        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).
+                getRequestQueue();
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(url, new Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("SummaryActivity", "Service: TFLSaveTripandSummaryInfo,\n" +
+                        "Result: " + response);
+            }
+        }, null);
+        queue.add(stringRequest);
     }
 
     public void cancelTrip(View view) {
@@ -101,16 +213,6 @@ public class SummaryActivity extends Activity
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    @Override
-    public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesDurations) {
-        mStateCodes = stateCodes;
-        mStateDistances = stateDistances;
-        mTotalDistance = totalDistance;
-        mStateDurations = statesDurations;
-
-        saveTrip();
     }
 
     @Override

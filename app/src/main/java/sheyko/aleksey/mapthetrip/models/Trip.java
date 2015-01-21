@@ -170,6 +170,9 @@ public class Trip implements Parcelable {
                 .appendQueryParameter("EntityId", mDevice.getEntityId());
         String url = builder.build().toString();
 
+        Log.i("Trip.java", "Service: TFLRegDeviceandGetTripIdResult,\n" +
+                "Query: " + url);
+
         RequestQueue queue = VolleySingleton.getInstance(mContext.getApplicationContext()).
                 getRequestQueue();
 
@@ -183,6 +186,7 @@ public class Trip implements Parcelable {
                             String mParseStatus = mServerResponseObject.getString("Status");
                             if (mParseStatus.equals("Success")) {
                                 tripId = mServerResponseObject.getString("TripId");
+                                Log.i("Trip.java", "Trip registered. ID: " + tripId);
 
                                 setStartTime();
                                 // Sends location to server
@@ -194,7 +198,7 @@ public class Trip implements Parcelable {
                                         .putString("trip_id", tripId).apply();
                             }
                         } catch (JSONException e) {
-                            Log.e("RegisterTrip", e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                 }, null));

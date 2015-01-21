@@ -158,7 +158,7 @@ public class LocationService extends Service
                 .appendQueryParameter("Accuracy", mAccuracy)
         ;
         String url = builder.build().toString();
-        
+
         Log.i("LocationService", "Service: TFLRecordTripCoordinates,\n" +
                 "Query: " + url);
 
