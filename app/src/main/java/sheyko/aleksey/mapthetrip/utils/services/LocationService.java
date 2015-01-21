@@ -3,9 +3,13 @@ package sheyko.aleksey.mapthetrip.utils.services;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -17,6 +21,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.parse.ParseObject;
 
 import sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
 
 public class LocationService extends Service
@@ -44,22 +49,30 @@ public class LocationService extends Service
 
         } else if (intent.getStringExtra("Action") != null) {
             // Location client connected, and we get a callback here.
-            // In case there's no network available, we will store data in
-            // local database (and then send it «SummaryActivity»)
-            pinCurrentCoordinates();
+            IntentFilter filter = new IntentFilter("ac");
+            filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+
+            BroadcastReceiver receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (isConnected()) {
+                        new SendLocationTask(LocationService.this).execute(
+                                mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
+                    }
+                }
+            };
+            this.registerReceiver(receiver, filter);
         }
         return START_STICKY;
     }
 
-    private void pinCurrentCoordinates() {
-        try {
-            ParseObject coordinates = new ParseObject("Coordinates");
-            coordinates.put("latitude", mLatitude);
-            coordinates.put("longitude", mLongitude);
-            coordinates.put("altitude", mAltitude);
-            coordinates.put("accuracy", mAccuracy);
-            coordinates.pinInBackground();
-        } catch (Exception ignored) {}
+    private boolean isConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
     }
 
     @Override
@@ -70,7 +83,9 @@ public class LocationService extends Service
     @Override
     public void onDestroy() {
         super.onDestroy();
-        pinCurrentCoordinates();
+        // TODO Also send location here
+        new SendLocationTask(LocationService.this).execute(
+                mTripId, mLatitude, mLongitude, mAltitude, mAccuracy);
         stopLocationUpdates(mLocationClient);
         cancelAlarm(this);
     }

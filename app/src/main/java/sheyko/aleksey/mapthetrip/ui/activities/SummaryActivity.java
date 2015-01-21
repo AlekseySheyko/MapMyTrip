@@ -58,7 +58,7 @@ public class SummaryActivity extends Activity
         mDistance = currentTrip.getDistance();
         mDuration = currentTrip.getDuration();
         mStartTime = currentTrip.getStartTime();
-        mTripId = currentTrip.getTripId();
+        mTripId = currentTrip.getId();
         if (mTripId == null) mTripId = sharedPrefs.getString("trip_id", "");
 
         // Update UI

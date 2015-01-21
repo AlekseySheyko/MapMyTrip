@@ -110,7 +110,7 @@ public class Trip implements OnTripRegistered, Parcelable {
         new UpdateTripStatusTask(mContext).execute(tripId, status);
     }
 
-    public String getTripId() {
+    public String getId() {
         return tripId;
     }
 

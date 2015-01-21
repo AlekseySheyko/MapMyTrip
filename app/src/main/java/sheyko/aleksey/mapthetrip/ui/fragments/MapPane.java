@@ -2,7 +2,6 @@ package sheyko.aleksey.mapthetrip.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +12,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,11 +62,6 @@ public class MapPane extends Fragment
     private TextView mDistanceCounter;
     private TextView mDurationCounter;
     private BroadcastReceiver receiver;
-    private Intent mTripStartedIntent;
-    private int isTripStarted = 0;
-    private Builder mNotifyBuilder;
-    private NotificationManager mNotificationManager;
-    private int notifyID;
 
     // Required empty constructor
     public MapPane() {
@@ -93,39 +85,14 @@ public class MapPane extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        IntentFilter filter = new IntentFilter("ac");
+        IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
 
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                ConnectivityManager cm =
-                        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                boolean isConnected = activeNetwork != null &&
-                        activeNetwork.isConnectedOrConnecting();
-
-                if (isConnected) {
-                    if (isTripStarted == 1 && mCurrentTrip.getTripId() == null) {
+                if (isConnected() && mCurrentTrip.getId() == null) {
                         new RegisterTripTask(MapPane.this.getActivity()).execute();
-                    }
-                    if (mNotificationManager != null)
-                        mNotificationManager.cancel(notifyID);
-                } else {
-                    mNotificationManager =
-                            (NotificationManager) MapPane.this.getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                    // Sets an ID for the notification, so it can be updated
-                    notifyID = 1;
-                    mNotifyBuilder = new NotificationCompat.Builder(MapPane.this.getActivity())
-                            .setContentTitle("Offline mode")
-                            .setContentText("Trip isn't on server yet.")
-                            .setSmallIcon(android.R.drawable.ic_menu_info_details);
-                    // Because the ID remains unchanged, the existing notification is
-                    // updated.
-                    mNotificationManager.notify(
-                            notifyID,
-                            mNotifyBuilder.build());
                 }
             }
         };
@@ -214,10 +181,6 @@ public class MapPane extends Fragment
     }
 
     private void updateUiOnStart() {
-        if (isTripStarted < 2) {
-            isTripStarted++;
-        }
-
         if (getActivity() != null && getActivity().getActionBar() != null)
             getActivity().getActionBar()
                     .setTitle(getString(R.string.recording_label));
@@ -352,5 +315,15 @@ public class MapPane extends Fragment
             mTimerTask.cancel();
             mTimerTask = null;
         }
+    }
+
+    private boolean isConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getActivity().
+                        getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
     }
 }
