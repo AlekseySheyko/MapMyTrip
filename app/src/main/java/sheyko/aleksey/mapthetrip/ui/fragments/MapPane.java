@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -20,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -124,18 +121,9 @@ public class MapPane extends Fragment
         switch (view.getId()) {
             case R.id.startButton:
                 if (mCurrentTrip == null) {
-                    ConnectivityManager connMgr = (ConnectivityManager)
-                            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                        updateUiOnStart();
-                        // If start button label is «Start»
-                        mCurrentTrip = new Trip();
-                        mCurrentTrip.start(this.getActivity());
-                    } else {
-                        Toast.makeText(MapPane.this.getActivity(), "Please connect to a network",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    // If start button label is «Start»
+                    mCurrentTrip = new Trip();
+                    mCurrentTrip.start(this.getActivity());
                 } else {
                     // If start button label is «Resume»
                     mCurrentTrip.resume();
