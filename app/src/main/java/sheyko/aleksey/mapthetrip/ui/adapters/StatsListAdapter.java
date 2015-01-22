@@ -1,58 +1,73 @@
 package sheyko.aleksey.mapthetrip.ui.adapters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import sheyko.aleksey.mapthetrip.R;
 
-public class StatsListAdapter extends ArrayAdapter<String> {
-    private final String[] values;
+public class StatsListAdapter extends BaseAdapter {
+    public static final String FIRST_COLUMN = "First";
+    public static final String SECOND_COLUMN = "Second";
 
-    private String[] separatedCodes;
-    private String[] separatedDistances;
+    public ArrayList<HashMap> list;
+    Activity activity;
 
-    public StatsListAdapter(Context context, String[] values) {
-        super(context, R.layout.stats_list_item, values);
-        this.values = values;
+    public StatsListAdapter(Activity activity, ArrayList<HashMap> list) {
+        super();
+        this.activity = activity;
+        this.list = list;
+    }
 
-        String stateCodes = values[0];
-        String stateDistances = values[1];
+    @Override
+    public int getCount() {
+        // TODO Auto-generated method stub
+        return list.size();
+    }
 
-        separatedCodes = stateCodes.split(",");
-        separatedDistances = stateDistances.split(",");
+    @Override
+    public Object getItem(int position) {
+        // TODO Auto-generated method stub
+        return list.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    private class ViewHolder {
+        TextView txtFirst;
+        TextView txtSecond;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View v = convertView;
+        ViewHolder holder;
+        LayoutInflater inflater = activity.getLayoutInflater();
 
-        if (v == null) {
-            LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.stats_list_item, null);
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.stats_list_item, null);
+            holder = new ViewHolder();
+            holder.txtFirst = (TextView) convertView.findViewById(R.id.stateCodeLabel);
+            holder.txtSecond = (TextView) convertView.findViewById(R.id.stateDistanceLabel);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        if (separatedCodes[0] != null
-                && separatedDistances[0] != null) {
+        HashMap map = list.get(position);
+        holder.txtFirst.setText(map.get(FIRST_COLUMN) + "");
+        holder.txtSecond.setText(map.get(SECOND_COLUMN) + "");
 
-            try {
-                TextView stateCodeTextView = (TextView) v.findViewById(R.id.stateCodeLabel);
-                stateCodeTextView.setText(separatedCodes[position]);
-
-                TextView stateDistanceTextView = (TextView) v.findViewById(R.id.stateDistanceLabel);
-                stateDistanceTextView.setText(
-                        String.format("%.2f",
-                                Float.parseFloat(
-                                        separatedDistances[position].trim())));
-            } catch (Exception ignored) {
-            }
-        }
-
-        return v;
+        return convertView;
     }
 }

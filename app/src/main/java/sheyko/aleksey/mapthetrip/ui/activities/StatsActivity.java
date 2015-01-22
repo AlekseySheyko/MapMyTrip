@@ -8,10 +8,17 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.ui.adapters.StatsListAdapter;
 
 public class StatsActivity extends Activity {
+    public static final String FIRST_COLUMN = "First";
+    public static final String SECOND_COLUMN = "Second";
+
+    private ArrayList<HashMap> list;
 
     private String mTotalDistance;
     private String mStateCodes;
@@ -32,15 +39,30 @@ public class StatsActivity extends Activity {
         }
 
         if (!mStateCodes.equals("0")) {
-            
 
-            String[] values = new String[]{mStateCodes, mStateDistances};
+            String[] separatedCodes = mStateCodes.split(",");
+            String[] separatedDistances = mStateDistances.split(",");
+            populateList(separatedCodes, separatedDistances);
 
-            StatsListAdapter listAdapter = new StatsListAdapter(
-                    this, values);
-
+            StatsListAdapter adapter = new StatsListAdapter(this, list);
             ListView mListView = (ListView) findViewById(R.id.stats_list);
-            mListView.setAdapter(listAdapter);
+            mListView.setAdapter(adapter);
+        }
+    }
+
+    private void populateList(String[] separatedCodes, String[] separatedDistances) {
+
+        list = new ArrayList<HashMap>();
+
+        for (int i = 0; i <= separatedCodes.length; i++) {
+
+            HashMap temp = new HashMap();
+            temp.put(FIRST_COLUMN, separatedCodes[i]);
+            temp.put(SECOND_COLUMN, String.format("%.2f",
+                    Float.parseFloat(
+                            separatedDistances[i].trim())));
+            list.add(temp);
+
         }
     }
 

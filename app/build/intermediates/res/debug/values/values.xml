@@ -414,7 +414,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:divider">#bdc3c7</item>
+        <item name="android:divider">#d7dbde</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
     <!-- From: file:/D:/MapTheTrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_styles.xml -->
