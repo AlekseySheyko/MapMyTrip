@@ -124,8 +124,6 @@ activity#sheyko.aleksey.mapthetrip.ui.activities.StatsActivity
 ADDED from AndroidManifest.xml:60:9
 	android:label
 		ADDED from AndroidManifest.xml:62:13
-	android:parentActivityName
-		ADDED from AndroidManifest.xml:63:13
 	android:name
 		ADDED from AndroidManifest.xml:61:13
 uses-sdk

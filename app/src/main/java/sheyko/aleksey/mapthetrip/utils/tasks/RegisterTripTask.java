@@ -144,6 +144,6 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
             mCallback.onTripRegistered(mContext, mTripId);
 
         PreferenceManager.getDefaultSharedPreferences(mContext).edit()
-                .putString("trip_id", mTripId);
+                .putString("trip_id", mTripId).apply();
     }
 }
