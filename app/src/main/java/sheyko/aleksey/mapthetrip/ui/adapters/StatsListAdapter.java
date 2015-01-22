@@ -23,7 +23,6 @@ public class StatsListAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
         View rowView = inflater.inflate(R.layout.stats_list_item, parent, false);
 
         TextView stateCodeTextView = (TextView) rowView.findViewById(R.id.stateCodeLabel);
@@ -31,7 +30,6 @@ public class StatsListAdapter extends ArrayAdapter<String> {
 
         TextView stateDistanceTextView = (TextView) rowView.findViewById(R.id.stateDistanceLabel);
         stateDistanceTextView.setText(values[1]);
-
 
         return rowView;
     }

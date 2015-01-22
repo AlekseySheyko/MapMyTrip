@@ -27,7 +27,7 @@ public class StatsActivity extends Activity {
             mStateDistances = getIntent().getStringExtra("state_distances");
         }
 
-        TextView mTotalDistanceLabel = (TextView) findViewById(R.id.total_distance_label);
+        TextView mTotalDistanceLabel = (TextView) findViewById(R.id.total_distance_value);
         mTotalDistanceLabel.setText(mTotalDistance);
 
         String[] values = new String[] { mStateCodes, mStateDistances };

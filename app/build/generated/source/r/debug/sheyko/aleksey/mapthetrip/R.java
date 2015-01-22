@@ -424,8 +424,8 @@ containing a value of this type.
         public static final int TripLabelHeader=0x7f0d001a;
         public static final int TripLabelUnits=0x7f0d001c;
         public static final int actionBarTabsContainer=0x7f0d0015;
-        public static final int action_settings=0x7f0d0033;
-        public static final int action_stats_accept=0x7f0d0034;
+        public static final int action_settings=0x7f0d0035;
+        public static final int action_stats_accept=0x7f0d0036;
         public static final int book_now=0x7f0d000e;
         public static final int button_container=0x7f0d0029;
         public static final int buyButton=0x7f0d000a;
@@ -465,13 +465,15 @@ containing a value of this type.
         public static final int splashscreen=0x7f0d0032;
         public static final int startButton=0x7f0d002a;
         public static final int start_button_label=0x7f0d0020;
+        public static final int stateCodeLabel=0x7f0d0033;
+        public static final int stateDistanceLabel=0x7f0d0034;
+        public static final int stats_list=0x7f0d0019;
         public static final int strict_sandbox=0x7f0d0009;
         public static final int terrain=0x7f0d0004;
         public static final int text1=0x7f0d0031;
-        public static final int total_distance_label=0x7f0d0018;
+        public static final int total_distance_value=0x7f0d0018;
         public static final int tripNameField=0x7f0d001d;
         public static final int tripNotesField=0x7f0d001e;
-        public static final int trip_list=0x7f0d0019;
         public static final int wrap_content=0x7f0d000d;
     }
     public static final class integer {
@@ -484,6 +486,7 @@ containing a value of this type.
         public static final int fragment_map=0x7f040003;
         public static final int navigation_list_item=0x7f040004;
         public static final int splash_screen=0x7f040005;
+        public static final int stats_list_item=0x7f040006;
     }
     public static final class menu {
         public static final int menu_stats=0x7f0c0000;

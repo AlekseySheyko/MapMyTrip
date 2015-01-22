@@ -147,8 +147,8 @@ int id TripLabelDistance 0x7f0d001b
 int id TripLabelHeader 0x7f0d001a
 int id TripLabelUnits 0x7f0d001c
 int id actionBarTabsContainer 0x7f0d0015
-int id action_settings 0x7f0d0033
-int id action_stats_accept 0x7f0d0034
+int id action_settings 0x7f0d0035
+int id action_stats_accept 0x7f0d0036
 int id book_now 0x7f0d000e
 int id button_container 0x7f0d0029
 int id buyButton 0x7f0d000a
@@ -188,13 +188,15 @@ int id slide_button_container 0x7f0d002d
 int id splashscreen 0x7f0d0032
 int id startButton 0x7f0d002a
 int id start_button_label 0x7f0d0020
+int id stateCodeLabel 0x7f0d0033
+int id stateDistanceLabel 0x7f0d0034
+int id stats_list 0x7f0d0019
 int id strict_sandbox 0x7f0d0009
 int id terrain 0x7f0d0004
 int id text1 0x7f0d0031
-int id total_distance_label 0x7f0d0018
+int id total_distance_value 0x7f0d0018
 int id tripNameField 0x7f0d001d
 int id tripNotesField 0x7f0d001e
-int id trip_list 0x7f0d0019
 int id wrap_content 0x7f0d000d
 int integer google_play_services_version 0x7f090000
 int layout activity_main 0x7f040000
@@ -203,6 +205,7 @@ int layout activity_summary 0x7f040002
 int layout fragment_map 0x7f040003
 int layout navigation_list_item 0x7f040004
 int layout splash_screen 0x7f040005
+int layout stats_list_item 0x7f040006
 int menu menu_stats 0x7f0c0000
 int menu summary 0x7f0c0001
 int mipmap ic_launcher 0x7f030000

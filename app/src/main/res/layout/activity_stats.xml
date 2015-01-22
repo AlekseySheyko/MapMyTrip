@@ -25,7 +25,7 @@
                 style="@style/TotalDistanceValueContainer">
 
                 <TextView
-                    android:id="@+id/total_distance_label"
+                    android:id="@+id/total_distance_value"
                     style="@style/total_distance_value"
                     android:text="@string/total_distance_test_value"
                     android:textSize="24sp"/>

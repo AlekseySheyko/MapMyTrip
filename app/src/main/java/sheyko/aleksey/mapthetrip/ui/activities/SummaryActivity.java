@@ -58,10 +58,6 @@ public class SummaryActivity extends Activity
 
             sharedPrefs.edit().putBoolean("is_saved", isSaved);
             new GetSummaryInfoTask(this).execute(mTripId);
-            startActivity(new Intent(this, StatsActivity.class)
-            .putExtra("total_distance", mTotalDistance)
-            .putExtra("state_codes", mStateCodes)
-            .putExtra("state_distances", mStateDistances));
     }
 
     private void saveTrip(boolean isSaved) {
@@ -74,6 +70,11 @@ public class SummaryActivity extends Activity
                 mDuration + "", tripName, tripNotes,
                 mStateCodes, mStateDistances, mStateDurations
         );
+
+        startActivity(new Intent(this, StatsActivity.class)
+                .putExtra("total_distance", mTotalDistance)
+                .putExtra("state_codes", mStateCodes)
+                .putExtra("state_distances", mStateDistances));
     }
 
     public void cancelTrip(View view) {
