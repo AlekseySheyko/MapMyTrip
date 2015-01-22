@@ -26,11 +26,13 @@ public class StatsActivity extends Activity {
             mTotalDistance = getIntent().getStringExtra("total_distance");
             mStateCodes = getIntent().getStringExtra("state_codes");
             mStateDistances = getIntent().getStringExtra("state_distances");
+
+            TextView mTotalDistanceLabel = (TextView) findViewById(R.id.total_distance_value);
+            mTotalDistanceLabel.setText(mTotalDistance);
         }
 
         if (!mStateCodes.equals("0")) {
-            TextView mTotalDistanceLabel = (TextView) findViewById(R.id.total_distance_value);
-            mTotalDistanceLabel.setText(mTotalDistance);
+            
 
             String[] values = new String[]{mStateCodes, mStateDistances};
 
