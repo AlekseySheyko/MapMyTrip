@@ -6,6 +6,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -83,9 +85,11 @@ public class LocationService extends Service
                             .getString("trip_id", "");
                     coordinate.put("trip_id", tripId);
                 }
-                new SendLocationTask(LocationService.this).execute(coordinates);
-                for (ParseObject coordinate : coordinates) {
-                    coordinate.unpinInBackground();
+                if (isOnline()) {
+                    new SendLocationTask(LocationService.this).execute(coordinates);
+                    for (ParseObject coordinate : coordinates) {
+                        coordinate.unpinInBackground();
+                    }
                 }
             }
         });
@@ -102,6 +106,13 @@ public class LocationService extends Service
         pinCurrentCoordinates();
         stopLocationUpdates(mLocationClient);
         cancelAlarm(this);
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 
     private static void startAlarm(Context context) {

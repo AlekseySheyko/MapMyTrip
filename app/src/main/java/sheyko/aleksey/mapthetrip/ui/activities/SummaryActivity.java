@@ -2,12 +2,9 @@ package sheyko.aleksey.mapthetrip.ui.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
@@ -15,19 +12,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-
-import java.util.List;
-
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetrieved;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
 public class SummaryActivity extends Activity
         implements OnStatesDataRetrieved {
@@ -130,14 +119,5 @@ public class SummaryActivity extends Activity
                 return (true);
         }
         return (super.onOptionsItemSelected(item));
-    }
-
-    private boolean isConnected() {
-        ConnectivityManager cm =
-                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
     }
 }

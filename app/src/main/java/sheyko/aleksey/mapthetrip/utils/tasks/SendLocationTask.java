@@ -137,7 +137,7 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
                 }
             }
         } catch (IOException e) {
-            Log.e(TAG, "Error ", e);
+            Log.e(TAG, "Error : " + e.getLocalizedMessage());
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
