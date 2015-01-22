@@ -11,6 +11,8 @@ import android.util.Log;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
@@ -173,7 +175,8 @@ public class Trip implements Parcelable {
         RequestQueue queue = VolleySingleton.getInstance(mContext.getApplicationContext()).
                 getRequestQueue();
 
-        queue.add(new JsonObjectRequest(url, null,
+
+        JsonObjectRequest objectRequest = new JsonObjectRequest(url, null,
                 new Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonRoot) {
@@ -198,9 +201,23 @@ public class Trip implements Parcelable {
                             e.printStackTrace();
                         }
                     }
-                }, null))
-                .setRetryPolicy(new DefaultRetryPolicy(
-                        1000, 30, 2));
+                }, null);
+        queue.add(objectRequest).setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 5000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+                Log.i("TAG", "БЯЛЯЛЛЯЛЯ");
+            }
+        });
     }
 
     private void updateStatus(final String status) {
