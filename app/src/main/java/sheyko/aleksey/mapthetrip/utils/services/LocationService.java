@@ -86,7 +86,7 @@ public class LocationService extends Service
                     coordinate.put("trip_id", tripId);
                 }
                 if (isOnline()) {
-                    new SendLocationTask(LocationService.this).execute(coordinates);
+                    new SendLocationTask(LocationService.this, null).execute(coordinates);
                     for (ParseObject coordinate : coordinates) {
                         coordinate.unpinInBackground();
                     }

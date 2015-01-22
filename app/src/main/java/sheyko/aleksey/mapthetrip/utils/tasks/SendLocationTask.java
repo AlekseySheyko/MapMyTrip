@@ -21,8 +21,15 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
     public static final String TAG = SendLocationTask.class.getSimpleName();
     private Context mContext;
 
-    public SendLocationTask(Context context) {
+    protected OnLocationSent mCallback;
+
+    public interface OnLocationSent {
+        public void onLocationSent();
+    }
+
+    public SendLocationTask(Context context, OnLocationSent callback) {
         mContext = context;
+        mCallback = callback;
     }
 
     @Override
@@ -144,5 +151,14 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
             }
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void v) {
+        super.onPostExecute(v);
+
+        if (mCallback != null) {
+            mCallback.onLocationSent();
+        }
     }
 }

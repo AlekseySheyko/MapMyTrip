@@ -28,9 +28,10 @@ import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetrieved;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask.OnLocationSent;
 
 public class SummaryActivity extends Activity
-        implements OnStatesDataRetrieved {
+        implements OnStatesDataRetrieved, OnLocationSent {
 
     private String mTripId;
     private int mDuration;
@@ -66,13 +67,10 @@ public class SummaryActivity extends Activity
     }
 
     private void finishSession(boolean isSaved) {
+        sharedPrefs.edit().putBoolean("is_saved", isSaved);
 
         if (isOnline()) {
-            
-
             sendCoordinatesToServer();
-
-            new GetSummaryInfoTask(this).execute(mTripId);
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
             builder.setTitle("Network lost");
@@ -109,7 +107,7 @@ public class SummaryActivity extends Activity
                     coordinate.put("trip_id", tripId);
                 }
                 if (isOnline()) {
-                    new SendLocationTask(SummaryActivity.this).execute(coordinates);
+                    new SendLocationTask(SummaryActivity.this, SummaryActivity.this).execute(coordinates);
                     for (ParseObject coordinate : coordinates) {
                         coordinate.unpinInBackground();
                     }
@@ -188,5 +186,10 @@ public class SummaryActivity extends Activity
                 return (true);
         }
         return (super.onOptionsItemSelected(item));
+    }
+
+    @Override
+    public void onLocationSent() {
+        new GetSummaryInfoTask(this).execute(mTripId);
     }
 }
