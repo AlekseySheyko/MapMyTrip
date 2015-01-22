@@ -35,10 +35,7 @@ public class StatsListAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.stats_list_item, parent, false);
 
         TextView stateCodeTextView = (TextView) rowView.findViewById(R.id.stateCodeLabel);
-        stateCodeTextView.setText(
-                String.format("%.2f",
-                        Float.parseFloat(
-                                separatedCodes[position])));
+        stateCodeTextView.setText(separatedCodes[position]);
 
         TextView stateDistanceTextView = (TextView) rowView.findViewById(R.id.stateDistanceLabel);
         stateDistanceTextView.setText(
