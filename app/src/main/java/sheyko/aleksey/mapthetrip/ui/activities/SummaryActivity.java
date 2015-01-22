@@ -137,7 +137,7 @@ public class SummaryActivity extends Activity
                 mStateCodes, mStateDistances, mStateDurations
         );
         setProgressBarIndeterminateVisibility(false);
-        
+
         startActivity(new Intent(this, StatsActivity.class)
                 .putExtra("total_distance", mDistance)
                 .putExtra("state_codes", mStateCodes)
