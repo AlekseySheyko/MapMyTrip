@@ -6,23 +6,16 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.Listener;
-import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.parse.ParseObject;
 
-import sheyko.aleksey.mapthetrip.models.Device;
-import sheyko.aleksey.mapthetrip.utils.helpers.VolleySingleton;
 import sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver;
 
 
@@ -38,22 +31,35 @@ public class LocationService extends Service
     private String mAccuracy;
 
     private boolean isTripJustStarted = true;
-    private String mTripId;
 
     public LocationService() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        if (intent.getStringExtra("Trip ID") != null) {
-            mTripId = intent.getStringExtra("Trip ID");
+        if (intent.getStringExtra("Action") == null) {
+            // Request to start sending location updates catched,
+            // so we need to connect Location Client
             createLocationClient().connect();
 
-        } else {
-            sendLocationOnServer();
+        } else if (intent.getStringExtra("Action") != null) {
+            // Location client connected, and we get a callback here.
+            // In case there's no network available, we will store data in
+            // local database (and then send it «SummaryActivity»)
+            pinCurrentCoordinates();
         }
         return START_STICKY;
+    }
+
+    private void pinCurrentCoordinates() {
+        try {
+            ParseObject coordinates = new ParseObject("Coordinates");
+            coordinates.put("latitude", mLatitude);
+            coordinates.put("longitude", mLongitude);
+            coordinates.put("altitude", mAltitude);
+            coordinates.put("accuracy", mAccuracy);
+            coordinates.pinInBackground();
+        } catch (Exception ignored) {}
     }
 
     @Override
@@ -64,8 +70,8 @@ public class LocationService extends Service
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mLocationClient != null && mLocationClient.isConnected())
-            stopLocationUpdates(mLocationClient);
+        pinCurrentCoordinates();
+        stopLocationUpdates(mLocationClient);
         cancelAlarm(this);
     }
 
@@ -90,6 +96,7 @@ public class LocationService extends Service
         mLocationClient = new LocationClient(this, this, null);
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
         int UPDATE_INTERVAL = 5 * 1000; // 5 seconds
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(UPDATE_INTERVAL);
@@ -98,7 +105,7 @@ public class LocationService extends Service
 
     private void startLocationUpdates(LocationClient client) {
         if (mLocationClient.isConnected())
-            client.requestLocationUpdates(mLocationRequest, this);
+        client.requestLocationUpdates(mLocationRequest, this);
     }
 
     private void stopLocationUpdates(LocationClient client) {
@@ -136,73 +143,5 @@ public class LocationService extends Service
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    private void sendLocationOnServer() {
-        Device mDevice = new Device(this);
-
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http")
-                .authority("wsapp.mapthetrip.com")
-                .appendPath("TrucFuelLog.svc")
-                .appendPath("TFLRecordTripCoordinates")
-                .appendQueryParameter("TripId", mTripId)
-                .appendQueryParameter("Latitute", mLatitude)
-                .appendQueryParameter("Longitude", mLongitude)
-                .appendQueryParameter("CoordinatesRecordDateTime", mDevice.getCurrentDateTime())
-                .appendQueryParameter("CoordinatesRecordTimezone", mDevice.getTimeZone())
-                .appendQueryParameter("CoordinatesIdStatesRegions", "")
-                .appendQueryParameter("CoordinatesStateRegionCode", "")
-                .appendQueryParameter("CoordinatesCountry", mDevice.getCoordinatesCountry())
-                .appendQueryParameter("UserId", mDevice.getUserId())
-                .appendQueryParameter("Altitude", mAltitude)
-                .appendQueryParameter("Accuracy", mAccuracy)
-        ;
-        String url = builder.build().toString();
-
-        Log.i("LocationService", "Service: TFLRecordTripCoordinates,\n" +
-                "Query: " + url);
-
-        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).
-                getRequestQueue();
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(url, new Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("LocationService", "Service: TFLRecordTripCoordinates,\n" +
-                        "Result: " + response);
-            }
-        }, null);
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                1000, 30, 2));
-        queue.add(stringRequest);
-
-        builder = new Uri.Builder();
-        builder.scheme("http")
-                .authority("64.251.25.139")
-                .appendPath("trucks_app")
-                .appendPath("ws")
-                .appendPath("record-position.php")
-                .appendQueryParameter("lat", mLatitude)
-                .appendQueryParameter("lon", mLongitude)
-                .appendQueryParameter("alt", mAltitude)
-                .appendQueryParameter("id", mTripId)
-                .appendQueryParameter("datetime", mDevice.getCurrentDateTime())
-                .appendQueryParameter("timezone", mDevice.getTimeZone())
-                .appendQueryParameter("accuracy", mAccuracy);
-        url = builder.build().toString();
-
-        Log.i("LocationService", "Service: record-position.php,\n" +
-                "Query: " + url);
-
-        stringRequest = new StringRequest(url, new Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("LocationService", "Service: record-position.php,\n" +
-                        "Result: " + response);
-            }
-        }, null);
-        queue.add(stringRequest);
     }
 }

@@ -2,189 +2,128 @@ package sheyko.aleksey.mapthetrip.ui.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.Listener;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
-import sheyko.aleksey.mapthetrip.utils.helpers.VolleySingleton;
+import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetrieved;
+import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
-public class SummaryActivity extends Activity {
+public class SummaryActivity extends Activity
+        implements OnStatesDataRetrieved {
 
-    private Trip mCurrentTrip;
     private String mTripId;
+    private int mDuration;
+    private String mDistance;
+    private String mStartTime;
     private String mStateCodes;
     private String mStateDistances;
     private String mTotalDistance;
     private String mStateDurations;
-    private boolean mIsSaved = true;
+    private SharedPreferences sharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
-
-        mCurrentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
-        mTripId = PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("trip_id", "-1");
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
+        sendCoordinatesToServer();
+        
+        Trip currentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
+        // Get trip info
+        mDistance = currentTrip.getDistance();
+        mDuration = currentTrip.getDuration();
+        mStartTime = currentTrip.getStartTime();
+        mTripId = currentTrip.getTripId();
+        if (mTripId == null) mTripId = sharedPrefs.getString("trip_id", "");
 
         // Update UI
-        ((TextView) findViewById(R.id.TripLabelDistance))
-                .setText(mCurrentTrip.getDistance());
-        ((EditText) findViewById(R.id.tripNameField))
-                .setHint("Trip on " + mCurrentTrip.getStartTime());
+        ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
+        ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
     }
 
-    public void saveButtonPressed(View view) {
-        getSummaryInfo();
+    public void finishSession(View view) {
+        finishSession(true);
     }
 
-    private void getSummaryInfo() {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http")
-                .authority("64.251.25.139")
-                .appendPath("trucks_app")
-                .appendPath("ws")
-                .appendPath("get-distance.php")
-                .appendQueryParameter("truck_id", mTripId);
-        String url = builder.build().toString();
+    private void finishSession(boolean isSaved) {
 
-        Log.i("SummaryActivity", "Service: " + "GetSummaryInfo" + ",\n" +
-                "Query: " + url);
+        if (mTripId != null && isConnected()) {
+            sharedPrefs.edit().putBoolean("is_saved", isSaved);
+            new GetSummaryInfoTask(this).execute(mTripId);
+            startActivity(new Intent(this, MainActivity.class));
 
-        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).
-                getRequestQueue();
+        } else {
+            Toast.makeText(this, "Waiting for network...",
+                    Toast.LENGTH_SHORT).show();
 
-        queue.add(new JsonObjectRequest(url, null,
-                new Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonRoot) {
+            IntentFilter filter = new IntentFilter("ac");
+            filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
 
-                        try {
-                            String mQueryStatus = jsonRoot.getJSONObject("status").getString("code");
-
-                            if (mQueryStatus.equals("OK")) {
-                                JSONObject mDataObject = jsonRoot.getJSONObject("data");
-                                JSONObject mDistances = mDataObject.getJSONObject("distance");
-
-                                Iterator<?> keys = mDistances.keys();
-
-                                List<String> keyList = new ArrayList<>();
-
-                                while (keys.hasNext()) {
-                                    String state = (String) keys.next();
-                                    keyList.add(state);
-
-                                    if (!state.equals("total"))
-                                        if (mStateDurations.equals("")) {
-                                            mStateDurations = mStateDurations + "0";
-                                        } else {
-                                            mStateDurations = mStateDurations + ", " + "0";
-                                        }
-
-                                    if (mStateCodes.equals("")) {
-                                        mStateCodes = mStateCodes + state;
-                                    } else {
-                                        mStateCodes = mStateCodes + "," + state;
-                                    }
-                                }
-
-                                for (String key : keyList) {
-                                    if (!key.equals("total")) {
-
-                                        String distance = mDistances.getDouble(key) + "";
-
-                                        if (mStateDistances.equals("")) {
-                                            mStateDistances = mStateDistances + distance;
-                                        } else {
-                                            mStateDistances = mStateDistances + ", " + distance;
-                                        }
-                                    }
-                                }
-                                mStateCodes = mStateCodes.replace("total,", "");
-                                mTotalDistance = mDistances.getDouble("total") + "";
-                                if (mStateDurations.equals("")) mStateDurations = "0";
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } finally {
-                            saveTrip();
-                        }
+            BroadcastReceiver receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (isConnected() && mTripId != null) {
+                        Toast.makeText(SummaryActivity.this, "Now you can save the trip",
+                                Toast.LENGTH_SHORT).show();
                     }
-                }, null))
-                .setRetryPolicy(new DefaultRetryPolicy(
-                        1000, 30, 2));
-        startActivity(new Intent(this, MainActivity.class));
+                }
+            };
+            registerReceiver(receiver, filter);
+        }
     }
 
-    private void saveTrip() {
-        String tripName = ((EditText)
-                findViewById(R.id.tripNameField)).getText().toString();
-        String tripNotes = ((EditText)
-                findViewById(R.id.tripNotesField)).getText().toString();
-        if (tripName.equals("")) tripName =
-                "Trip on " + mCurrentTrip.getStartTime();
-
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http")
-                .authority("wsapp.mapthetrip.com")
-                .appendPath("TrucFuelLog.svc")
-                .appendPath("TFLSaveTripandSummaryInfo")
-                .appendQueryParameter("TripId", mTripId)
-                .appendQueryParameter("IsTripSaved", mIsSaved + "")
-                .appendQueryParameter("TotalDistanceTraveled", mTotalDistance)
-                .appendQueryParameter("TotalTripDuration", mCurrentTrip.getDuration() + "")
-                .appendQueryParameter("TripName", "" + tripName)
-                .appendQueryParameter("TripDesc", "" + tripName)
-                .appendQueryParameter("TripNotes", "" + tripNotes)
-                .appendQueryParameter("StateCd", mStateCodes)
-                .appendQueryParameter("TotalStateDistanceTraveled", mStateDistances)
-                .appendQueryParameter("Total_State_Trip_Duration", "" + mStateDurations)
-                .appendQueryParameter("EntityId", "1")
-                .appendQueryParameter("UserId", "1");
-        String url = builder.build().toString();
-
-        Log.i("SummaryActivity", "Service: TFLSaveTripandSummaryInfo,\n" +
-                "Query: " + url);
-
-        RequestQueue queue = VolleySingleton.getInstance(this.getApplicationContext()).
-                getRequestQueue();
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(url, new Listener<String>() {
+    private void sendCoordinatesToServer() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void onResponse(String response) {
-                Log.i("SummaryActivity", "Service: TFLSaveTripandSummaryInfo,\n" +
-                        "Result: " + response);
+            public void done(List<ParseObject> coordinates, ParseException e) {
+                for (ParseObject coordinate : coordinates) {
+                    coordinate.put("trip_id", mTripId);
+                }
+                new SendLocationTask(SummaryActivity.this).execute(coordinates);
+                for (ParseObject coordinate : coordinates) {
+                    coordinate.unpinInBackground();
+                }
             }
-        }, null);
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                1000, 30, 2));
-        queue.add(stringRequest);
+        });
+    }
+
+    private void saveTrip(boolean isSaved) {
+        String tripName = ((EditText) findViewById(R.id.tripNameField)).getText().toString();
+        if (tripName.equals("")) tripName = "Trip on " + mStartTime;
+        String tripNotes = ((EditText) findViewById(R.id.tripNotesField)).getText().toString();
+
+        new SaveTripTask(this).execute(
+                mTripId, isSaved + "", mTotalDistance,
+                mDuration + "", tripName, tripNotes,
+                mStateCodes, mStateDistances, mStateDurations
+        );
     }
 
     public void cancelTrip(View view) {
@@ -200,8 +139,7 @@ public class SummaryActivity extends Activity {
         builder.setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User confirm exit
-                mIsSaved = false;
-                getSummaryInfo();
+                finishSession(false);
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -216,9 +154,20 @@ public class SummaryActivity extends Activity {
     }
 
     @Override
+    public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesDurations) {
+        mStateCodes = stateCodes;
+        mStateDistances = stateDistances;
+        mTotalDistance = totalDistance;
+        mStateDurations = statesDurations;
+
+        saveTrip(sharedPrefs.getBoolean("is_saved", true));
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                // do something useful
                 cancelTrip();
                 return (true);
         }
