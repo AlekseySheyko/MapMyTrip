@@ -91,6 +91,7 @@ public class MapPane extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (this.getActivity() != null && receiver != null)
         this.getActivity().unregisterReceiver(receiver);
     }
 

@@ -30,19 +30,31 @@ public class StatsListAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.stats_list_item, parent, false);
 
-        TextView stateCodeTextView = (TextView) rowView.findViewById(R.id.stateCodeLabel);
-        stateCodeTextView.setText(separatedCodes[position]);
+        View v = convertView;
 
-        TextView stateDistanceTextView = (TextView) rowView.findViewById(R.id.stateDistanceLabel);
-        stateDistanceTextView.setText(
-                String.format("%.2f",
-                        Float.parseFloat(
-                                separatedDistances[position].trim())));
+        if (v == null) {
+            LayoutInflater vi;
+            vi = LayoutInflater.from(getContext());
+            v = vi.inflate(R.layout.stats_list_item, null);
+        }
 
-        return rowView;
+        if (separatedCodes[0] != null
+                && separatedDistances[0] != null) {
+
+            try {
+                TextView stateCodeTextView = (TextView) v.findViewById(R.id.stateCodeLabel);
+                stateCodeTextView.setText(separatedCodes[position]);
+
+                TextView stateDistanceTextView = (TextView) v.findViewById(R.id.stateDistanceLabel);
+                stateDistanceTextView.setText(
+                        String.format("%.2f",
+                                Float.parseFloat(
+                                        separatedDistances[position].trim())));
+            } catch (Exception ignored) {
+            }
+        }
+
+        return v;
     }
 }
