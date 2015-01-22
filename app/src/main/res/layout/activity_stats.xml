@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context="sheyko.aleksey.mapthetrip.ui.activities.StatsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--Total distance container-->
+        <LinearLayout
+            style="@style/total_distance_bar">
+
+            <TextView
+                style="@style/total_distance_label"
+                android:text="@string/total_distance_label"/>
+
+            <LinearLayout
+                style="@style/TotalDistanceValueContainer">
+
+                <TextView
+                    android:id="@+id/total_distance_label"
+                    style="@style/total_distance_value"
+                    android:text="@string/total_distance_test_value"
+                    android:textSize="24sp"/>
+
+                <TextView
+                    style="@style/total_distance_value"
+                    android:text="@string/total_distance_units"
+                    android:textSize="20sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/stats_list"
+            style="@style/TripList"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

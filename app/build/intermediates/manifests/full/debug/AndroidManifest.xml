@@ -62,6 +62,15 @@
             android:exported="false" />
 
         <receiver android:name="sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver" />
+
+        <activity
+            android:name="sheyko.aleksey.mapthetrip.ui.activities.StatsActivity"
+            android:label="@string/title_activity_stats"
+            android:parentActivityName="sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity" />
+        </activity>
     </application>
 
 </manifest>

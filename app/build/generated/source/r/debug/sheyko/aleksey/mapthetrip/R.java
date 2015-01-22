@@ -420,55 +420,58 @@ containing a value of this type.
         public static final int yellow_button_selector=0x7f020045;
     }
     public static final class id {
-        public static final int TripLabelDistance=0x7f0d0019;
-        public static final int TripLabelHeader=0x7f0d0018;
-        public static final int TripLabelUnits=0x7f0d001a;
+        public static final int TripLabelDistance=0x7f0d001b;
+        public static final int TripLabelHeader=0x7f0d001a;
+        public static final int TripLabelUnits=0x7f0d001c;
         public static final int actionBarTabsContainer=0x7f0d0015;
-        public static final int action_stats_accept=0x7f0d0031;
+        public static final int action_settings=0x7f0d0033;
+        public static final int action_stats_accept=0x7f0d0034;
         public static final int book_now=0x7f0d000e;
-        public static final int button_container=0x7f0d0027;
+        public static final int button_container=0x7f0d0029;
         public static final int buyButton=0x7f0d000a;
         public static final int buy_now=0x7f0d000f;
         public static final int buy_with_google=0x7f0d0010;
         public static final int classic=0x7f0d0011;
-        public static final int counters_container=0x7f0d0020;
-        public static final int discardButton=0x7f0d001f;
-        public static final int distance_counter=0x7f0d0025;
-        public static final int distance_counter_container=0x7f0d0023;
-        public static final int distance_label=0x7f0d0024;
+        public static final int counters_container=0x7f0d0022;
+        public static final int discardButton=0x7f0d0021;
+        public static final int distance_counter=0x7f0d0027;
+        public static final int distance_counter_container=0x7f0d0025;
+        public static final int distance_label=0x7f0d0026;
         public static final int drawer_layout=0x7f0d0014;
-        public static final int duration_counter=0x7f0d0022;
-        public static final int duration_label=0x7f0d0021;
-        public static final int finishButton=0x7f0d002c;
-        public static final int finish_button_label=0x7f0d002d;
+        public static final int duration_counter=0x7f0d0024;
+        public static final int duration_label=0x7f0d0023;
+        public static final int finishButton=0x7f0d002e;
+        public static final int finish_button_label=0x7f0d002f;
         public static final int fragment_container=0x7f0d0016;
         public static final int grayscale=0x7f0d0012;
         public static final int holo_dark=0x7f0d0005;
         public static final int holo_light=0x7f0d0006;
         public static final int hybrid=0x7f0d0000;
-        public static final int image1=0x7f0d002e;
-        public static final int map=0x7f0d0026;
+        public static final int image1=0x7f0d0030;
+        public static final int map=0x7f0d0028;
         public static final int match_parent=0x7f0d000c;
         public static final int monochrome=0x7f0d0013;
         public static final int navigationDrawerList=0x7f0d0017;
         public static final int none=0x7f0d0001;
         public static final int normal=0x7f0d0002;
-        public static final int pauseButton=0x7f0d0029;
-        public static final int pause_button_label=0x7f0d002a;
+        public static final int pauseButton=0x7f0d002b;
+        public static final int pause_button_label=0x7f0d002c;
         public static final int production=0x7f0d0007;
         public static final int sandbox=0x7f0d0008;
         public static final int satellite=0x7f0d0003;
-        public static final int saveButton=0x7f0d001d;
+        public static final int saveButton=0x7f0d001f;
         public static final int selectionDetails=0x7f0d000b;
-        public static final int slide_button_container=0x7f0d002b;
-        public static final int splashscreen=0x7f0d0030;
-        public static final int startButton=0x7f0d0028;
-        public static final int start_button_label=0x7f0d001e;
+        public static final int slide_button_container=0x7f0d002d;
+        public static final int splashscreen=0x7f0d0032;
+        public static final int startButton=0x7f0d002a;
+        public static final int start_button_label=0x7f0d0020;
         public static final int strict_sandbox=0x7f0d0009;
         public static final int terrain=0x7f0d0004;
-        public static final int text1=0x7f0d002f;
-        public static final int tripNameField=0x7f0d001b;
-        public static final int tripNotesField=0x7f0d001c;
+        public static final int text1=0x7f0d0031;
+        public static final int total_distance_label=0x7f0d0018;
+        public static final int tripNameField=0x7f0d001d;
+        public static final int tripNotesField=0x7f0d001e;
+        public static final int trip_list=0x7f0d0019;
         public static final int wrap_content=0x7f0d000d;
     }
     public static final class integer {
@@ -476,13 +479,15 @@ containing a value of this type.
     }
     public static final class layout {
         public static final int activity_main=0x7f040000;
-        public static final int activity_summary=0x7f040001;
-        public static final int fragment_map=0x7f040002;
-        public static final int navigation_list_item=0x7f040003;
-        public static final int splash_screen=0x7f040004;
+        public static final int activity_stats=0x7f040001;
+        public static final int activity_summary=0x7f040002;
+        public static final int fragment_map=0x7f040003;
+        public static final int navigation_list_item=0x7f040004;
+        public static final int splash_screen=0x7f040005;
     }
     public static final class menu {
-        public static final int summary=0x7f0c0000;
+        public static final int menu_stats=0x7f0c0000;
+        public static final int summary=0x7f0c0001;
     }
     public static final class mipmap {
         public static final int ic_launcher=0x7f030000;
@@ -565,18 +570,19 @@ containing a value of this type.
         public static final int title_activity_login=0x7f0a004a;
         public static final int title_activity_settings=0x7f0a004b;
         public static final int title_activity_sign_up=0x7f0a004c;
-        public static final int title_activity_summary=0x7f0a004d;
-        public static final int total_distance_label=0x7f0a004e;
-        public static final int total_distance_test_value=0x7f0a004f;
-        public static final int total_distance_units=0x7f0a0050;
-        public static final int travel_tab_label=0x7f0a0051;
-        public static final int trip_name_default_value=0x7f0a0052;
-        public static final int trip_was_label=0x7f0a0053;
-        public static final int units_kilometers=0x7f0a0054;
-        public static final int units_miles=0x7f0a0055;
-        public static final int username_hint=0x7f0a0056;
-        public static final int username_missing=0x7f0a0057;
-        public static final int wallet_buy_button_place_holder=0x7f0a0058;
+        public static final int title_activity_stats=0x7f0a004d;
+        public static final int title_activity_summary=0x7f0a004e;
+        public static final int total_distance_label=0x7f0a004f;
+        public static final int total_distance_test_value=0x7f0a0050;
+        public static final int total_distance_units=0x7f0a0051;
+        public static final int travel_tab_label=0x7f0a0052;
+        public static final int trip_name_default_value=0x7f0a0053;
+        public static final int trip_was_label=0x7f0a0054;
+        public static final int units_kilometers=0x7f0a0055;
+        public static final int units_miles=0x7f0a0056;
+        public static final int username_hint=0x7f0a0057;
+        public static final int username_missing=0x7f0a0058;
+        public static final int wallet_buy_button_place_holder=0x7f0a0059;
     }
     public static final class style {
         public static final int ActionbarTabDivider=0x7f0b0000;
