@@ -2,11 +2,9 @@ package sheyko.aleksey.mapthetrip.ui.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -16,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -51,8 +48,6 @@ public class SummaryActivity extends Activity
         setContentView(R.layout.activity_summary);
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         
-        sendCoordinatesToServer();
-        
         Trip currentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
         // Get trip info
         mDistance = currentTrip.getDistance();
@@ -72,46 +67,9 @@ public class SummaryActivity extends Activity
 
     private void finishSession(boolean isSaved) {
 
-        if (mTripId != null && isConnected()) {
             sharedPrefs.edit().putBoolean("is_saved", isSaved);
             new GetSummaryInfoTask(this).execute(mTripId);
             startActivity(new Intent(this, MainActivity.class));
-
-        } else {
-            Toast.makeText(this, "Waiting for network...",
-                    Toast.LENGTH_SHORT).show();
-
-            IntentFilter filter = new IntentFilter("ac");
-            filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-
-            BroadcastReceiver receiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    if (isConnected() && mTripId != null) {
-                        Toast.makeText(SummaryActivity.this, "Now you can save the trip",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            };
-            registerReceiver(receiver, filter);
-        }
-    }
-
-    private void sendCoordinatesToServer() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
-        query.fromLocalDatastore();
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> coordinates, ParseException e) {
-                for (ParseObject coordinate : coordinates) {
-                    coordinate.put("trip_id", mTripId);
-                }
-                new SendLocationTask(SummaryActivity.this).execute(coordinates);
-                for (ParseObject coordinate : coordinates) {
-                    coordinate.unpinInBackground();
-                }
-            }
-        });
     }
 
     private void saveTrip(boolean isSaved) {

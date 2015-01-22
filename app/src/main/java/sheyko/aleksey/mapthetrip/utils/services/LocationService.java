@@ -8,15 +8,22 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.List;
 
 import sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
 
 public class LocationService extends Service
@@ -59,7 +66,29 @@ public class LocationService extends Service
             coordinates.put("altitude", mAltitude);
             coordinates.put("accuracy", mAccuracy);
             coordinates.pinInBackground();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        } finally {
+            sendCoordinatesToServer();
+        }
+    }
+
+    private void sendCoordinatesToServer() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> coordinates, ParseException e) {
+                for (ParseObject coordinate : coordinates) {
+                    String tripId = PreferenceManager.getDefaultSharedPreferences(LocationService.this)
+                            .getString("trip_id", "");
+                    coordinate.put("trip_id", tripId);
+                }
+                new SendLocationTask(LocationService.this).execute(coordinates);
+                for (ParseObject coordinate : coordinates) {
+                    coordinate.unpinInBackground();
+                }
+            }
+        });
     }
 
     @Override
