@@ -5,18 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import sheyko.aleksey.eventy.R;
-import sheyko.aleksey.mapthetrip.ui.activities.StatsActivity;
+import sheyko.aleksey.mapthetrip.R;
 
 public class StatsListAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final String[] values;
 
-    public StatsListAdapter(Context context, String stateCodes, String stateDistances) {
-        super(context, R.layout.category_list_item, values);
+    public StatsListAdapter(Context context, String[] values) {
+        super(context, R.layout.stats_list_item, values);
         this.context = context;
         this.values = values;
     }
@@ -27,23 +25,13 @@ public class StatsListAdapter extends ArrayAdapter<String> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View rowView = inflater.inflate(R.layout.stats_list_item, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.category_title);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.category_icon);
-        textView.setText(values[position]);
 
-        if (position == 0) {
-            imageView.setImageResource(R.drawable.ic_category_1);
-        } else if (position == 1) {
-            imageView.setImageResource(R.drawable.ic_category_2);
-        } else if (position == 2) {
-            imageView.setImageResource(R.drawable.ic_category_3);
-        } else if (position == 3) {
-            imageView.setImageResource(R.drawable.ic_category_4);
-        } else if (position == 4) {
-            imageView.setImageResource(R.drawable.ic_category_5);
-        } else if (position == 5) {
-            imageView.setImageResource(R.drawable.ic_category_6);
-        }
+        TextView stateCodeTextView = (TextView) rowView.findViewById(R.id.stateCodeLabel);
+        stateCodeTextView.setText(values[0]);
+
+        TextView stateDistanceTextView = (TextView) rowView.findViewById(R.id.stateDistanceLabel);
+        stateDistanceTextView.setText(values[1]);
+
 
         return rowView;
     }

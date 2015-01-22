@@ -30,8 +30,10 @@ public class StatsActivity extends Activity {
         TextView mTotalDistanceLabel = (TextView) findViewById(R.id.total_distance_label);
         mTotalDistanceLabel.setText(mTotalDistance);
 
+        String[] values = new String[] { mStateCodes, mStateDistances };
+
         StatsListAdapter listAdapter = new StatsListAdapter(
-                this, mStateCodes, mStateDistances);
+                this, values);
 
         ListView mListView = (ListView) findViewById(R.id.stats_list);
         mListView.setAdapter(listAdapter);
