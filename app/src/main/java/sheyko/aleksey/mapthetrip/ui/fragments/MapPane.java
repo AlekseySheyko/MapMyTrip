@@ -13,7 +13,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -23,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,7 +38,6 @@ import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity;
 import sheyko.aleksey.mapthetrip.utils.helpers.Constants.ActionBar.Tab;
-import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 
 public class MapPane extends Fragment
         implements OnClickListener {
@@ -90,49 +89,6 @@ public class MapPane extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        IntentFilter filter = new IntentFilter("ac");
-        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                ConnectivityManager cm =
-                        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                boolean isConnected = activeNetwork != null &&
-                        activeNetwork.isConnectedOrConnecting();
-
-                if (isConnected) {
-                    if (isTripStarted == 1 && mCurrentTrip.getTripId() == null) {
-                        new RegisterTripTask(MapPane.this.getActivity()).execute();
-                    }
-                    if (mNotificationManager != null)
-                        mNotificationManager.cancel(notifyID);
-                } else {
-                    mNotificationManager =
-                            (NotificationManager) MapPane.this.getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                    // Sets an ID for the notification, so it can be updated
-                    notifyID = 1;
-                    mNotifyBuilder = new NotificationCompat.Builder(MapPane.this.getActivity())
-                            .setContentTitle("Offline mode")
-                            .setContentText("Trip isn't on server yet.")
-                            .setSmallIcon(android.R.drawable.ic_menu_info_details);
-                    // Because the ID remains unchanged, the existing notification is
-                    // updated.
-                    mNotificationManager.notify(
-                            notifyID,
-                            mNotifyBuilder.build());
-                }
-            }
-        };
-        getActivity().registerReceiver(receiver, filter);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         this.getActivity().unregisterReceiver(receiver);
@@ -180,15 +136,21 @@ public class MapPane extends Fragment
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.startButton:
-                updateUiOnStart();
 
                 if (mCurrentTrip == null) {
                     // If button label is «Start»
-                    mCurrentTrip = new Trip();
-                    mCurrentTrip.start(this.getActivity());
+                    if (isOnline()) {
+                        mCurrentTrip = new Trip();
+                        mCurrentTrip.start(this.getActivity());
+                        updateUiOnStart();
+                    } else {
+                        Toast.makeText(MapPane.this.getActivity(),
+                                "Please connect to a network", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     // If button label is «Resume»
                     mCurrentTrip.resume();
+                    updateUiOnStart();
                 }
 
                 break;
@@ -211,6 +173,13 @@ public class MapPane extends Fragment
                         .putExtra("CurrentTrip", mCurrentTrip));
                 break;
         }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 
     private void updateUiOnStart() {
