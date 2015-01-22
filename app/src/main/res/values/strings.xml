@@ -55,6 +55,6 @@
     <string name="pause_label">Paused</string>
     <string name="coming_soon">Coming soon</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_stats">StatsActivity</string>
+    <string name="title_activity_stats">Summary</string>
 
 </resources>
