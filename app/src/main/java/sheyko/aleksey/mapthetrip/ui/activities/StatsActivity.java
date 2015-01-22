@@ -54,7 +54,7 @@ public class StatsActivity extends Activity {
 
         list = new ArrayList<HashMap>();
 
-        for (int i = 0; i <= separatedCodes.length; i++) {
+        for (int i = 0; i < separatedCodes.length; i++) {
 
             HashMap temp = new HashMap();
             temp.put(FIRST_COLUMN, separatedCodes[i]);
