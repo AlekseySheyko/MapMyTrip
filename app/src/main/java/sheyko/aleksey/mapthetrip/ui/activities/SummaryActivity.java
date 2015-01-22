@@ -68,8 +68,10 @@ public class SummaryActivity extends Activity
     private void finishSession(boolean isSaved) {
 
         if (isOnline()) {
+            
+
             sendCoordinatesToServer();
-            sharedPrefs.edit().putBoolean("is_saved", isSaved);
+
             new GetSummaryInfoTask(this).execute(mTripId);
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
