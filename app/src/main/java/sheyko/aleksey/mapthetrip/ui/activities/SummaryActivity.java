@@ -2,9 +2,12 @@ package sheyko.aleksey.mapthetrip.ui.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
@@ -12,11 +15,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.List;
+
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetrieved;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
 public class SummaryActivity extends Activity
         implements OnStatesDataRetrieved {
@@ -56,8 +67,60 @@ public class SummaryActivity extends Activity
 
     private void finishSession(boolean isSaved) {
 
+        if (isOnline()) {
+            sendCoordinatesToServer();
             sharedPrefs.edit().putBoolean("is_saved", isSaved);
             new GetSummaryInfoTask(this).execute(mTripId);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
+            builder.setTitle("Network lost");
+            builder.setMessage("Please wait for a network to update trip status");
+            builder.setIcon(R.drawable.ic_action_airplane_mode_on);
+            // Add the buttons
+            builder.setPositiveButton("Wait", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                    dialog.cancel();
+                }
+            });
+            builder.setNegativeButton("Finish", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User confirm exit
+                    startActivity(new Intent(SummaryActivity.this, MainActivity.class));
+                }
+            });
+            // Create the AlertDialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
+
+    private void sendCoordinatesToServer() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> coordinates, ParseException e) {
+                for (ParseObject coordinate : coordinates) {
+                    String tripId = PreferenceManager.getDefaultSharedPreferences(SummaryActivity.this)
+                            .getString("trip_id", "");
+                    coordinate.put("trip_id", tripId);
+                }
+                if (isOnline()) {
+                    new SendLocationTask(SummaryActivity.this).execute(coordinates);
+                    for (ParseObject coordinate : coordinates) {
+                        coordinate.unpinInBackground();
+                    }
+                }
+            }
+        });
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 
     private void saveTrip(boolean isSaved) {

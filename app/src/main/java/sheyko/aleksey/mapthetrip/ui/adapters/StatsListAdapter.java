@@ -10,7 +10,6 @@ import android.widget.TextView;
 import sheyko.aleksey.mapthetrip.R;
 
 public class StatsListAdapter extends ArrayAdapter<String> {
-    private final Context context;
     private final String[] values;
 
     private String[] separatedCodes;
@@ -18,7 +17,6 @@ public class StatsListAdapter extends ArrayAdapter<String> {
 
     public StatsListAdapter(Context context, String[] values) {
         super(context, R.layout.stats_list_item, values);
-        this.context = context;
         this.values = values;
 
         String stateCodes = values[0];
