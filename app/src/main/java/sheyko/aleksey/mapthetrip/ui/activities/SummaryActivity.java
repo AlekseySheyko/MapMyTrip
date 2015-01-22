@@ -72,7 +72,7 @@ public class SummaryActivity extends Activity
         );
 
         startActivity(new Intent(this, StatsActivity.class)
-                .putExtra("total_distance", mTotalDistance)
+                .putExtra("total_distance", mDistance)
                 .putExtra("state_codes", mStateCodes)
                 .putExtra("state_distances", mStateDistances));
     }

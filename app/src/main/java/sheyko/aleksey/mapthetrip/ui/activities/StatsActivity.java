@@ -27,16 +27,18 @@ public class StatsActivity extends Activity {
             mStateDistances = getIntent().getStringExtra("state_distances");
         }
 
-        TextView mTotalDistanceLabel = (TextView) findViewById(R.id.total_distance_value);
-        mTotalDistanceLabel.setText(mTotalDistance);
+        if (!mStateCodes.equals("0")) {
+            TextView mTotalDistanceLabel = (TextView) findViewById(R.id.total_distance_value);
+            mTotalDistanceLabel.setText(mTotalDistance);
 
-        String[] values = new String[] { mStateCodes, mStateDistances };
+            String[] values = new String[]{mStateCodes, mStateDistances};
 
-        StatsListAdapter listAdapter = new StatsListAdapter(
-                this, values);
+            StatsListAdapter listAdapter = new StatsListAdapter(
+                    this, values);
 
-        ListView mListView = (ListView) findViewById(R.id.stats_list);
-        mListView.setAdapter(listAdapter);
+            ListView mListView = (ListView) findViewById(R.id.stats_list);
+            mListView.setAdapter(listAdapter);
+        }
     }
 
 

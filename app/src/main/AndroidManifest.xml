@@ -59,11 +59,7 @@
 
         <activity
             android:name=".ui.activities.StatsActivity"
-            android:label="@string/title_activity_stats"
-            android:parentActivityName=".ui.activities.SummaryActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity" />
+            android:label="@string/title_activity_stats">
         </activity>
     </application>
 
