@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ public class SummaryActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_summary);
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         
@@ -70,6 +72,7 @@ public class SummaryActivity extends Activity
         sharedPrefs.edit().putBoolean("is_saved", isSaved);
 
         if (isOnline()) {
+            setProgressBarIndeterminateVisibility(true);
             sendCoordinatesToServer();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
@@ -133,7 +136,8 @@ public class SummaryActivity extends Activity
                 mDuration + "", tripName, tripNotes,
                 mStateCodes, mStateDistances, mStateDurations
         );
-
+        setProgressBarIndeterminateVisibility(false);
+        
         startActivity(new Intent(this, StatsActivity.class)
                 .putExtra("total_distance", mDistance)
                 .putExtra("state_codes", mStateCodes)
