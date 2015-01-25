@@ -30,6 +30,7 @@ import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetr
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask.OnLocationSent;
+import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
 public class SummaryActivity extends Activity
         implements OnStatesDataRetrieved, OnLocationSent {
@@ -74,6 +75,7 @@ public class SummaryActivity extends Activity
         if (isOnline()) {
             setProgressBarIndeterminateVisibility(true);
             sendCoordinatesToServer();
+            updateStatusOnServer();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
             builder.setTitle("Network lost");
@@ -119,6 +121,27 @@ public class SummaryActivity extends Activity
         });
     }
 
+    private void updateStatusOnServer() {
+        ParseQuery<ParseObject> status = ParseQuery.getQuery("Status");
+        status.fromLocalDatastore();
+        status.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> coordinates, ParseException e) {
+                String tripId = PreferenceManager.getDefaultSharedPreferences(SummaryActivity.this)
+                        .getString("trip_id", "");
+                for (ParseObject coordinate : coordinates) {
+                    coordinate.put("trip_id", tripId);
+                }
+                if (isOnline()) {
+                    for (ParseObject status : coordinates) {
+                        new UpdateTripStatusTask(SummaryActivity.this).execute(tripId, status.getString("status"));
+                        status.deleteInBackground();
+                    }
+                }
+            }
+        });
+    }
+
     public boolean isOnline() {
         ConnectivityManager connMgr = (ConnectivityManager)
                 this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -136,6 +159,8 @@ public class SummaryActivity extends Activity
                 mDuration + "", tripName, tripNotes,
                 mStateCodes, mStateDistances, mStateDurations
         );
+
+
         setProgressBarIndeterminateVisibility(false);
 
         startActivity(new Intent(this, StatsActivity.class)

@@ -80,9 +80,9 @@ public class LocationService extends Service
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
+                String tripId = PreferenceManager.getDefaultSharedPreferences(LocationService.this)
+                        .getString("trip_id", "");
                 for (ParseObject coordinate : coordinates) {
-                    String tripId = PreferenceManager.getDefaultSharedPreferences(LocationService.this)
-                            .getString("trip_id", "");
                     coordinate.put("trip_id", tripId);
                 }
                 if (isOnline()) {

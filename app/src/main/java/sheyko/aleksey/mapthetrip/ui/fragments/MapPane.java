@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -30,7 +31,12 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -38,6 +44,7 @@ import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity;
 import sheyko.aleksey.mapthetrip.utils.helpers.Constants.ActionBar.Tab;
+import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
 public class MapPane extends Fragment
         implements OnClickListener {
@@ -57,6 +64,11 @@ public class MapPane extends Fragment
     private TextView mStartButtonLabel;
     private TextView mPauseButtonLabel;
     private TextView mFinishButtonLabel;
+
+    // Trip status constants
+    private static final String RESUME = "Resume";
+    private static final String PAUSE = "Pause";
+    private static final String FINISH = "Finish";
 
     // Timer
     private TimerTask mTimerTask;
@@ -92,7 +104,7 @@ public class MapPane extends Fragment
     public void onDestroy() {
         super.onDestroy();
         if (this.getActivity() != null && receiver != null)
-        this.getActivity().unregisterReceiver(receiver);
+            this.getActivity().unregisterReceiver(receiver);
     }
 
     @Override
@@ -151,6 +163,7 @@ public class MapPane extends Fragment
                 } else {
                     // If button label is «Resume»
                     mCurrentTrip.resume();
+                    pinTripStatus(RESUME);
                     updateUiOnStart();
                 }
 
@@ -159,11 +172,13 @@ public class MapPane extends Fragment
                 updateUiOnPause();
 
                 mCurrentTrip.pause();
+                pinTripStatus(PAUSE);
 
                 break;
             case R.id.finishButton:
 
                 mCurrentTrip.finish();
+                pinTripStatus(FINISH);
 
                 // Start Summary Activity
                 // on «Finish» button pressed
@@ -174,6 +189,39 @@ public class MapPane extends Fragment
                         .putExtra("CurrentTrip", mCurrentTrip));
                 break;
         }
+    }
+
+    private void pinTripStatus(String status) {
+        try {
+            ParseObject coordinates = new ParseObject("Status");
+            coordinates.put("status", status);
+            coordinates.pinInBackground();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            updateStatusOnServer();
+        }
+    }
+
+    private void updateStatusOnServer() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Status");
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> coordinates, ParseException e) {
+                String tripId = PreferenceManager.getDefaultSharedPreferences(MapPane.this.getActivity())
+                        .getString("trip_id", "");
+                for (ParseObject status : coordinates) {
+                    status.put("trip_id", tripId);
+                }
+                if (isOnline()) {
+                    for (ParseObject status : coordinates) {
+                        new UpdateTripStatusTask(MapPane.this.getActivity()).execute(tripId, status.getString("status"));
+                        status.deleteInBackground();
+                    }
+                }
+            }
+        });
     }
 
     public boolean isOnline() {
@@ -271,7 +319,8 @@ public class MapPane extends Fragment
 
         mMap.addPolygon(new PolygonOptions()
                 .strokeColor(Color.parseColor("#9f5c8f"))
-                .add(new LatLng(mPreviousLocation.getLatitude(),
+                .add(
+                        new LatLng(mPreviousLocation.getLatitude(),
                                 mPreviousLocation.getLongitude()),
                         new LatLng(currentLocation.getLatitude(),
                                 currentLocation.getLongitude())));

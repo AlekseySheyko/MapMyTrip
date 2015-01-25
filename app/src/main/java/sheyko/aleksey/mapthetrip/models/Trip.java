@@ -13,7 +13,6 @@ import java.util.Date;
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
-import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
 public class Trip implements OnTripRegistered, Parcelable {
 
@@ -28,11 +27,6 @@ public class Trip implements OnTripRegistered, Parcelable {
 
     // Listens for location service
     private Intent mPinCoordinatesIntent;
-
-    // Trip status constants
-    private static final String RESUME = "Resume";
-    private static final String PAUSE = "Pause";
-    private static final String FINISH = "Finish";
 
     public Trip() {
     }
@@ -90,24 +84,17 @@ public class Trip implements OnTripRegistered, Parcelable {
     }
 
     public void resume() {
-        updateStatus(RESUME);
         mContext.startService(mPinCoordinatesIntent);
     }
 
     public void pause() {
-        updateStatus(PAUSE);
         if (mPinCoordinatesIntent != null) {
             mContext.stopService(mPinCoordinatesIntent);
         }
     }
 
     public void finish() {
-        updateStatus(FINISH);
         mContext.stopService(mPinCoordinatesIntent);
-    }
-
-    private void updateStatus(String status) {
-        new UpdateTripStatusTask(mContext).execute(tripId, status);
     }
 
     public String getTripId() {
