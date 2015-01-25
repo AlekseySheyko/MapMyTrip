@@ -29,11 +29,12 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.parse.GetCallback;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -180,10 +181,10 @@ public class MapPane extends Fragment
         String tripId = PreferenceManager.getDefaultSharedPreferences(MapPane.this.getActivity())
                 .getString("trip_id", "");
         try {
-            ParseObject coordinates = new ParseObject("Status");
-            coordinates.put("trip_id", tripId);
-            coordinates.put("status", status);
-            coordinates.pinInBackground();
+            ParseObject statusObject = new ParseObject("Status");
+            statusObject.put("trip_id", tripId);
+            statusObject.put("status", status);
+            statusObject.pinInBackground();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -195,14 +196,16 @@ public class MapPane extends Fragment
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Status");
         query.fromLocalDatastore();
         try {
-            query.getFirstInBackground(new GetCallback<ParseObject>() {
+            query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
-                public void done(ParseObject statusObject, ParseException e) {
-                    if (isOnline()) {
-                        new UpdateTripStatusTask(MapPane.this.getActivity()).execute(
-                                statusObject.getString("trip_id"),
-                                statusObject.getString("status"));
-                        statusObject.unpinInBackground();
+                public void done(List<ParseObject> statusObjects, ParseException e) {
+                        for (ParseObject statusObject : statusObjects) {
+                            if (isOnline()) {
+                                new UpdateTripStatusTask(MapPane.this.getActivity()).execute(
+                                        statusObject.getString("trip_id"),
+                                        statusObject.getString("status"));
+                                statusObject.unpinInBackground();
+                            }
                     }
                 }
             });
