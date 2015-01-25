@@ -163,7 +163,7 @@ public class MapPane extends Fragment
                 } else {
                     // If button label is «Resume»
                     mCurrentTrip.resume();
-                    pinTripStatus(RESUME);
+                    pinCurrentStatus(RESUME);
                     updateUiOnStart();
                 }
 
@@ -172,13 +172,13 @@ public class MapPane extends Fragment
                 updateUiOnPause();
 
                 mCurrentTrip.pause();
-                pinTripStatus(PAUSE);
+                pinCurrentStatus(PAUSE);
 
                 break;
             case R.id.finishButton:
 
                 mCurrentTrip.finish();
-                pinTripStatus(FINISH);
+                pinCurrentStatus(FINISH);
 
                 // Start Summary Activity
                 // on «Finish» button pressed
@@ -191,7 +191,7 @@ public class MapPane extends Fragment
         }
     }
 
-    private void pinTripStatus(String status) {
+    private void pinCurrentStatus(String status) {
         try {
             ParseObject coordinates = new ParseObject("Status");
             coordinates.put("status", status);
@@ -208,16 +208,13 @@ public class MapPane extends Fragment
         query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> coordinates, ParseException e) {
+            public void done(List<ParseObject> statuses, ParseException e) {
                 String tripId = PreferenceManager.getDefaultSharedPreferences(MapPane.this.getActivity())
                         .getString("trip_id", "");
-                for (ParseObject status : coordinates) {
-                    status.put("trip_id", tripId);
-                }
                 if (isOnline()) {
-                    for (ParseObject status : coordinates) {
+                    for (ParseObject status : statuses) {
                         new UpdateTripStatusTask(MapPane.this.getActivity()).execute(tripId, status.getString("status"));
-                        status.deleteInBackground();
+                        status.unpinInBackground();
                     }
                 }
             }
