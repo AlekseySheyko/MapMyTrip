@@ -2,7 +2,6 @@ package sheyko.aleksey.mapthetrip.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,12 +73,7 @@ public class MapPane extends Fragment
     private LinearLayout mCountersContainer;
     private TextView mDistanceCounter;
     private TextView mDurationCounter;
-    private BroadcastReceiver receiver;
-    private Intent mTripStartedIntent;
     private int isTripStarted = 0;
-    private Builder mNotifyBuilder;
-    private NotificationManager mNotificationManager;
-    private int notifyID;
 
     // Required empty constructor
     public MapPane() {
@@ -98,13 +91,6 @@ public class MapPane extends Fragment
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                 mLocationReciever, new IntentFilter("LocationUpdates"));
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (this.getActivity() != null && receiver != null)
-            this.getActivity().unregisterReceiver(receiver);
     }
 
     @Override
@@ -192,8 +178,11 @@ public class MapPane extends Fragment
     }
 
     private void pinCurrentStatus(String status) {
+        String tripId = PreferenceManager.getDefaultSharedPreferences(MapPane.this.getActivity())
+                .getString("trip_id", "");
         try {
             ParseObject coordinates = new ParseObject("Status");
+            coordinates.put("trip_id", tripId);
             coordinates.put("status", status);
             coordinates.pinInBackground();
         } catch (Exception e) {
@@ -209,11 +198,10 @@ public class MapPane extends Fragment
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> statuses, ParseException e) {
-                String tripId = PreferenceManager.getDefaultSharedPreferences(MapPane.this.getActivity())
-                        .getString("trip_id", "");
                 if (isOnline()) {
                     for (ParseObject status : statuses) {
-                        new UpdateTripStatusTask(MapPane.this.getActivity()).execute(tripId, status.getString("status"));
+                        new UpdateTripStatusTask(MapPane.this.getActivity()).execute(
+                                status.getString("trip_id"), status.getString("status"));
                         status.unpinInBackground();
                     }
                 }

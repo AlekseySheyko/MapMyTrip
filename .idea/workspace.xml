@@ -74,15 +74,15 @@
       <file leaf-file-name="MapPane.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3321033" vertical-offset="3531" max-vertical-offset="6290">
-              <caret line="213" column="0" selection-start-line="213" selection-start-column="0" selection-end-line="213" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.3321033" vertical-offset="3344" max-vertical-offset="6086">
+              <caret line="202" column="0" selection-start-line="202" selection-start-column="0" selection-end-line="202" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#7184#7803#0" expanded="true" />
-                <element signature="e#7792#7793#0" expanded="true" />
-                <element signature="e#8379#8414#0" expanded="true" />
-                <element signature="e#9144#9175#0" expanded="true" />
-                <element signature="e#9461#9494#0" expanded="true" />
+                <element signature="e#6881#7397#0" expanded="true" />
+                <element signature="e#7386#7387#0" expanded="true" />
+                <element signature="e#7973#8008#0" expanded="true" />
+                <element signature="e#8738#8769#0" expanded="true" />
+                <element signature="e#9055#9088#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -91,7 +91,7 @@
       <file leaf-file-name="LocationService.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/utils/services/LocationService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="884" max-vertical-offset="2737">
+            <state vertical-scroll-proportion="0.0" vertical-offset="782" max-vertical-offset="2737">
               <caret line="83" column="50" selection-start-line="83" selection-start-column="50" selection-end-line="83" selection-end-column="50" />
               <folding />
             </state>
@@ -2459,12 +2459,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java</url>
-          <line>211</line>
+          <line>187</line>
           <properties />
-          <option name="timeStamp" value="109" />
+          <option name="timeStamp" value="113" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java</url>
+          <line>202</line>
+          <properties />
+          <option name="timeStamp" value="115" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="110" />
+      <option name="time" value="116" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -2853,15 +2859,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/sheyko/aleksey/mapthetrip/ui/fragments/MapPane.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3321033" vertical-offset="3531" max-vertical-offset="6290">
-          <caret line="213" column="0" selection-start-line="213" selection-start-column="0" selection-end-line="213" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.3321033" vertical-offset="3344" max-vertical-offset="6086">
+          <caret line="202" column="0" selection-start-line="202" selection-start-column="0" selection-end-line="202" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#7184#7803#0" expanded="true" />
-            <element signature="e#7792#7793#0" expanded="true" />
-            <element signature="e#8379#8414#0" expanded="true" />
-            <element signature="e#9144#9175#0" expanded="true" />
-            <element signature="e#9461#9494#0" expanded="true" />
+            <element signature="e#6881#7397#0" expanded="true" />
+            <element signature="e#7386#7387#0" expanded="true" />
+            <element signature="e#7973#8008#0" expanded="true" />
+            <element signature="e#8738#8769#0" expanded="true" />
+            <element signature="e#9055#9088#0" expanded="true" />
           </folding>
         </state>
       </provider>
