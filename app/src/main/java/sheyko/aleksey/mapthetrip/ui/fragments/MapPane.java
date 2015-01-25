@@ -29,12 +29,11 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -195,18 +194,21 @@ public class MapPane extends Fragment
     private void updateStatusOnServer() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Status");
         query.fromLocalDatastore();
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> statuses, ParseException e) {
-                if (isOnline()) {
-                    for (ParseObject status : statuses) {
+        try {
+            query.getFirstInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject statusObject, ParseException e) {
+                    if (isOnline()) {
                         new UpdateTripStatusTask(MapPane.this.getActivity()).execute(
-                                status.getString("trip_id"), status.getString("status"));
-                        status.unpinInBackground();
+                                statusObject.getString("trip_id"),
+                                statusObject.getString("status"));
+                        statusObject.unpinInBackground();
                     }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isOnline() {
