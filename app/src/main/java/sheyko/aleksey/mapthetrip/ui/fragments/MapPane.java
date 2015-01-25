@@ -193,19 +193,19 @@ public class MapPane extends Fragment
     }
 
     private void updateStatusOnServer() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Status");
-        query.fromLocalDatastore();
         try {
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Status");
+            query.fromLocalDatastore();
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> statusObjects, ParseException e) {
-                        for (ParseObject statusObject : statusObjects) {
-                            if (isOnline()) {
-                                new UpdateTripStatusTask(MapPane.this.getActivity()).execute(
-                                        statusObject.getString("trip_id"),
-                                        statusObject.getString("status"));
-                                statusObject.unpinInBackground();
-                            }
+                    for (ParseObject statusObject : statusObjects) {
+                        if (isOnline()) {
+                            new UpdateTripStatusTask(MapPane.this.getActivity()).execute(
+                                    statusObject.getString("trip_id"),
+                                    statusObject.getString("status"));
+                            statusObject.unpinInBackground();
+                        }
                     }
                 }
             });
