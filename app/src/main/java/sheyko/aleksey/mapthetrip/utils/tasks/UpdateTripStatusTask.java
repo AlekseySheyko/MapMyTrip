@@ -79,8 +79,8 @@ public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
             Log.i(TAG, "Service: TFLUpdateTripStatus " + "(" + params[1] + " trip)" + ",\n" +
                     "Result: " + java.net.URLDecoder.decode(updateTripJsonResponse, "UTF-8"));
 
-        } catch (IOException e) {
-            Log.e(TAG, "Error ", e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally{
             if (urlConnection != null) {
                 urlConnection.disconnect();

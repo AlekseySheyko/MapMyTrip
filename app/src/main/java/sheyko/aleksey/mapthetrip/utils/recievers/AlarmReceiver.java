@@ -13,12 +13,25 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
-        wl.acquire();
 
-        Intent sendLocationIntent = new Intent(context, LocationService.class);
-        sendLocationIntent.putExtra("Action", "Send Location");
-        context.startService(sendLocationIntent);
+        try {
+            wl.acquire();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        wl.release();
+        try {
+            Intent sendLocationIntent = new Intent(context, LocationService.class);
+            sendLocationIntent.putExtra("Action", "Send Location");
+            context.startService(sendLocationIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            wl.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

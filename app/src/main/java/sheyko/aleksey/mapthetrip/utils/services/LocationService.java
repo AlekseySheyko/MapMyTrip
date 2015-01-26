@@ -103,9 +103,15 @@ public class LocationService extends Service
     @Override
     public void onDestroy() {
         super.onDestroy();
-        pinCurrentCoordinates();
-        stopLocationUpdates(mLocationClient);
-        cancelAlarm(this);
+        try {
+            pinCurrentCoordinates();
+        } catch (Exception ignored) {}
+        try {
+            stopLocationUpdates(mLocationClient);
+        } catch (Exception ignored) {}
+        try {
+            cancelAlarm(this);
+        } catch (Exception ignored) {}
     }
 
     public boolean isOnline() {
@@ -144,13 +150,15 @@ public class LocationService extends Service
     }
 
     private void startLocationUpdates(LocationClient client) {
-        if (mLocationClient.isConnected())
-        client.requestLocationUpdates(mLocationRequest, this);
+        if (mLocationClient.isConnected()) {
+            client.requestLocationUpdates(mLocationRequest, this);
+        }
     }
 
     private void stopLocationUpdates(LocationClient client) {
-        if (mLocationClient.isConnected())
+        if (mLocationClient.isConnected()) {
             client.removeLocationUpdates(this);
+        }
     }
 
     @Override

@@ -87,8 +87,8 @@ public class SaveTripTask extends AsyncTask<String, Void, Void> {
             Log.i(TAG, "Service: TFLSaveTripandSummaryInfo,\n" +
                     "Result: " + java.net.URLDecoder.decode(saveTripJsonResponse, "UTF-8"));
 
-        } catch (IOException e) {
-            Log.e(TAG, "Error ", e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally{
             if (urlConnection != null) {
                 urlConnection.disconnect();

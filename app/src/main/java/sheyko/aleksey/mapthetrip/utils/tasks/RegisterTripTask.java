@@ -116,8 +116,8 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
             }
-        } catch (IOException e) {
-            Log.e(TAG, "Error ", e);
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         } finally {
             if (urlConnection != null) {
