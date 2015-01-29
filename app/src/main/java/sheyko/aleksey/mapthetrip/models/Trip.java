@@ -6,15 +6,24 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
+
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import sheyko.aleksey.mapthetrip.utils.services.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask.OnLocationSent;
 
-public class Trip implements OnTripRegistered, Parcelable {
+public class Trip implements OnTripRegistered, Parcelable, OnLocationSent {
 
     private Context mContext;
     private String tripId;
@@ -70,12 +79,42 @@ public class Trip implements OnTripRegistered, Parcelable {
         mContext = context;
         setStartTime();
 
-        if (isNetworkAvailable())
-            new RegisterTripTask(mContext, this).execute();
+        if (isNetworkAvailable()) {
+            sendCoordinatesToServer();
+            // Will register trip id on callback recieved
+        }
 
         // Sends location to server
         mPinCoordinatesIntent = new Intent(context, LocationService.class);
         context.startService(mPinCoordinatesIntent);
+    }
+
+    private void sendCoordinatesToServer() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> coordinates, ParseException e) {
+                if (coordinates.size() != 0) {
+                    String tripId = PreferenceManager.getDefaultSharedPreferences(mContext)
+                            .getString("trip_id", "");
+                    for (ParseObject coordinate : coordinates) {
+                        coordinate.put("trip_id", tripId);
+                    }
+                    new SendLocationTask(mContext, Trip.this).execute(coordinates);
+                    for (ParseObject coordinate : coordinates) {
+                        coordinate.unpinInBackground();
+                    }
+                } else {
+                    new RegisterTripTask(mContext, Trip.this).execute();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onLocationSent() {
+        new RegisterTripTask(mContext, this).execute();
     }
 
     @Override

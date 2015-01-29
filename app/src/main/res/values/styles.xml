@@ -106,10 +106,10 @@
     </style>
 
     <style name="SeparatorLight">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">#f2f3f5</item>
-    </style>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">1dp</item>
+    <item name="android:background">#f2f3f5</item>
+</style>
 
     <style name="total_distance_value">
         <item name="android:layout_width">wrap_content</item>
