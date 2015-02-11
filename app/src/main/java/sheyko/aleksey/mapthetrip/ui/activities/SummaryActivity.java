@@ -51,7 +51,7 @@ public class SummaryActivity extends Activity
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_summary);
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        
+
         Trip currentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
         // Get trip info
         mDistance = currentTrip.getDistance();
@@ -106,16 +106,9 @@ public class SummaryActivity extends Activity
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
+                new SendLocationTask(SummaryActivity.this, SummaryActivity.this).execute(coordinates);
                 for (ParseObject coordinate : coordinates) {
-                    String tripId = PreferenceManager.getDefaultSharedPreferences(SummaryActivity.this)
-                            .getString("trip_id", "");
-                    coordinate.put("trip_id", tripId);
-                }
-                if (isOnline()) {
-                    new SendLocationTask(SummaryActivity.this, SummaryActivity.this).execute(coordinates);
-                    for (ParseObject coordinate : coordinates) {
-                        coordinate.unpinInBackground();
-                    }
+                    coordinate.deleteInBackground();
                 }
             }
         });
@@ -127,16 +120,10 @@ public class SummaryActivity extends Activity
         status.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
-                String tripId = PreferenceManager.getDefaultSharedPreferences(SummaryActivity.this)
-                        .getString("trip_id", "");
-                for (ParseObject coordinate : coordinates) {
-                    coordinate.put("trip_id", tripId);
-                }
-                if (isOnline()) {
-                    for (ParseObject status : coordinates) {
-                        new UpdateTripStatusTask(SummaryActivity.this).execute(tripId, status.getString("status"));
-                        status.deleteInBackground();
-                    }
+                for (ParseObject status : coordinates) {
+                    new UpdateTripStatusTask(SummaryActivity.this).execute(
+                            status.getString("trip_id"), status.getString("status"));
+                    status.deleteInBackground();
                 }
             }
         });

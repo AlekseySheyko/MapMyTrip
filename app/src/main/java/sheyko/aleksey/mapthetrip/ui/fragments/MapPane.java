@@ -135,7 +135,6 @@ public class MapPane extends Fragment
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.startButton:
-
                 if (mCurrentTrip == null) {
                     // If button label is «Start»
                     if (isOnline()) {
@@ -152,7 +151,6 @@ public class MapPane extends Fragment
                     pinCurrentStatus(RESUME);
                     updateUiOnStart();
                 }
-
                 break;
             case R.id.pauseButton:
                 updateUiOnPause();
@@ -178,10 +176,10 @@ public class MapPane extends Fragment
     }
 
     private void pinCurrentStatus(String status) {
-        String tripId = PreferenceManager.getDefaultSharedPreferences(MapPane.this.getActivity())
-                .getString("trip_id", "");
         try {
             ParseObject statusObject = new ParseObject("Status");
+            String tripId = PreferenceManager.getDefaultSharedPreferences(MapPane.this.getActivity())
+                    .getString("trip_id", "");
             statusObject.put("trip_id", tripId);
             statusObject.put("status", status);
             statusObject.pinInBackground();

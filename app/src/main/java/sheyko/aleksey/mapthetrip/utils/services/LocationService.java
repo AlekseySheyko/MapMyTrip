@@ -63,14 +63,15 @@ public class LocationService extends Service
     private void pinCurrentCoordinates() {
         try {
             ParseObject coordinates = new ParseObject("Coordinates");
+            String tripId = PreferenceManager.getDefaultSharedPreferences(LocationService.this)
+                    .getString("trip_id", "");
+            coordinates.put("trip_id", tripId);
             coordinates.put("latitude", mLatitude);
             coordinates.put("longitude", mLongitude);
             coordinates.put("altitude", mAltitude);
             coordinates.put("accuracy", mAccuracy);
             coordinates.pinInBackground();
         } catch (Exception ignored) {
-        } finally {
-            sendCoordinatesToServer();
         }
     }
 
@@ -80,11 +81,6 @@ public class LocationService extends Service
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
-                String tripId = PreferenceManager.getDefaultSharedPreferences(LocationService.this)
-                        .getString("trip_id", "");
-                for (ParseObject coordinate : coordinates) {
-                    coordinate.put("trip_id", tripId);
-                }
                 if (isOnline()) {
                     new SendLocationTask(LocationService.this, null).execute(coordinates);
                     for (ParseObject coordinate : coordinates) {
