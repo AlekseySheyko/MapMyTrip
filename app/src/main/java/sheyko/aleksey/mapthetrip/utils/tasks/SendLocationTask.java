@@ -65,8 +65,7 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
                             .appendQueryParameter("CoordinatesCountry", mDevice.getCoordinatesCountry())
                             .appendQueryParameter("UserId", mDevice.getUserId())
                             .appendQueryParameter("Altitude", altitude)
-                            .appendQueryParameter("Accuracy", accuracy)
-                    ;
+                            .appendQueryParameter("Accuracy", accuracy);
                     String mUrlString = builder.build().toString();
 
                     Log.i(TAG, "Service: TFLRecordTripCoordinates,\n" +

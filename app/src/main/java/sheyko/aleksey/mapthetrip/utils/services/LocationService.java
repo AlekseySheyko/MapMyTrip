@@ -6,8 +6,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -17,16 +15,10 @@ import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallback
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-
-import java.util.List;
 
 import sheyko.aleksey.mapthetrip.models.Device;
 import sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver;
-import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
 
 public class LocationService extends Service
@@ -48,14 +40,10 @@ public class LocationService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getStringExtra("Action") == null) {
-            // Request to start sending location updates catched,
-            // so we need to connect Location Client
+            // Connect Location Client
             createLocationClient().connect();
-
-        } else if (intent.getStringExtra("Action") != null) {
-            // Location client connected, and we get a callback here.
-            // In case there's no network available, we will store data in
-            // local database (and then send it «SummaryActivity»)
+        } else {
+            // Save data to the local database
             pinCurrentCoordinates();
         }
         return START_STICKY;
@@ -77,22 +65,6 @@ public class LocationService extends Service
         }
     }
 
-    private void sendCoordinatesToServer() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
-        query.fromLocalDatastore();
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> coordinates, ParseException e) {
-                if (isOnline()) {
-                    new SendLocationTask(LocationService.this, null).execute(coordinates);
-                    for (ParseObject coordinate : coordinates) {
-                        coordinate.unpinInBackground();
-                    }
-                }
-            }
-        });
-    }
-
     @Override
     public void onConnected(Bundle bundle) {
         startLocationUpdates(mLocationClient);
@@ -110,13 +82,6 @@ public class LocationService extends Service
         try {
             cancelAlarm(this);
         } catch (Exception ignored) {}
-    }
-
-    public boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager)
-                this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
     }
 
     private static void startAlarm(Context context) {
