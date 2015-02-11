@@ -17,8 +17,9 @@ import java.util.Locale;
 
 import sheyko.aleksey.mapthetrip.utils.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask.OnLocationSent;
 
-public class Trip implements Parcelable {
+public class Trip implements Parcelable, OnLocationSent {
 
     private Context mContext;
     private String tripId;
@@ -74,9 +75,6 @@ public class Trip implements Parcelable {
         mContext = context;
         setStartTime();
         sendPreviousCoordinates();
-
-        mLocationUpdatesIntent = new Intent(mContext, LocationService.class);
-        mContext.startService(mLocationUpdatesIntent);
     }
 
     private void sendPreviousCoordinates() {
@@ -86,13 +84,19 @@ public class Trip implements Parcelable {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
                 if (coordinates.size() != 0) {
-                    new SendLocationTask(mContext).execute(coordinates);
+                    new SendLocationTask(mContext, Trip.this).execute(coordinates);
                     for (ParseObject coordinate : coordinates) {
                         coordinate.unpinInBackground();
                     }
                 }
             }
         });
+    }
+
+    @Override
+    public void onLocationSent() {
+        mLocationUpdatesIntent = new Intent(mContext, LocationService.class);
+        mContext.startService(mLocationUpdatesIntent);
     }
 
     public void resume() {
