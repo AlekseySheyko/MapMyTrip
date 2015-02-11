@@ -24,6 +24,7 @@ import com.parse.ParseQuery;
 
 import java.util.List;
 
+import sheyko.aleksey.mapthetrip.models.Device;
 import sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 
@@ -68,6 +69,7 @@ public class LocationService extends Service
             coordinates.put("trip_id", tripId);
             coordinates.put("latitude", mLatitude);
             coordinates.put("longitude", mLongitude);
+            coordinates.put("datetime", new Device(this).getCurrentDateTime());
             coordinates.put("altitude", mAltitude);
             coordinates.put("accuracy", mAccuracy);
             coordinates.pinInBackground();

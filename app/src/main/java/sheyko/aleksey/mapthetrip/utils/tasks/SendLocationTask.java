@@ -45,6 +45,7 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
                     String tripId = coordinate.getString("trip_id");
                     String latitude = coordinate.getString("latitude");
                     String longitude = coordinate.getString("longitude");
+                    String datetime = coordinate.getString("datetime");
                     String altitude = coordinate.getString("altitude");
                     String accuracy = coordinate.getString("accuracy");
 
@@ -57,7 +58,7 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
                             .appendQueryParameter("TripId", tripId)
                             .appendQueryParameter("Latitute", latitude)
                             .appendQueryParameter("Longitude", longitude)
-                            .appendQueryParameter("CoordinatesRecordDateTime", mDevice.getCurrentDateTime())
+                            .appendQueryParameter("CoordinatesRecordDateTime", datetime)
                             .appendQueryParameter("CoordinatesRecordTimezone", mDevice.getTimeZone())
                             .appendQueryParameter("CoordinatesIdStatesRegions", "")
                             .appendQueryParameter("CoordinatesStateRegionCode", "")
@@ -109,7 +110,7 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
                             .appendQueryParameter("lon", longitude)
                             .appendQueryParameter("alt", altitude)
                             .appendQueryParameter("id", tripId)
-                            .appendQueryParameter("datetime", mDevice.getCurrentDateTime())
+                            .appendQueryParameter("datetime", datetime)
                             .appendQueryParameter("timezone", mDevice.getTimeZone())
                             .appendQueryParameter("accuracy", accuracy);
                     mUrlString = builder.build().toString();
