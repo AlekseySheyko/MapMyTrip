@@ -65,6 +65,16 @@ public class SummaryActivity extends Activity
         // Update UI
         ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
         ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
+
+        try {
+            ParseObject summaryTask = new ParseObject("SummaryTask");
+            String tripId = PreferenceManager.getDefaultSharedPreferences(SummaryActivity.this)
+                    .getString("trip_id", "");
+            summaryTask.put("trip_id", tripId);
+            summaryTask.pinInBackground();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void finishSession(View view) {
@@ -73,7 +83,6 @@ public class SummaryActivity extends Activity
 
     private void finishSession(boolean isSaved) {
         mSharedPrefs.edit().putBoolean("is_saved", isSaved);
-
         if (isOnline()) {
             setProgressBarIndeterminateVisibility(true);
             sendCoordinatesToServer();
@@ -88,6 +97,12 @@ public class SummaryActivity extends Activity
                 public void onClick(DialogInterface dialog, int id) {
                     // User cancelled the dialog
                     dialog.cancel();
+                }
+            });
+            builder.setNegativeButton("Finish", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User confirm exit
+                    startActivity(new Intent(SummaryActivity.this, MainActivity.class));
                 }
             });
             // Create the AlertDialog
@@ -120,6 +135,20 @@ public class SummaryActivity extends Activity
                     new UpdateTripStatusTask(SummaryActivity.this).execute(
                             status.getString("trip_id"), status.getString("status"));
                     status.deleteInBackground();
+                }
+            }
+        });
+    }
+
+    private void getSummaryInfoFromServer() {
+        ParseQuery<ParseObject> status = ParseQuery.getQuery("SummaryTask");
+        status.fromLocalDatastore();
+        status.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> summaryTasks, ParseException e) {
+                for (ParseObject summaryTask : summaryTasks) {
+                    new GetSummaryInfoTask(SummaryActivity.this).execute(mTripId);
+                    summaryTask.deleteInBackground();
                 }
             }
         });
@@ -183,6 +212,32 @@ public class SummaryActivity extends Activity
                 .putExtra("state_distances", mStateDistances));
     }
 
+    @Override
+    public void onLocationSent() {
+        new GetSummaryInfoTask(this).execute(mTripId);
+    }
+
+    @Override
+    public void onSummaryDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesDurations) {
+        mStateCodes = stateCodes;
+        mStateDistances = stateDistances;
+        mTotalDistance = totalDistance;
+        mStateDurations = statesDurations;
+
+        saveTrip();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // do something useful
+                cancelTrip();
+                return (true);
+        }
+        return (super.onOptionsItemSelected(item));
+    }
+
     public void cancelTrip(View view) {
         cancelTrip();
     }
@@ -208,32 +263,6 @@ public class SummaryActivity extends Activity
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    @Override
-    public void onLocationSent() {
-        new GetSummaryInfoTask(this).execute(mTripId);
-    }
-
-    @Override
-    public void onSummaryDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesDurations) {
-        mStateCodes = stateCodes;
-        mStateDistances = stateDistances;
-        mTotalDistance = totalDistance;
-        mStateDurations = statesDurations;
-
-        saveTrip();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // do something useful
-                cancelTrip();
-                return (true);
-        }
-        return (super.onOptionsItemSelected(item));
     }
 
     public boolean isOnline() {
