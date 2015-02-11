@@ -3,6 +3,7 @@ package sheyko.aleksey.mapthetrip.utils.tasks;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -33,6 +34,7 @@ public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
         String updateTripJsonResponse;
 
         Device mDevice = new Device(mContext);
+        String id = PreferenceManager.getDefaultSharedPreferences(mContext).getString("trip_id", "");
 
         try {
             // Construct the URL for the query
@@ -41,7 +43,7 @@ public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
                     .authority("wsapp.mapthetrip.com")
                     .appendPath("TrucFuelLog.svc")
                     .appendPath("TFLUpdateTripStatus")
-                    .appendQueryParameter("TripId", params[0])
+                    .appendQueryParameter("TripId", id)
                     .appendQueryParameter("TripStatus", params[1])
                     .appendQueryParameter("TripDateTime", mDevice.getCurrentDateTime())
                     .appendQueryParameter("TripTimezone", mDevice.getTimeZone())

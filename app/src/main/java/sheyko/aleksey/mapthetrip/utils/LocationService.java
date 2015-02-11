@@ -110,14 +110,14 @@ public class LocationService extends Service
             new RegisterTripTask(this).execute();
             isTripJustStarted = false;
         }
-
         updateMapFragment(location);
-        pinCurrentCoordinates();
 
         mLatitude = location.getLatitude() + "";
         mLongitude = location.getLongitude() + "";
         mAltitude = location.getAltitude() + "";
         mAccuracy = location.getAccuracy() + "";
+
+        pinCurrentCoordinates();
     }
 
     private void updateMapFragment(Location location) {

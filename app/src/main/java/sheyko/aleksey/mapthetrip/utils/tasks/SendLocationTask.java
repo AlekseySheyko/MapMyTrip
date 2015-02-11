@@ -27,6 +27,10 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
         public void onLocationSent();
     }
 
+    public SendLocationTask(Context context) {
+        mContext = context;
+    }
+
     public SendLocationTask(Context context, OnLocationSent callback) {
         mContext = context;
         mCallback = callback;

@@ -2,11 +2,8 @@ package sheyko.aleksey.mapthetrip.models;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -16,14 +13,12 @@ import com.parse.ParseQuery;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import sheyko.aleksey.mapthetrip.utils.LocationService;
-import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask.OnLocationSent;
 
-public class Trip implements OnTripRegistered, Parcelable, OnLocationSent {
+public class Trip implements Parcelable {
 
     private Context mContext;
     private String tripId;
@@ -78,34 +73,26 @@ public class Trip implements OnTripRegistered, Parcelable, OnLocationSent {
     public void start(Context context) {
         mContext = context;
         setStartTime();
+        sendPreviousCoordinates();
 
-        if (isOnline()) {
-            sendCoordinatesToServer();
-        }
-        // Sends location to server
-        mLocationUpdatesIntent = new Intent(context, LocationService.class);
-        context.startService(mLocationUpdatesIntent);
+        mLocationUpdatesIntent = new Intent(mContext, LocationService.class);
+        mContext.startService(mLocationUpdatesIntent);
     }
 
-    private void sendCoordinatesToServer() {
+    private void sendPreviousCoordinates() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
         query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
                 if (coordinates.size() != 0) {
-                    new SendLocationTask(mContext, Trip.this).execute(coordinates);
+                    new SendLocationTask(mContext).execute(coordinates);
                     for (ParseObject coordinate : coordinates) {
                         coordinate.unpinInBackground();
                     }
                 }
             }
         });
-    }
-
-    @Override
-    public void onLocationSent() {
-        new RegisterTripTask(mContext, this).execute();
     }
 
     public void resume() {
@@ -143,18 +130,12 @@ public class Trip implements OnTripRegistered, Parcelable, OnLocationSent {
     }
 
     private void setStartTime() {
-        startTime = new SimpleDateFormat("dd MMM, hh:mm").format(new Date()).toLowerCase();
+        startTime = new SimpleDateFormat("dd MMM, hh:mm", Locale.US)
+                .format(new Date()).toLowerCase();
     }
 
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    private boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnected();
     }
 }
