@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import sheyko.aleksey.mapthetrip.utils.services.LocationService;
+import sheyko.aleksey.mapthetrip.utils.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
@@ -35,7 +35,7 @@ public class Trip implements OnTripRegistered, Parcelable, OnLocationSent {
     String totalDistance;
 
     // Listens for location service
-    private Intent mPinCoordinatesIntent;
+    private Intent mLocationUpdatesIntent;
 
     public Trip() {
     }
@@ -79,14 +79,12 @@ public class Trip implements OnTripRegistered, Parcelable, OnLocationSent {
         mContext = context;
         setStartTime();
 
-        if (isNetworkAvailable()) {
+        if (isOnline()) {
             sendCoordinatesToServer();
-            // Will register trip id on callback recieved
         }
-
         // Sends location to server
-        mPinCoordinatesIntent = new Intent(context, LocationService.class);
-        context.startService(mPinCoordinatesIntent);
+        mLocationUpdatesIntent = new Intent(context, LocationService.class);
+        context.startService(mLocationUpdatesIntent);
     }
 
     private void sendCoordinatesToServer() {
@@ -96,17 +94,10 @@ public class Trip implements OnTripRegistered, Parcelable, OnLocationSent {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
                 if (coordinates.size() != 0) {
-                    String tripId = PreferenceManager.getDefaultSharedPreferences(mContext)
-                            .getString("trip_id", "");
-                    for (ParseObject coordinate : coordinates) {
-                        coordinate.put("trip_id", tripId);
-                    }
                     new SendLocationTask(mContext, Trip.this).execute(coordinates);
                     for (ParseObject coordinate : coordinates) {
                         coordinate.unpinInBackground();
                     }
-                } else {
-                    new RegisterTripTask(mContext, Trip.this).execute();
                 }
             }
         });
@@ -117,27 +108,18 @@ public class Trip implements OnTripRegistered, Parcelable, OnLocationSent {
         new RegisterTripTask(mContext, this).execute();
     }
 
-    @Override
-    public void onTripRegistered(Context context, String id) {
-        tripId = id;
-    }
-
     public void resume() {
-        mContext.startService(mPinCoordinatesIntent);
+        mContext.startService(mLocationUpdatesIntent);
     }
 
     public void pause() {
-        if (mPinCoordinatesIntent != null) {
-            mContext.stopService(mPinCoordinatesIntent);
+        if (mLocationUpdatesIntent != null) {
+            mContext.stopService(mLocationUpdatesIntent);
         }
     }
 
     public void finish() {
-        mContext.stopService(mPinCoordinatesIntent);
-    }
-
-    public String getTripId() {
-        return tripId;
+        mContext.stopService(mLocationUpdatesIntent);
     }
 
     public String getDistance() {
@@ -169,7 +151,7 @@ public class Trip implements OnTripRegistered, Parcelable, OnLocationSent {
         return 0;
     }
 
-    private boolean isNetworkAvailable() {
+    private boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();

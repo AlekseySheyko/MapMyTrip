@@ -41,7 +41,7 @@ import java.util.TimerTask;
 import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity;
-import sheyko.aleksey.mapthetrip.utils.helpers.Constants.ActionBar.Tab;
+import sheyko.aleksey.mapthetrip.utils.Constants.ActionBar.Tab;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
 public class MapPane extends Fragment

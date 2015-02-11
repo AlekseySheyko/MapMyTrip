@@ -1,9 +1,6 @@
-package sheyko.aleksey.mapthetrip.utils.services;
+package sheyko.aleksey.mapthetrip.utils;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -18,7 +15,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.parse.ParseObject;
 
 import sheyko.aleksey.mapthetrip.models.Device;
-import sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver;
+import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
 
 
 public class LocationService extends Service
@@ -39,13 +36,7 @@ public class LocationService extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getStringExtra("Action") == null) {
-            // Connect Location Client
-            createLocationClient().connect();
-        } else {
-            // Save data to the local database
-            pinCurrentCoordinates();
-        }
+        createLocationClient().connect();
         return START_STICKY;
     }
 
@@ -57,11 +48,13 @@ public class LocationService extends Service
             coordinates.put("trip_id", tripId);
             coordinates.put("latitude", mLatitude);
             coordinates.put("longitude", mLongitude);
-            coordinates.put("datetime", new Device(this).getCurrentDateTime());
+            coordinates.put("datetime",
+                    new Device(this).getCurrentDateTime());
             coordinates.put("altitude", mAltitude);
             coordinates.put("accuracy", mAccuracy);
             coordinates.pinInBackground();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -75,29 +68,12 @@ public class LocationService extends Service
         super.onDestroy();
         try {
             pinCurrentCoordinates();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         try {
             stopLocationUpdates(mLocationClient);
-        } catch (Exception ignored) {}
-        try {
-            cancelAlarm(this);
-        } catch (Exception ignored) {}
-    }
-
-    private static void startAlarm(Context context) {
-        Intent receiverIntent = new Intent(context, AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, 123456789, receiverIntent, 0);
-
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 10, sender); // Millisec * Second * Minute
-    }
-
-    private static void cancelAlarm(Context context) {
-        Intent receiverIntent = new Intent(context, AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, 123456789, receiverIntent, 0);
-
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(sender);
+        } catch (Exception ignored) {
+        }
     }
 
     private LocationClient createLocationClient() {
@@ -106,7 +82,7 @@ public class LocationService extends Service
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        int UPDATE_INTERVAL = 5 * 1000; // 5 seconds
+        int UPDATE_INTERVAL = 10 * 1000; // 10 seconds
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(UPDATE_INTERVAL);
         return mLocationClient;
@@ -131,10 +107,12 @@ public class LocationService extends Service
     @Override
     public void onLocationChanged(Location location) {
         if (isTripJustStarted) {
-            startAlarm(this);
+            new RegisterTripTask(this).execute();
             isTripJustStarted = false;
         }
+
         updateMapFragment(location);
+        pinCurrentCoordinates();
 
         mLatitude = location.getLatitude() + "";
         mLongitude = location.getLongitude() + "";
@@ -144,7 +122,7 @@ public class LocationService extends Service
 
     private void updateMapFragment(Location location) {
         Intent intent = new Intent("LocationUpdates");
-        // You can also include some extra data.
+        // Also include extra data
         Bundle b = new Bundle();
         b.putParcelable("Location", location);
         intent.putExtra("Location", b);

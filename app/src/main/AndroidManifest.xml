@@ -50,17 +50,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
         </activity>
-
-        <service
-            android:name=".utils.services.LocationService"
-            android:exported="false" />
-
-        <receiver android:name=".utils.recievers.AlarmReceiver" />
-
         <activity
             android:name=".ui.activities.StatsActivity"
             android:label="@string/title_activity_stats">
         </activity>
-    </application>
 
+        <service
+            android:name=".utils.LocationService"
+            android:exported="false" />
+    </application>
 </manifest>

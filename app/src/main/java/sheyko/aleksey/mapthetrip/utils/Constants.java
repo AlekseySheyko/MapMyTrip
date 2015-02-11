@@ -1,4 +1,4 @@
-package sheyko.aleksey.mapthetrip.utils.helpers;
+package sheyko.aleksey.mapthetrip.utils;
 
 public class Constants {
 

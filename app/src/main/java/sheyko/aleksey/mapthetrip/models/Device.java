@@ -12,7 +12,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import sheyko.aleksey.mapthetrip.R;
-import sheyko.aleksey.mapthetrip.utils.helpers.Constants;
+import sheyko.aleksey.mapthetrip.utils.Constants;
 
 public class Device {
 

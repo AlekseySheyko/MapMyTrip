@@ -43,22 +43,24 @@ public class SummaryActivity extends Activity
     private String mStateDistances;
     private String mTotalDistance;
     private String mStateDurations;
-    private SharedPreferences sharedPrefs;
+    private String mTripName;
+    private String mTripNotes;
+
+    private SharedPreferences mSharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_summary);
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         Trip currentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
-        // Get trip info
         mDistance = currentTrip.getDistance();
         mDuration = currentTrip.getDuration();
         mStartTime = currentTrip.getStartTime();
-        mTripId = currentTrip.getTripId();
-        if (mTripId == null) mTripId = sharedPrefs.getString("trip_id", "");
+        mTripId = mSharedPrefs.getString("trip_id", "");
 
         // Update UI
         ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
@@ -70,7 +72,7 @@ public class SummaryActivity extends Activity
     }
 
     private void finishSession(boolean isSaved) {
-        sharedPrefs.edit().putBoolean("is_saved", isSaved);
+        mSharedPrefs.edit().putBoolean("is_saved", isSaved);
 
         if (isOnline()) {
             setProgressBarIndeterminateVisibility(true);
@@ -86,12 +88,6 @@ public class SummaryActivity extends Activity
                 public void onClick(DialogInterface dialog, int id) {
                     // User cancelled the dialog
                     dialog.cancel();
-                }
-            });
-            builder.setNegativeButton("Finish", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User confirm exit
-                    startActivity(new Intent(SummaryActivity.this, MainActivity.class));
                 }
             });
             // Create the AlertDialog
@@ -129,25 +125,56 @@ public class SummaryActivity extends Activity
         });
     }
 
-    public boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager)
-                this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
+    private void saveTripOnServer() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("SaveTripTask");
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> tasks, ParseException e) {
+                if (tasks.size() != 0) {
+                    String tripId = PreferenceManager.getDefaultSharedPreferences(SummaryActivity.this)
+                            .getString("trip_id", "");
+                    for (ParseObject saveTripTask : tasks) {
+                        saveTripTask.put("trip_id", tripId);
+                    }
+                    new SaveTripTask(SummaryActivity.this).execute(
+                            mTripId, "true", mTotalDistance,
+                            mDuration + "", mTripName, mTripNotes,
+                            mStateCodes, mStateDistances, mStateDurations
+                    );
+                    for (ParseObject task : tasks) {
+                        task.unpinInBackground();
+                    }
+                }
+            }
+        });
     }
 
-    private void saveTrip(boolean isSaved) {
-        String tripName = ((EditText) findViewById(R.id.tripNameField)).getText().toString();
-        if (tripName.equals("")) tripName = "Trip on " + mStartTime;
-        String tripNotes = ((EditText) findViewById(R.id.tripNotesField)).getText().toString();
+    private void saveTrip() {
+        mTripName = ((EditText) findViewById(R.id.tripNameField)).getText().toString();
+        if (mTripName.isEmpty()) mTripName = "Trip on " + mStartTime;
+        mTripNotes = ((EditText) findViewById(R.id.tripNotesField)).getText().toString();
 
-        new SaveTripTask(this).execute(
-                mTripId, isSaved + "", mTotalDistance,
-                mDuration + "", tripName, tripNotes,
-                mStateCodes, mStateDistances, mStateDurations
-        );
-
-
+        try {
+            ParseObject coordinates = new ParseObject("SaveTripTask");
+            String tripId = PreferenceManager.getDefaultSharedPreferences(SummaryActivity.this)
+                    .getString("trip_id", "");
+            coordinates.put("trip_id", tripId);
+            coordinates.put("is_saved", "true");
+            coordinates.put("total_distance", mTotalDistance);
+            coordinates.put("duration", mDuration + "");
+            coordinates.put("name", mTripName);
+            coordinates.put("notes", mTripNotes);
+            coordinates.put("state_codes", mStateCodes);
+            coordinates.put("state_distances", mStateDistances);
+            coordinates.put("state_durations", mStateDurations);
+            coordinates.pinInBackground();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (isOnline()) {
+            saveTripOnServer();
+        }
         setProgressBarIndeterminateVisibility(false);
 
         startActivity(new Intent(this, StatsActivity.class)
@@ -184,13 +211,18 @@ public class SummaryActivity extends Activity
     }
 
     @Override
-    public void onStatesDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesDurations) {
+    public void onLocationSent() {
+        new GetSummaryInfoTask(this).execute(mTripId);
+    }
+
+    @Override
+    public void onSummaryDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesDurations) {
         mStateCodes = stateCodes;
         mStateDistances = stateDistances;
         mTotalDistance = totalDistance;
         mStateDurations = statesDurations;
 
-        saveTrip(sharedPrefs.getBoolean("is_saved", true));
+        saveTrip();
     }
 
     @Override
@@ -204,8 +236,10 @@ public class SummaryActivity extends Activity
         return (super.onOptionsItemSelected(item));
     }
 
-    @Override
-    public void onLocationSent() {
-        new GetSummaryInfoTask(this).execute(mTripId);
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 }

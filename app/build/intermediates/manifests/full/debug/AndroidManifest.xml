@@ -56,17 +56,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
         </activity>
-
-        <service
-            android:name="sheyko.aleksey.mapthetrip.utils.services.LocationService"
-            android:exported="false" />
-
-        <receiver android:name="sheyko.aleksey.mapthetrip.utils.recievers.AlarmReceiver" />
-
         <activity
             android:name="sheyko.aleksey.mapthetrip.ui.activities.StatsActivity"
             android:label="@string/title_activity_stats" >
         </activity>
+
+        <service
+            android:name="sheyko.aleksey.mapthetrip.utils.LocationService"
+            android:exported="false" />
     </application>
 
 </manifest>
