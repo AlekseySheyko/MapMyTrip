@@ -128,15 +128,7 @@ public class SummaryActivity extends Activity
 
     @Override
     public void onLocationSent() {
-        try {
-            ParseObject task = new ParseObject("SummaryTask");
-            String tripId = mSharedPrefs.getString("trip_id", "");
-            task.put("trip_id", tripId);
-            task.pinInBackground();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        startSummaryTask();
+        new GetSummaryInfoTask(SummaryActivity.this).execute(mTripId);
     }
 
     private void startSummaryTask() {
@@ -194,23 +186,11 @@ public class SummaryActivity extends Activity
 
     private void saveTripOnServer(final String id, final String stateCodes, final String stateDistances,
                                   final String totalDistance, final String stateDurations) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("SaveTripTask");
-        query.fromLocalDatastore();
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> tasks, ParseException e) {
-                if (tasks.size() != 0) {
-                    new SaveTripTask(SummaryActivity.this).execute(
-                            id, "true", totalDistance,
-                            mDuration + "", mTripName, mTripNotes,
-                            stateCodes, stateDistances, stateDurations
-                    );
-                    for (ParseObject task : tasks) {
-                        task.unpinInBackground();
-                    }
-                }
-            }
-        });
+        new SaveTripTask(SummaryActivity.this).execute(
+                id, "true", totalDistance,
+                mDuration + "", mTripName, mTripNotes,
+                stateCodes, stateDistances, stateDurations
+        );
     }
 
     @Override
