@@ -88,6 +88,8 @@ public class Trip implements Parcelable, OnLocationSent {
                     for (ParseObject coordinate : coordinates) {
                         coordinate.unpinInBackground();
                     }
+                } else {
+                    startLocationUpdates();
                 }
             }
         });
@@ -95,12 +97,18 @@ public class Trip implements Parcelable, OnLocationSent {
 
     @Override
     public void onLocationSent() {
+        startLocationUpdates();
+    }
+
+    private void startLocationUpdates() {
         mLocationUpdatesIntent = new Intent(mContext, LocationService.class);
         mContext.startService(mLocationUpdatesIntent);
     }
 
     public void resume() {
-        mContext.startService(mLocationUpdatesIntent);
+        if (mLocationUpdatesIntent != null) {
+            mContext.startService(mLocationUpdatesIntent);
+        }
     }
 
     public void pause() {

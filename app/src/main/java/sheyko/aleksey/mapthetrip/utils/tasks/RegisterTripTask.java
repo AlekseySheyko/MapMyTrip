@@ -1,6 +1,7 @@
 package sheyko.aleksey.mapthetrip.utils.tasks;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -118,6 +119,10 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            SharedPreferences sharedPrefs =
+                    PreferenceManager.getDefaultSharedPreferences(mContext);
+            int id = Integer.parseInt(sharedPrefs.getString("trip_id", "0")) + 1;
+            sharedPrefs.edit().putString("trip_id", id + "");
             return null;
         } finally {
             if (urlConnection != null) {

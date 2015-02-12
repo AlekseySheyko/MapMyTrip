@@ -27,10 +27,6 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
         public void onLocationSent();
     }
 
-    public SendLocationTask(Context context) {
-        mContext = context;
-    }
-
     public SendLocationTask(Context context, OnLocationSent callback) {
         mContext = context;
         mCallback = callback;
@@ -40,7 +36,7 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
     protected Void doInBackground(List<ParseObject>... coordinatesList) {
 
         HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
+        BufferedReader reader;
         Device mDevice = new Device(mContext);
 
         try {

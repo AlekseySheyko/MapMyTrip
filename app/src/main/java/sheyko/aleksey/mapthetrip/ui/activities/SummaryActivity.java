@@ -155,7 +155,8 @@ public class SummaryActivity extends Activity
     }
 
     @Override
-    public void onSummaryDataRetrieved(String id, String stateCodes, String stateDistances, String totalDistance, String statesDurations) {
+    public void onSummaryDataRetrieved(String id, String stateCodes, String stateDistances,
+                                       String totalDistance, String statesDurations) {
         saveTrip(id, stateCodes, stateDistances, totalDistance, statesDurations);
     }
 
