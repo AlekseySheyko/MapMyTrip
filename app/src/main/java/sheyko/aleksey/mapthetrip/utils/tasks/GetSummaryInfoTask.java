@@ -28,7 +28,7 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
 
     // Interface to return states data
     public interface OnStatesDataRetrieved {
-        public void onSummaryDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesCount);
+        public void onSummaryDataRetrieved(String id, String stateCodes, String stateDistances, String totalDistance, String statesCount);
     }
 
     public GetSummaryInfoTask(OnStatesDataRetrieved callback) {
@@ -120,6 +120,7 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
                     String totalDistance = mStateDistances.getDouble("total") + "";
                     if (mStatesDurations.equals("")) mStatesDurations = "0";
 
+                    statesData.put("id", params[0]);
                     statesData.put("stateCodes", mStateCodes);
                     statesData.put("stateDistances", mDistances);
                     statesData.put("totalDistance", totalDistance);
@@ -154,6 +155,7 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
         super.onPostExecute(mStatesInfo);
 
         mCallback.onSummaryDataRetrieved(
+                mStatesInfo.get("id"),
                 mStatesInfo.get("stateCodes"),
                 mStatesInfo.get("stateDistances"),
                 mStatesInfo.get("totalDistance"),

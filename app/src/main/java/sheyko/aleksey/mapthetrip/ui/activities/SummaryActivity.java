@@ -39,10 +39,6 @@ public class SummaryActivity extends Activity
     private int mDuration;
     private String mDistance;
     private String mStartTime;
-    private String mStateCodes;
-    private String mStateDistances;
-    private String mTotalDistance;
-    private String mStateDurations;
     private String mTripName;
     private String mTripNotes;
 
@@ -65,16 +61,6 @@ public class SummaryActivity extends Activity
         // Update UI
         ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
         ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
-
-        try {
-            ParseObject summaryTask = new ParseObject("SummaryTask");
-            String tripId = PreferenceManager.getDefaultSharedPreferences(SummaryActivity.this)
-                    .getString("trip_id", "");
-            summaryTask.put("trip_id", tripId);
-            summaryTask.pinInBackground();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void finishSession(View view) {
@@ -140,36 +126,83 @@ public class SummaryActivity extends Activity
         });
     }
 
-    private void getSummaryInfoFromServer() {
+    @Override
+    public void onLocationSent() {
+        try {
+            ParseObject task = new ParseObject("SummaryTask");
+            String tripId = mSharedPrefs.getString("trip_id", "");
+            task.put("trip_id", tripId);
+            task.pinInBackground();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        startSummaryTask();
+    }
+
+    private void startSummaryTask() {
         ParseQuery<ParseObject> status = ParseQuery.getQuery("SummaryTask");
         status.fromLocalDatastore();
         status.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> summaryTasks, ParseException e) {
-                for (ParseObject summaryTask : summaryTasks) {
-                    new GetSummaryInfoTask(SummaryActivity.this).execute(mTripId);
-                    summaryTask.deleteInBackground();
+                for (ParseObject task : summaryTasks) {
+                    new GetSummaryInfoTask(SummaryActivity.this).execute(
+                            task.getString("trip_id"));
+                    task.deleteInBackground();
                 }
             }
         });
     }
 
-    private void saveTripOnServer() {
+    @Override
+    public void onSummaryDataRetrieved(String id, String stateCodes, String stateDistances, String totalDistance, String statesDurations) {
+        saveTrip(id, stateCodes, stateDistances, totalDistance, statesDurations);
+    }
+
+    private void saveTrip(String id, String stateCodes, String stateDistances,
+                          String totalDistance, String statesDurations) {
+        mTripName = ((EditText) findViewById(R.id.tripNameField)).getText().toString();
+        if (mTripName.isEmpty()) mTripName = "Trip on " + mStartTime;
+        mTripNotes = ((EditText) findViewById(R.id.tripNotesField)).getText().toString();
+
+        try {
+            ParseObject coordinates = new ParseObject("SaveTripTask");
+            coordinates.put("trip_id", id);
+            coordinates.put("is_saved", "true");
+            coordinates.put("total_distance", totalDistance);
+            coordinates.put("duration", mDuration + "");
+            coordinates.put("name", mTripName);
+            coordinates.put("notes", mTripNotes);
+            coordinates.put("state_codes", stateCodes);
+            coordinates.put("state_distances", stateDistances);
+            coordinates.put("state_durations", statesDurations);
+            coordinates.pinInBackground();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (isOnline()) {
+            saveTripOnServer(id, stateCodes, stateDistances, totalDistance, statesDurations);
+        }
+        setProgressBarIndeterminateVisibility(false);
+
+        startActivity(new Intent(this, StatsActivity.class)
+                .putExtra("total_distance", totalDistance)
+                .putExtra("state_codes", stateCodes)
+                .putExtra("state_distances", stateDistances));
+    }
+
+    private void saveTripOnServer(final String id, final String stateCodes, final String stateDistances,
+                                  final String totalDistance, final String stateDurations) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("SaveTripTask");
         query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> tasks, ParseException e) {
                 if (tasks.size() != 0) {
-                    String tripId = PreferenceManager.getDefaultSharedPreferences(SummaryActivity.this)
-                            .getString("trip_id", "");
-                    for (ParseObject saveTripTask : tasks) {
-                        saveTripTask.put("trip_id", tripId);
-                    }
                     new SaveTripTask(SummaryActivity.this).execute(
-                            mTripId, "true", mTotalDistance,
+                            id, "true", totalDistance,
                             mDuration + "", mTripName, mTripNotes,
-                            mStateCodes, mStateDistances, mStateDurations
+                            stateCodes, stateDistances, stateDurations
                     );
                     for (ParseObject task : tasks) {
                         task.unpinInBackground();
@@ -177,54 +210,6 @@ public class SummaryActivity extends Activity
                 }
             }
         });
-    }
-
-    private void saveTrip() {
-        mTripName = ((EditText) findViewById(R.id.tripNameField)).getText().toString();
-        if (mTripName.isEmpty()) mTripName = "Trip on " + mStartTime;
-        mTripNotes = ((EditText) findViewById(R.id.tripNotesField)).getText().toString();
-
-        try {
-            ParseObject coordinates = new ParseObject("SaveTripTask");
-            String tripId = PreferenceManager.getDefaultSharedPreferences(SummaryActivity.this)
-                    .getString("trip_id", "");
-            coordinates.put("trip_id", tripId);
-            coordinates.put("is_saved", "true");
-            coordinates.put("total_distance", mTotalDistance);
-            coordinates.put("duration", mDuration + "");
-            coordinates.put("name", mTripName);
-            coordinates.put("notes", mTripNotes);
-            coordinates.put("state_codes", mStateCodes);
-            coordinates.put("state_distances", mStateDistances);
-            coordinates.put("state_durations", mStateDurations);
-            coordinates.pinInBackground();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (isOnline()) {
-            saveTripOnServer();
-        }
-        setProgressBarIndeterminateVisibility(false);
-
-        startActivity(new Intent(this, StatsActivity.class)
-                .putExtra("total_distance", mDistance)
-                .putExtra("state_codes", mStateCodes)
-                .putExtra("state_distances", mStateDistances));
-    }
-
-    @Override
-    public void onLocationSent() {
-        new GetSummaryInfoTask(this).execute(mTripId);
-    }
-
-    @Override
-    public void onSummaryDataRetrieved(String stateCodes, String stateDistances, String totalDistance, String statesDurations) {
-        mStateCodes = stateCodes;
-        mStateDistances = stateDistances;
-        mTotalDistance = totalDistance;
-        mStateDurations = statesDurations;
-
-        saveTrip();
     }
 
     @Override
