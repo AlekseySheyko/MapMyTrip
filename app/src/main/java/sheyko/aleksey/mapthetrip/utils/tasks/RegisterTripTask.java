@@ -122,7 +122,7 @@ public class RegisterTripTask extends AsyncTask<String, Void, String> {
             SharedPreferences sharedPrefs =
                     PreferenceManager.getDefaultSharedPreferences(mContext);
             int id = Integer.parseInt(sharedPrefs.getString("trip_id", "0")) + 1;
-            sharedPrefs.edit().putString("trip_id", id + "");
+            sharedPrefs.edit().putString("trip_id", id + "").apply();
             return null;
         } finally {
             if (urlConnection != null) {
