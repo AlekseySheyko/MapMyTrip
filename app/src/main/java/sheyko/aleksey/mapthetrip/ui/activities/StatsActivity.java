@@ -20,7 +20,6 @@ public class StatsActivity extends Activity {
 
     private ArrayList<HashMap> list;
 
-    private String mTotalDistance;
     private String mStateCodes;
     private String mStateDistances;
 
@@ -30,12 +29,12 @@ public class StatsActivity extends Activity {
         setContentView(R.layout.activity_stats);
 
         if (getIntent() != null) {
-            mTotalDistance = getIntent().getStringExtra("total_distance");
+            String totalDistance = getIntent().getStringExtra("total_distance");
             mStateCodes = getIntent().getStringExtra("state_codes");
             mStateDistances = getIntent().getStringExtra("state_distances");
 
             TextView mTotalDistanceLabel = (TextView) findViewById(R.id.total_distance_value);
-            mTotalDistanceLabel.setText(mTotalDistance);
+            mTotalDistanceLabel.setText(totalDistance);
         }
 
         if (!mStateCodes.equals("0")) {

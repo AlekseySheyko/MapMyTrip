@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -75,6 +76,11 @@ public class MapPane extends Fragment
     private TextView mDurationCounter;
     private int isTripStarted = 0;
 
+    private int mDuration;
+    private float mDistance;
+
+    private SharedPreferences mSharedPrefs;
+
     // Required empty constructor
     public MapPane() {
     }
@@ -111,6 +117,9 @@ public class MapPane extends Fragment
         mStartButton.setOnClickListener(this);
         mPauseButton.setOnClickListener(this);
         mFinishButton.setOnClickListener(this);
+
+        mSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(getActivity());
     }
 
     private void initializeViews(View rootView) {
@@ -129,6 +138,16 @@ public class MapPane extends Fragment
                 rootView.findViewById(R.id.duration_counter);
         mDistanceCounter = (TextView)
                 rootView.findViewById(R.id.distance_counter);
+    }
+
+    private GoogleMap disableMapUiControls(Fragment fragment) {
+        mMap = ((MapFragment) fragment).getMap();
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setAllGesturesEnabled(false);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+        return mMap;
     }
 
     @Override
@@ -164,13 +183,12 @@ public class MapPane extends Fragment
                 mCurrentTrip.finish();
                 pinCurrentStatus(FINISH);
 
-                // Start Summary Activity
-                // on «Finish» button pressed
+                mSharedPrefs.edit()
+                        .putInt("duration", getDuration()).apply();
+
+                // Start summary activity
                 startActivity(new Intent(
-                        this.getActivity(), SummaryActivity.class)
-                        // Passing current instance of Trip class,
-                        // containing id, distance, duration, etc.
-                        .putExtra("CurrentTrip", mCurrentTrip));
+                        getActivity(), SummaryActivity.class));
                 break;
         }
     }
@@ -264,6 +282,13 @@ public class MapPane extends Fragment
         pauseStopwatch();
     }
 
+    public void pauseStopwatch() {
+        if (mTimerTask != null) {
+            mTimerTask.cancel();
+            mTimerTask = null;
+        }
+    }
+
     private Location mPreviousLocation;
 
     private BroadcastReceiver mLocationReciever = new BroadcastReceiver() {
@@ -284,11 +309,12 @@ public class MapPane extends Fragment
             moveCameraFocus(currentLocation);
 
             //Increment distance by current sector
-            mCurrentTrip.increazeDistance(
+            increazeDistance(
                     getDistance(mPreviousLocation, currentLocation));
 
             // Update UI counter
-            mDistanceCounter.setText(mCurrentTrip.getDistance());
+            mDistanceCounter.setText(
+                    String.format("%.1f", mDistance));
 
             // Current turns into previous on the next iteration
             mPreviousLocation = currentLocation;
@@ -307,25 +333,18 @@ public class MapPane extends Fragment
 
         mMap.addPolygon(new PolygonOptions()
                 .strokeColor(Color.parseColor("#9f5c8f"))
-                .add(
-                        new LatLng(mPreviousLocation.getLatitude(),
+                .add(new LatLng(mPreviousLocation.getLatitude(),
                                 mPreviousLocation.getLongitude()),
                         new LatLng(currentLocation.getLatitude(),
                                 currentLocation.getLongitude())));
     }
 
-    private float getDistance(Location previousLocation, Location currentLocation) {
-        return previousLocation.distanceTo(currentLocation) * 0.000621371f;
+    public void increazeDistance(float increment) {
+        mDistance = mDistance + increment;
     }
 
-    private GoogleMap disableMapUiControls(Fragment fragment) {
-        mMap = ((MapFragment) fragment).getMap();
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(false);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mMap.getUiSettings().setAllGesturesEnabled(false);
-        mMap.getUiSettings().setZoomControlsEnabled(false);
-        return mMap;
+    private float getDistance(Location previousLocation, Location currentLocation) {
+        return previousLocation.distanceTo(currentLocation) * 0.000621371f;
     }
 
     public void startUiStopwatch() {
@@ -336,9 +355,9 @@ public class MapPane extends Fragment
                 handler.post(new Runnable() {
                     public void run() {
                         int ONE_SECOND = 1;
-                        mCurrentTrip.incrementDuration(ONE_SECOND);
+                        incrementDuration(ONE_SECOND);
                         mDurationCounter.setText(
-                                convertSecondsToHMmSs(mCurrentTrip.getDuration()));
+                                convertSecondsToHMmSs(getDuration()));
                     }
                 });
             }
@@ -347,17 +366,18 @@ public class MapPane extends Fragment
         mTimer.schedule(mTimerTask, 0, 1000);
     }
 
+    public void incrementDuration(int increment) {
+        mDuration = mDuration + increment;
+    }
+
+    public int getDuration() {
+        return mDuration;
+    }
+
     private String convertSecondsToHMmSs(long seconds) {
         long s = seconds % 60;
         long m = (seconds / 60) % 60;
         long h = (seconds / (60 * 60)) % 24;
         return String.format("%02d:%02d:%02d", h, m, s);
-    }
-
-    public void pauseStopwatch() {
-        if (mTimerTask != null) {
-            mTimerTask.cancel();
-            mTimerTask = null;
-        }
     }
 }

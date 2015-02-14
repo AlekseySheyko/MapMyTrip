@@ -35,30 +35,30 @@ public class SummaryActivity extends Activity
         implements OnSummaryDataRetrieved, OnLocationSent {
 
     private String mTripId;
-    private int mDuration;
     private String mDistance;
     private String mStartTime;
-    private String mTripName;
-    private String mTripNotes;
 
     private SharedPreferences mSharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(
+                Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_summary);
 
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        mDistance = currentTrip.getDistance();
-        mDuration = currentTrip.getDuration();
-        mStartTime = mSharedPrefs.getString("start_time", "");
         mTripId = mSharedPrefs.getString("trip_id", "");
 
+        mDistance = currentTrip.getDistance();
+
+        mStartTime = mSharedPrefs.getString("start_time", "");
+
         // Update UI
-        ((TextView) findViewById(R.id.TripLabelDistance)).setText(mDistance);
-        ((EditText) findViewById(R.id.tripNameField)).setHint("Trip on " + mStartTime);
+        ((TextView) findViewById(
+                R.id.TripLabelDistance)).setText(mDistance);
+        ((EditText) findViewById(
+                R.id.tripNameField)).setHint("Trip on " + mStartTime);
     }
 
     public void finishSession(View view) {
@@ -69,7 +69,7 @@ public class SummaryActivity extends Activity
         mSharedPrefs.edit().putBoolean("is_saved", isSaved);
         if (isOnline()) {
             setProgressBarIndeterminateVisibility(true);
-            sendCoordinatesToServer();
+            sendCoordinates();
             updateStatusOnServer();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
@@ -95,8 +95,9 @@ public class SummaryActivity extends Activity
         }
     }
 
-    private void sendCoordinatesToServer() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
+    private void sendCoordinates() {
+        ParseQuery<ParseObject> query =
+                ParseQuery.getQuery("Coordinates");
         query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -126,22 +127,7 @@ public class SummaryActivity extends Activity
 
     @Override
     public void onLocationSent() {
-        new GetSummaryInfoTask(SummaryActivity.this).execute(mTripId);
-    }
-
-    private void startSummaryTask() {
-        ParseQuery<ParseObject> status = ParseQuery.getQuery("SummaryTask");
-        status.fromLocalDatastore();
-        status.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> summaryTasks, ParseException e) {
-                for (ParseObject task : summaryTasks) {
-                    new GetSummaryInfoTask(SummaryActivity.this).execute(
-                            task.getString("trip_id"));
-                    task.deleteInBackground();
-                }
-            }
-        });
+        new GetSummaryInfoTask(this).execute(mTripId);
     }
 
     @Override
@@ -153,22 +139,30 @@ public class SummaryActivity extends Activity
                 .putString("total_distance", totalDistance)
                 .putString("state_durations", statesDurations)
                 .apply();
+
+        saveTrip();
     }
 
-    private void saveTrip(String id, String stateCodes, String stateDistances,
-                          String totalDistance, String statesDurations) {
-        mTripName = ((EditText) findViewById(R.id.tripNameField)).getText().toString();
-        if (mTripName.isEmpty()) mTripName = "Trip on " + mStartTime;
-        mTripNotes = ((EditText) findViewById(R.id.tripNotesField)).getText().toString();
+    private void saveTrip() {
+        String tripName = ((EditText) findViewById(
+                R.id.tripNameField)).getText().toString();
+        String tripNotes = ((EditText) findViewById(
+                R.id.tripNotesField)).getText().toString();
+
+        if (tripName.isEmpty()) {
+            tripName = "Trip on " + mStartTime;
+        }
+
+        String duration = mSharedPrefs.getInt("duration", 0) + "";
 
         try {
             ParseObject coordinates = new ParseObject("SaveTripTask");
             coordinates.put("trip_id", id);
             coordinates.put("is_saved", "true");
-            coordinates.put("total_distance", totalDistance);
-            coordinates.put("duration", mDuration + "");
-            coordinates.put("name", mTripName);
-            coordinates.put("notes", mTripNotes);
+            coordinates.put("total_distance", /* TODO: Use my "distance" instead of totalDistance */mDistance);
+            coordinates.put("duration", duration);
+            coordinates.put("name", tripName);
+            coordinates.put("notes", tripNotes);
             coordinates.put("state_codes", stateCodes);
             coordinates.put("state_distances", stateDistances);
             coordinates.put("state_durations", statesDurations);
@@ -187,6 +181,13 @@ public class SummaryActivity extends Activity
                 .putExtra("state_distances", stateDistances));
     }
 
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
     private void saveTripOnServer(final String id, final String stateCodes, final String stateDistances,
                                   final String totalDistance, final String stateDurations) {
         new SaveTripTask(SummaryActivity.this).execute(
@@ -200,7 +201,7 @@ public class SummaryActivity extends Activity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // do something useful
+                // Go back to main screen
                 cancelTrip();
                 return (true);
         }
@@ -232,12 +233,5 @@ public class SummaryActivity extends Activity
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    public boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager)
-                this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
     }
 }

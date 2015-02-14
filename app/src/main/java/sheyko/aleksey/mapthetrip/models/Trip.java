@@ -37,13 +37,6 @@ public class Trip implements OnLocationSent {
     public Trip() {
     }
 
-//        tripId = in.readString();
-//        distance = in.readFloat();
-//        duration = in.readInt();
-//        stateCodes = in.readString();
-//        stateDistances = in.readString();
-//        totalDistance = in.readString();
-
     public void start(Context context) {
         mContext = context;
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -61,7 +54,7 @@ public class Trip implements OnLocationSent {
                 if (coordinates.size() != 0) {
                     new SendLocationTask(mContext, Trip.this).execute(coordinates);
                     for (ParseObject coordinate : coordinates) {
-                        coordinate.unpinInBackground();
+                        coordinate.deleteInBackground();
                     }
                 } else {
                     startLocationUpdates();
@@ -76,40 +69,33 @@ public class Trip implements OnLocationSent {
     }
 
     private void startLocationUpdates() {
-        mLocationUpdatesIntent = new Intent(mContext, LocationService.class);
-        mContext.startService(mLocationUpdatesIntent);
+        mLocationUpdatesIntent = new Intent(
+                mContext, LocationService.class);
+        startService();
+    }
+
+    public void pause() {
+        stopService();
     }
 
     public void resume() {
+        startService();
+    }
+
+    public void finish() {
+        stopService();
+    }
+
+    private void startService() {
         if (mLocationUpdatesIntent != null) {
             mContext.startService(mLocationUpdatesIntent);
         }
     }
 
-    public void pause() {
+    private void stopService() {
         if (mLocationUpdatesIntent != null) {
             mContext.stopService(mLocationUpdatesIntent);
         }
-    }
-
-    public void finish() {
-        mContext.stopService(mLocationUpdatesIntent);
-    }
-
-    public String getDistance() {
-        return String.format("%.1f", distance);
-    }
-
-    public void increazeDistance(float increment) {
-        distance = distance + increment;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void incrementDuration(int increment) {
-        duration = duration + increment;
     }
 
     private void setStartTime() {
