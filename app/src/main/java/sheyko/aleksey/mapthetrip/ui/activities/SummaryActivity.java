@@ -19,6 +19,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -161,13 +162,14 @@ public class SummaryActivity extends Activity
             coordinates.put("state_codes", stateCodes);
             coordinates.put("state_distances", stateDistances);
             coordinates.put("state_durations", stateDurations);
-            coordinates.pinInBackground();
+            coordinates.pinInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    sendSaveQueries();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (isOnline()) {
-                sendSaveQueries();
-            }
         }
     }
 
