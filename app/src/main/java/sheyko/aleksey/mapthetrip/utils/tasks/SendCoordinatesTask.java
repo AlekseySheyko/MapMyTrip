@@ -91,7 +91,6 @@ public class SendCoordinatesTask extends AsyncTask<List<ParseObject>, Void, Void
                     Log.i(TAG, "Service: TFLRecordTripCoordinates,\n" +
                             "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
 
-                    // urlConnection.disconnect();
                     try {
                         reader.close();
                     } catch (final Exception e) {

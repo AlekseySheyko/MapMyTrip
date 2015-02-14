@@ -1,7 +1,6 @@
 package sheyko.aleksey.mapthetrip.utils;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -16,12 +15,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.parse.ParseObject;
 
 import sheyko.aleksey.mapthetrip.models.Device;
-import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 
 
 public class LocationService extends Service
-        implements ConnectionCallbacks, LocationListener, OnTripRegistered {
+        implements ConnectionCallbacks, LocationListener {
 
     private LocationClient mLocationClient;
     private LocationRequest mLocationRequest;
@@ -31,23 +28,13 @@ public class LocationService extends Service
     private String mAltitude;
     private String mAccuracy;
 
-    private boolean isTripJustStarted = true;
-
     public LocationService() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (isTripJustStarted) {
-            new RegisterTripTask(this, this).execute();
-            isTripJustStarted = false;
-        }
-        return START_STICKY;
-    }
-
-    @Override
-    public void onTripRegistered(Context context, String tripId) {
         createLocationClient().connect();
+        return START_STICKY;
     }
 
     @Override

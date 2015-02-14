@@ -19,11 +19,13 @@ import java.util.Locale;
 import sheyko.aleksey.mapthetrip.utils.LocationService;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnSummaryDataRetrieved;
+import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendCoordinatesTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendCoordinatesTask.OnLocationSent;
 
-public class Trip implements OnLocationSent, OnSummaryDataRetrieved {
+public class Trip implements OnLocationSent, OnSummaryDataRetrieved, OnTripRegistered {
 
     private Context mContext;
     private String mTripId;
@@ -58,6 +60,8 @@ public class Trip implements OnLocationSent, OnSummaryDataRetrieved {
             public void done(List<ParseObject> coordinates, ParseException e) {
                 if (coordinates.size() != 0) {
                     new SendCoordinatesTask(mContext, Trip.this).execute(coordinates);
+                } else {
+                    new RegisterTripTask(mContext, Trip.this).execute();
                 }
             }
         });
@@ -80,6 +84,12 @@ public class Trip implements OnLocationSent, OnSummaryDataRetrieved {
                 .apply();
 
         saveTrip();
+
+        new RegisterTripTask(mContext, this).execute();
+    }
+
+    @Override
+    public void onTripRegistered(Context context, String tripId) {
         startLocationUpdates();
     }
 
