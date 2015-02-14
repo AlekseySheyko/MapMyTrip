@@ -102,12 +102,17 @@ public class SummaryActivity extends Activity
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> statusUpdates, ParseException e) {
+                new SendStatusTask(SummaryActivity.this)
+                        .execute(statusUpdates);
+
+                /*
                 for (ParseObject statusUpdate : statusUpdates) {
                     new SendStatusTask(SummaryActivity.this).execute(
                             statusUpdate.getString("trip_id"),
                             statusUpdate.getString("status"));
                     statusUpdate.deleteInBackground();
                 }
+                */
             }
         });
     }

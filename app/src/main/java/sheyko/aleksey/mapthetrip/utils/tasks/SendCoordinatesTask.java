@@ -19,6 +19,7 @@ import sheyko.aleksey.mapthetrip.models.Device;
 
 public class SendCoordinatesTask extends AsyncTask<List<ParseObject>, Void, Void> {
     public static final String TAG = SendCoordinatesTask.class.getSimpleName();
+
     private Context mContext;
 
     protected OnLocationSent mCallback;
