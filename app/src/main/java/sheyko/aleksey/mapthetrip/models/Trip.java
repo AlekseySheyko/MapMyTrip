@@ -9,6 +9,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,8 +40,6 @@ public class Trip implements OnLocationSent, OnSummaryDataRetrieved {
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         setStartTime();
-        startLocationUpdates();
-
         sendPreviousCoordinates();
     }
 
@@ -85,7 +84,7 @@ public class Trip implements OnLocationSent, OnSummaryDataRetrieved {
     }
 
     private void saveTrip() {
-        String distance = mSharedPrefs.getFloat("distance", 0) + "";
+        String distance = mSharedPrefs.getString("distance", "0");
         String duration = mSharedPrefs.getInt("duration", 0) + "";
         String stateCodes = mSharedPrefs.getString("state_codes", "");
         String stateDistances = mSharedPrefs.getString("state_distances", "0");
@@ -102,15 +101,18 @@ public class Trip implements OnLocationSent, OnSummaryDataRetrieved {
             coordinates.put("state_codes", stateCodes);
             coordinates.put("state_distances", stateDistances);
             coordinates.put("state_durations", stateDurations);
-            coordinates.pinInBackground();
+            coordinates.pinInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    sendSaveTasks();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-                sendSaveQueries();
         }
     }
 
-    private void sendSaveQueries() {
+    private void sendSaveTasks() {
         ParseQuery<ParseObject> query =
                 ParseQuery.getQuery("SaveTasks");
         query.fromLocalDatastore();

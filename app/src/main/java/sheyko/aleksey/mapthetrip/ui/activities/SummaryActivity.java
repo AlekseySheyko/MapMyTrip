@@ -165,7 +165,7 @@ public class SummaryActivity extends Activity
             coordinates.pinInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
-                    sendSaveQueries();
+                    sendSaveTasks();
                 }
             });
         } catch (Exception e) {
@@ -173,7 +173,7 @@ public class SummaryActivity extends Activity
         }
     }
 
-    private void sendSaveQueries() {
+    private void sendSaveTasks() {
         ParseQuery<ParseObject> query =
                 ParseQuery.getQuery("SaveTasks");
         query.fromLocalDatastore();
