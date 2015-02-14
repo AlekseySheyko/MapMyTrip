@@ -62,7 +62,7 @@ public class SummaryActivity extends Activity
     }
 
     private void finishSession(boolean isSaved) {
-        mSharedPrefs.edit().putBoolean("is_saved", isSaved);
+        mSharedPrefs.edit().putBoolean("is_saved", isSaved).apply();
         if (isOnline()) {
             sendCoordinates();
             sendStatusUpdates();
@@ -173,7 +173,6 @@ public class SummaryActivity extends Activity
         }
     }
 
-    // TODO Сейчас сэйв трип таск запаздывает на одну поездку
     private void sendSaveQueries() {
         ParseQuery<ParseObject> query =
                 ParseQuery.getQuery("SaveTasks");
