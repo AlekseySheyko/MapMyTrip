@@ -16,22 +16,15 @@ import java.util.List;
 import java.util.Locale;
 
 import sheyko.aleksey.mapthetrip.utils.LocationService;
-import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask.OnLocationSent;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendCoordinatesTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendCoordinatesTask.OnLocationSent;
 
 public class Trip implements OnLocationSent {
 
-    private String tripId;
-    float distance = 0;
-    int duration = 0;
-    String stateCodes;
-    String stateDistances;
-    String totalDistance;
+    private Context mContext;
 
-    // Listens for location service
     private Intent mLocationUpdatesIntent;
 
-    private Context mContext;
     private SharedPreferences mSharedPrefs;
 
     public Trip() {
@@ -45,6 +38,13 @@ public class Trip implements OnLocationSent {
         sendPreviousCoordinates();
     }
 
+    private void setStartTime() {
+        String startTime = new SimpleDateFormat("dd MMM, hh:mm", Locale.US)
+                .format(new Date()).toLowerCase();
+        mSharedPrefs.edit().putString(
+                "start_time", startTime).apply();
+    }
+
     private void sendPreviousCoordinates() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Coordinates");
         query.fromLocalDatastore();
@@ -52,7 +52,7 @@ public class Trip implements OnLocationSent {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
                 if (coordinates.size() != 0) {
-                    new SendLocationTask(mContext, Trip.this).execute(coordinates);
+                    new SendCoordinatesTask(mContext, Trip.this).execute(coordinates);
                     for (ParseObject coordinate : coordinates) {
                         coordinate.deleteInBackground();
                     }
@@ -96,12 +96,5 @@ public class Trip implements OnLocationSent {
         if (mLocationUpdatesIntent != null) {
             mContext.stopService(mLocationUpdatesIntent);
         }
-    }
-
-    private void setStartTime() {
-        String startTime = new SimpleDateFormat("dd MMM, hh:mm", Locale.US)
-                .format(new Date()).toLowerCase();
-        mSharedPrefs.edit().putString(
-                "start_time", startTime).apply();
     }
 }

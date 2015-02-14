@@ -2,7 +2,9 @@ package sheyko.aleksey.mapthetrip.ui.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -28,14 +30,16 @@ public class StatsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
 
-        if (getIntent() != null) {
-            String totalDistance = getIntent().getStringExtra("total_distance");
-            mStateCodes = getIntent().getStringExtra("state_codes");
-            mStateDistances = getIntent().getStringExtra("state_distances");
+        SharedPreferences sharedPrefs =
+                PreferenceManager.getDefaultSharedPreferences(this);
 
-            TextView mTotalDistanceLabel = (TextView) findViewById(R.id.total_distance_value);
-            mTotalDistanceLabel.setText(totalDistance);
-        }
+        String totalDistance = sharedPrefs.getString("total_distance", "0");
+        mStateCodes = sharedPrefs.getString("state_codes", "");
+        mStateDistances = sharedPrefs.getString("state_distances", "0");
+
+        TextView mTotalDistanceLabel = (TextView)
+                findViewById(R.id.total_distance_value);
+        mTotalDistanceLabel.setText(totalDistance);
 
         if (!mStateCodes.equals("0")) {
 

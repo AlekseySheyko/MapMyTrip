@@ -43,7 +43,7 @@ import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity;
 import sheyko.aleksey.mapthetrip.utils.Constants.ActionBar.Tab;
-import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendStatusTask;
 
 public class MapPane extends Fragment
         implements OnClickListener {
@@ -184,7 +184,9 @@ public class MapPane extends Fragment
                 pinCurrentStatus(FINISH);
 
                 mSharedPrefs.edit()
-                        .putInt("duration", getDuration()).apply();
+                        .putInt("duration", mDuration)
+                        .putFloat("distance", mDistance)
+                        .apply();
 
                 // Start summary activity
                 startActivity(new Intent(
@@ -217,7 +219,7 @@ public class MapPane extends Fragment
                 public void done(List<ParseObject> statusObjects, ParseException e) {
                     for (ParseObject statusObject : statusObjects) {
                         if (isOnline()) {
-                            new UpdateTripStatusTask(MapPane.this.getActivity()).execute(
+                            new SendStatusTask(MapPane.this.getActivity()).execute(
                                     statusObject.getString("trip_id"),
                                     statusObject.getString("status"));
                             statusObject.unpinInBackground();
@@ -357,7 +359,7 @@ public class MapPane extends Fragment
                         int ONE_SECOND = 1;
                         incrementDuration(ONE_SECOND);
                         mDurationCounter.setText(
-                                convertSecondsToHMmSs(getDuration()));
+                                convertSecondsToHMmSs(mDuration));
                     }
                 });
             }
@@ -368,10 +370,6 @@ public class MapPane extends Fragment
 
     public void incrementDuration(int increment) {
         mDuration = mDuration + increment;
-    }
-
-    public int getDuration() {
-        return mDuration;
     }
 
     private String convertSecondsToHMmSs(long seconds) {

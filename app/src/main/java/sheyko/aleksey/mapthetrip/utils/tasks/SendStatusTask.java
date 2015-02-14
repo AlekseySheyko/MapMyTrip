@@ -15,12 +15,12 @@ import java.net.URL;
 
 import sheyko.aleksey.mapthetrip.models.Device;
 
-public class UpdateTripStatusTask extends AsyncTask<String, Void, Void> {
-    public static final String TAG = UpdateTripStatusTask.class.getSimpleName();
+public class SendStatusTask extends AsyncTask<String, Void, Void> {
+    public static final String TAG = SendStatusTask.class.getSimpleName();
 
     private Context mContext;
 
-    public UpdateTripStatusTask(Context context){
+    public SendStatusTask(Context context){
         mContext = context;
     }
 

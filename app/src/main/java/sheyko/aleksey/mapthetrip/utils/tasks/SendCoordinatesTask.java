@@ -17,8 +17,8 @@ import java.util.List;
 
 import sheyko.aleksey.mapthetrip.models.Device;
 
-public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
-    public static final String TAG = SendLocationTask.class.getSimpleName();
+public class SendCoordinatesTask extends AsyncTask<List<ParseObject>, Void, Void> {
+    public static final String TAG = SendCoordinatesTask.class.getSimpleName();
     private Context mContext;
 
     protected OnLocationSent mCallback;
@@ -27,7 +27,7 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
         public void onLocationSent();
     }
 
-    public SendLocationTask(Context context, OnLocationSent callback) {
+    public SendCoordinatesTask(Context context, OnLocationSent callback) {
         mContext = context;
         mCallback = callback;
     }
@@ -41,13 +41,13 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
 
         try {
             for (List<ParseObject> coordinates : coordinatesList) {
-                for (ParseObject coordinate : coordinates) {
-                    String tripId = coordinate.getString("trip_id");
-                    String latitude = coordinate.getString("latitude");
-                    String longitude = coordinate.getString("longitude");
-                    String datetime = coordinate.getString("datetime");
-                    String altitude = coordinate.getString("altitude");
-                    String accuracy = coordinate.getString("accuracy");
+                for (ParseObject coordinateSet : coordinates) {
+                    String tripId = coordinateSet.getString("trip_id");
+                    String latitude = coordinateSet.getString("latitude");
+                    String longitude = coordinateSet.getString("longitude");
+                    String datetime = coordinateSet.getString("datetime");
+                    String altitude = coordinateSet.getString("altitude");
+                    String accuracy = coordinateSet.getString("accuracy");
 
                     // Construct the URL for the first query
                     Uri.Builder builder = new Uri.Builder();
@@ -141,6 +141,7 @@ public class SendLocationTask extends AsyncTask<List<ParseObject>, Void, Void> {
                     } catch (final IOException e) {
                         Log.e(TAG, "Error closing stream", e);
                     }
+                    coordinateSet.deleteInBackground();
                 }
             }
         } catch (Exception e) {

@@ -26,7 +26,7 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
     public interface OnSummaryDataRetrieved {
         public void onSummaryDataRetrieved(
                 String stateCodes, String stateDistances,
-                String totalDistance, String stateDurations);
+                String stateDurations);
     }
 
     public GetSummaryInfoTask(OnSummaryDataRetrieved callback) {
@@ -153,7 +153,6 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
         mCallback.onSummaryDataRetrieved(
                 mStatesInfo.get("stateCodes"),
                 mStatesInfo.get("stateDistances"),
-                mStatesInfo.get("totalDistance"),
                 mStatesInfo.get("stateDurations"));
     }
 }

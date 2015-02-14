@@ -27,9 +27,9 @@ import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnSummaryDataRetrieved;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask.OnLocationSent;
-import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendCoordinatesTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendCoordinatesTask.OnLocationSent;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendStatusTask;
 
 public class SummaryActivity extends Activity
         implements OnSummaryDataRetrieved, OnLocationSent {
@@ -50,7 +50,7 @@ public class SummaryActivity extends Activity
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mTripId = mSharedPrefs.getString("trip_id", "");
 
-        mDistance = currentTrip.getDistance();
+        mDistance = mSharedPrefs.getFloat("distance", 0) + "";
 
         mStartTime = mSharedPrefs.getString("start_time", "");
 
@@ -70,7 +70,7 @@ public class SummaryActivity extends Activity
         if (isOnline()) {
             setProgressBarIndeterminateVisibility(true);
             sendCoordinates();
-            updateStatusOnServer();
+            sendStatuses();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
             builder.setTitle("Network lost");
@@ -95,6 +95,23 @@ public class SummaryActivity extends Activity
         }
     }
 
+    private void sendStatuses() {
+        ParseQuery<ParseObject> query =
+                ParseQuery.getQuery("Status");
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> statusUpdates, ParseException e) {
+                for (ParseObject statusUpdate : statusUpdates) {
+                    new SendStatusTask(SummaryActivity.this).execute(
+                            statusUpdate.getString("trip_id"),
+                            statusUpdate.getString("status"));
+                    statusUpdate.deleteInBackground();
+                }
+            }
+        });
+    }
+
     private void sendCoordinates() {
         ParseQuery<ParseObject> query =
                 ParseQuery.getQuery("Coordinates");
@@ -102,25 +119,9 @@ public class SummaryActivity extends Activity
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
-                new SendLocationTask(SummaryActivity.this, SummaryActivity.this).execute(coordinates);
-                for (ParseObject coordinate : coordinates) {
-                    coordinate.deleteInBackground();
-                }
-            }
-        });
-    }
-
-    private void updateStatusOnServer() {
-        ParseQuery<ParseObject> status = ParseQuery.getQuery("Status");
-        status.fromLocalDatastore();
-        status.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> coordinates, ParseException e) {
-                for (ParseObject status : coordinates) {
-                    new UpdateTripStatusTask(SummaryActivity.this).execute(
-                            status.getString("trip_id"), status.getString("status"));
-                    status.deleteInBackground();
-                }
+                new SendCoordinatesTask(SummaryActivity.this, SummaryActivity.this)
+                        .execute(coordinates);
+                // Coordinates will be then deleted inside SendCoordinatesTask
             }
         });
     }
@@ -132,11 +133,10 @@ public class SummaryActivity extends Activity
 
     @Override
     public void onSummaryDataRetrieved(String stateCodes, String stateDistances,
-                                       String totalDistance, String statesDurations) {
+                                       String statesDurations) {
         mSharedPrefs.edit()
                 .putString("state_codes", stateCodes)
                 .putString("state_distances", stateDistances)
-                .putString("total_distance", totalDistance)
                 .putString("state_durations", statesDurations)
                 .apply();
 
@@ -152,49 +152,47 @@ public class SummaryActivity extends Activity
         if (tripName.isEmpty()) {
             tripName = "Trip on " + mStartTime;
         }
-
         String duration = mSharedPrefs.getInt("duration", 0) + "";
+        String isSaved = mSharedPrefs.getBoolean("is_saved", false) + "";
+        String stateCodes = mSharedPrefs.getString("state_codes", "");
+        String stateDistances = mSharedPrefs.getString("state_distances", "0");
+        String stateDurations = mSharedPrefs.getString("state_durations", "0");
 
         try {
             ParseObject coordinates = new ParseObject("SaveTripTask");
-            coordinates.put("trip_id", id);
-            coordinates.put("is_saved", "true");
-            coordinates.put("total_distance", /* TODO: Use my "distance" instead of totalDistance */mDistance);
+            coordinates.put("trip_id", mTripId);
+            coordinates.put("is_saved", isSaved);
+            coordinates.put("total_distance", mDistance);
             coordinates.put("duration", duration);
             coordinates.put("name", tripName);
             coordinates.put("notes", tripNotes);
             coordinates.put("state_codes", stateCodes);
             coordinates.put("state_distances", stateDistances);
-            coordinates.put("state_durations", statesDurations);
+            coordinates.put("state_durations", stateDurations);
             coordinates.pinInBackground();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (isOnline()) {
-            saveTripOnServer(id, stateCodes, stateDistances, totalDistance, statesDurations);
+        } finally {
+            if (isOnline()) {
+                new SaveTripTask(this).execute(
+                        mTripId, isSaved,
+                        mDistance, duration,
+                        tripName, tripNotes,
+                        stateCodes, stateDistances, stateDurations
+                );
+            }
         }
         setProgressBarIndeterminateVisibility(false);
 
-        startActivity(new Intent(this, StatsActivity.class)
-                .putExtra("total_distance", totalDistance)
-                .putExtra("state_codes", stateCodes)
-                .putExtra("state_distances", stateDistances));
+        startActivity(new Intent(this,
+                StatsActivity.class));
     }
 
     public boolean isOnline() {
         ConnectivityManager connMgr = (ConnectivityManager)
-                this.getSystemService(Context.CONNECTIVITY_SERVICE);
+                getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
-    }
-
-    private void saveTripOnServer(final String id, final String stateCodes, final String stateDistances,
-                                  final String totalDistance, final String stateDurations) {
-        new SaveTripTask(SummaryActivity.this).execute(
-                id, "true", totalDistance,
-                mDuration + "", mTripName, mTripNotes,
-                stateCodes, stateDistances, stateDurations
-        );
     }
 
     @Override
