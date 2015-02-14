@@ -158,7 +158,6 @@ public class SendCoordinatesTask extends AsyncTask<List<ParseObject>, Void, Void
     @Override
     protected void onPostExecute(Void v) {
         super.onPostExecute(v);
-
         if (mCallback != null) {
             mCallback.onLocationSent();
         }

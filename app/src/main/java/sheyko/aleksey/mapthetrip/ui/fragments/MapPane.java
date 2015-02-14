@@ -30,12 +30,8 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,7 +39,6 @@ import sheyko.aleksey.mapthetrip.R;
 import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.ui.activities.SummaryActivity;
 import sheyko.aleksey.mapthetrip.utils.Constants.ActionBar.Tab;
-import sheyko.aleksey.mapthetrip.utils.tasks.SendStatusTask;
 
 public class MapPane extends Fragment
         implements OnClickListener {
@@ -156,32 +151,34 @@ public class MapPane extends Fragment
             case R.id.startButton:
                 if (mCurrentTrip == null) {
                     // If button label is «Start»
+                    // and network is available
                     if (isOnline()) {
                         mCurrentTrip = new Trip();
                         mCurrentTrip.start(this.getActivity());
                         updateUiOnStart();
                     } else {
-                        Toast.makeText(MapPane.this.getActivity(),
+                        Toast.makeText(getActivity(),
                                 "Please connect to a network", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     // If button label is «Resume»
                     mCurrentTrip.resume();
-                    pinCurrentStatus(RESUME);
+                    saveStatus(RESUME);
                     updateUiOnStart();
                 }
+
                 break;
             case R.id.pauseButton:
-                updateUiOnPause();
 
                 mCurrentTrip.pause();
-                pinCurrentStatus(PAUSE);
+                saveStatus(PAUSE);
+                updateUiOnPause();
 
                 break;
             case R.id.finishButton:
 
                 mCurrentTrip.finish();
-                pinCurrentStatus(FINISH);
+                saveStatus(FINISH);
 
                 mSharedPrefs.edit()
                         .putInt("duration", mDuration)
@@ -195,38 +192,14 @@ public class MapPane extends Fragment
         }
     }
 
-    private void pinCurrentStatus(String status) {
+    private void saveStatus(String status) {
         try {
             ParseObject statusObject = new ParseObject("Statuses");
-            String tripId = PreferenceManager.getDefaultSharedPreferences(MapPane.this.getActivity())
+            String tripId = PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .getString("trip_id", "");
             statusObject.put("trip_id", tripId);
             statusObject.put("status", status);
             statusObject.pinInBackground();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            updateStatusOnServer();
-        }
-    }
-
-    private void updateStatusOnServer() {
-        try {
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Statuses");
-            query.fromLocalDatastore();
-            query.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> statusObjects, ParseException e) {
-                    for (ParseObject statusObject : statusObjects) {
-                        if (isOnline()) {
-                            new SendStatusTask(MapPane.this.getActivity()).execute(
-                                    statusObject.getString("trip_id"),
-                                    statusObject.getString("status"));
-                            statusObject.unpinInBackground();
-                        }
-                    }
-                }
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -243,11 +216,10 @@ public class MapPane extends Fragment
         if (isTripStarted < 2) {
             isTripStarted++;
         }
-
-        if (getActivity() != null && getActivity().getActionBar() != null)
+        if (getActivity() != null && getActivity().getActionBar() != null) {
             getActivity().getActionBar()
                     .setTitle(getString(R.string.recording_label));
-
+        }
         mCallback.onTabSelected(Tab.REST);
         if (mTimerTask == null && getActivity() != null)
             getActivity().setProgressBarIndeterminateVisibility(true);
@@ -265,10 +237,10 @@ public class MapPane extends Fragment
     }
 
     private void updateUiOnPause() {
-        if (getActivity() != null && getActivity().getActionBar() != null)
+        if (getActivity() != null && getActivity().getActionBar() != null) {
             getActivity().getActionBar()
                     .setTitle(getString(R.string.pause_label));
-
+        }
         mCallback.onTabSelected(Tab.GAS);
 
         mPauseButton.setVisibility(View.GONE);

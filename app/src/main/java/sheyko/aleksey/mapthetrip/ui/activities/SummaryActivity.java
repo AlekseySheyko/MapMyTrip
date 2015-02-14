@@ -49,9 +49,7 @@ public class SummaryActivity extends Activity
 
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mTripId = mSharedPrefs.getString("trip_id", "");
-
         mDistance = mSharedPrefs.getFloat("distance", 0) + "";
-
         mStartTime = mSharedPrefs.getString("start_time", "");
 
         // Update UI
@@ -70,7 +68,7 @@ public class SummaryActivity extends Activity
         if (isOnline()) {
             setProgressBarIndeterminateVisibility(true);
             sendCoordinates();
-            sendStatuses();
+            sendStatusUpdates();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
             builder.setTitle("Network lost");
@@ -95,7 +93,7 @@ public class SummaryActivity extends Activity
         }
     }
 
-    private void sendStatuses() {
+    private void sendStatusUpdates() {
         ParseQuery<ParseObject> query =
                 ParseQuery.getQuery("Statuses");
         query.fromLocalDatastore();
@@ -143,7 +141,6 @@ public class SummaryActivity extends Activity
                 R.id.tripNameField)).getText().toString();
         String tripNotes = ((EditText) findViewById(
                 R.id.tripNotesField)).getText().toString();
-
         if (tripName.isEmpty()) {
             tripName = "Trip on " + mStartTime;
         }
