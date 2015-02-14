@@ -57,9 +57,6 @@ public class Trip implements OnLocationSent, OnSummaryDataRetrieved {
             public void done(List<ParseObject> coordinates, ParseException e) {
                 if (coordinates.size() != 0) {
                     new SendCoordinatesTask(mContext, Trip.this).execute(coordinates);
-                    for (ParseObject coordinate : coordinates) {
-                        coordinate.deleteInBackground();
-                    }
                 } else {
                     startLocationUpdates();
                 }

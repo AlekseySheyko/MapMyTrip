@@ -83,7 +83,7 @@ public class SendStatusTask extends AsyncTask<List<ParseObject>, Void, Void> {
                     Log.i(TAG, "Service: TFLUpdateTripStatus " + "(" + status + " trip)" + ",\n" +
                             "Result: " + response);
 
-                    statusUpdate.deleteInBackground();
+                    statusUpdate.unpinInBackground();
                 }
             }
         } catch (Exception e) {

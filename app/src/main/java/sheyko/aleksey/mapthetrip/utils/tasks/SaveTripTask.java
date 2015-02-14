@@ -91,7 +91,7 @@ public class SaveTripTask extends AsyncTask<List<ParseObject>, Void, Void> {
                     Log.i(TAG, "Service: TFLSaveTripandSummaryInfo,\n" +
                             "Result: " + response);
 
-                    saveTask.deleteInBackground();
+                    saveTask.unpinInBackground();
                 }
             }
         } catch (Exception e) {

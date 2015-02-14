@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -43,8 +42,6 @@ public class SummaryActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(
-                Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_summary);
 
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -66,9 +63,11 @@ public class SummaryActivity extends Activity
     private void finishSession(boolean isSaved) {
         mSharedPrefs.edit().putBoolean("is_saved", isSaved);
         if (isOnline()) {
-            setProgressBarIndeterminateVisibility(true);
             sendCoordinates();
             sendStatusUpdates();
+
+            startActivity(new Intent(
+                    this, StatsActivity.class));
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
             builder.setTitle("Network lost");
@@ -84,7 +83,8 @@ public class SummaryActivity extends Activity
             builder.setNegativeButton("Finish", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     // User confirm exit
-                    startActivity(new Intent(SummaryActivity.this, MainActivity.class));
+                    startActivity(new Intent(
+                            SummaryActivity.this, MainActivity.class));
                 }
             });
             // Create the AlertDialog
@@ -169,10 +169,6 @@ public class SummaryActivity extends Activity
                 sendSaveQueries();
             }
         }
-        setProgressBarIndeterminateVisibility(false);
-
-        startActivity(new Intent(this,
-                StatsActivity.class));
     }
 
     private void sendSaveQueries() {
