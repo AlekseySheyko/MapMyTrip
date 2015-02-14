@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -43,6 +44,8 @@ public class SummaryActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(
+                Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_summary);
 
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -64,11 +67,9 @@ public class SummaryActivity extends Activity
     private void finishSession(boolean isSaved) {
         mSharedPrefs.edit().putBoolean("is_saved", isSaved).apply();
         if (isOnline()) {
+            setProgressBarIndeterminateVisibility(true);
             sendCoordinates();
             sendStatusUpdates();
-
-            startActivity(new Intent(
-                    this, StatsActivity.class));
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(SummaryActivity.this);
             builder.setTitle("Network lost");
@@ -125,7 +126,6 @@ public class SummaryActivity extends Activity
         new GetSummaryInfoTask(this).execute(mTripId);
     }
 
-    // TODO А что у нас с дистанциями? Походу всегда нули получаются
     @Override
     public void onSummaryDataRetrieved(String stateCodes, String stateDistances,
                                        String statesDurations) {
@@ -134,8 +134,11 @@ public class SummaryActivity extends Activity
                 .putString("state_distances", stateDistances)
                 .putString("state_durations", statesDurations)
                 .apply();
-
         saveTrip();
+
+        setProgressBarIndeterminateVisibility(false);
+        startActivity(new Intent(
+                this, StatsActivity.class));
     }
 
     private void saveTrip() {

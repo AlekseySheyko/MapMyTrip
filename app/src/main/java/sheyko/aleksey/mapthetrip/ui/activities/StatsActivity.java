@@ -33,13 +33,13 @@ public class StatsActivity extends Activity {
         SharedPreferences sharedPrefs =
                 PreferenceManager.getDefaultSharedPreferences(this);
 
-        String totalDistance = sharedPrefs.getString("total_distance", "0");
+        String distance = sharedPrefs.getString("distance", "0");
         mStateCodes = sharedPrefs.getString("state_codes", "");
         mStateDistances = sharedPrefs.getString("state_distances", "0");
 
         TextView mTotalDistanceLabel = (TextView)
                 findViewById(R.id.total_distance_value);
-        mTotalDistanceLabel.setText(totalDistance);
+        mTotalDistanceLabel.setText(distance);
 
         if (!mStateCodes.equals("0")) {
 
