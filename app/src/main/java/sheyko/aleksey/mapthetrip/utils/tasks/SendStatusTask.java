@@ -38,6 +38,7 @@ public class SendStatusTask extends AsyncTask<List<ParseObject>, Void, Void> {
                 for (ParseObject statusUpdate : statuses) {
                     String id = statusUpdate.getString("trip_id");
                     String status = statusUpdate.getString("status");
+                    String datetime = statusUpdate.getString("datetime");
 
                     // Construct the URL for the query
                     Uri.Builder builder = new Uri.Builder();
@@ -47,8 +48,7 @@ public class SendStatusTask extends AsyncTask<List<ParseObject>, Void, Void> {
                             .appendPath("TFLUpdateTripStatus")
                             .appendQueryParameter("TripId", id)
                             .appendQueryParameter("TripStatus", status)
-                            // TODO Брать дату с parse object-a
-                            .appendQueryParameter("TripDateTime", device.getCurrentDateTime())
+                            .appendQueryParameter("TripDateTime", datetime)
                             .appendQueryParameter("TripTimezone", device.getTimeZone())
                             .appendQueryParameter("UserId", device.getUserId());
                     String mUrlString = builder.build().toString();

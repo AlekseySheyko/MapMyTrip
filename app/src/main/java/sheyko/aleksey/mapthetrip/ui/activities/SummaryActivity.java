@@ -125,6 +125,7 @@ public class SummaryActivity extends Activity
         new GetSummaryInfoTask(this).execute(mTripId);
     }
 
+    // TODO А что у нас с дистанциями? Походу всегда нули получаются
     @Override
     public void onSummaryDataRetrieved(String stateCodes, String stateDistances,
                                        String statesDurations) {

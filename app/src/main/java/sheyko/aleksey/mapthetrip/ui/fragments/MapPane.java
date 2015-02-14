@@ -32,6 +32,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.parse.ParseObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -199,6 +202,8 @@ public class MapPane extends Fragment
                     .getString("trip_id", "");
             statusObject.put("trip_id", tripId);
             statusObject.put("status", status);
+            statusObject.put("datetime",
+                    new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US).format(new Date()));
             statusObject.pinInBackground();
         } catch (Exception e) {
             e.printStackTrace();
