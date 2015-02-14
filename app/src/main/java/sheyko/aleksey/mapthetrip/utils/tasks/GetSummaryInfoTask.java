@@ -20,23 +20,25 @@ import java.util.List;
 public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, String>> {
     public static final String TAG = GetSummaryInfoTask.class.getSimpleName();
 
-    protected OnStatesDataRetrieved mCallback;
-
-    private String mStateCodes = "";
-    private String mDistances = "";
-    private String mStatesDurations = "";
+    protected OnSummaryDataRetrieved mCallback;
 
     // Interface to return states data
-    public interface OnStatesDataRetrieved {
-        public void onSummaryDataRetrieved(String id, String stateCodes, String stateDistances, String totalDistance, String statesCount);
+    public interface OnSummaryDataRetrieved {
+        public void onSummaryDataRetrieved(
+                String stateCodes, String stateDistances,
+                String totalDistance, String stateDurations);
     }
 
-    public GetSummaryInfoTask(OnStatesDataRetrieved callback) {
+    public GetSummaryInfoTask(OnSummaryDataRetrieved callback) {
         mCallback = callback;
     }
 
     @Override
     protected HashMap<String, String> doInBackground(String... params) {
+
+        String stateCodes = "";
+        String distances = "";
+        String stateDurations = "";
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -76,60 +78,54 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
             }
 
             try {
-                JSONObject mResponseObject = new JSONObject(buffer.toString());
-                String mQueryStatus = mResponseObject.getJSONObject("status").getString("code");
+                JSONObject responseObject = new JSONObject(buffer.toString());
+                String mQueryStatus = responseObject
+                        .getJSONObject("status").getString("code");
                 if (mQueryStatus.equals("OK")) {
-                    JSONObject mDataObject = mResponseObject.getJSONObject("data");
+                    JSONObject mDataObject = responseObject.getJSONObject("data");
                     JSONObject mStateDistances = mDataObject.getJSONObject("distance");
-
                     Iterator<?> keys = mStateDistances.keys();
-
                     List<String> keyList = new ArrayList<>();
-
                     while (keys.hasNext()) {
                         String state = (String) keys.next();
                         keyList.add(state);
 
                         if (!state.equals("total"))
-                        if (mStatesDurations.equals("")) {
-                            mStatesDurations = mStatesDurations + "0";
+                        if (stateDurations.equals("")) {
+                            stateDurations = stateDurations + "0";
                         } else {
-                            mStatesDurations = mStatesDurations + ", " + "0";
+                            stateDurations = stateDurations + ", " + "0";
                         }
 
-                        if (mStateCodes.equals("")) {
-                            mStateCodes = mStateCodes + state;
+                        if (stateCodes.equals("")) {
+                            stateCodes = stateCodes + state;
                         } else {
-                            mStateCodes = mStateCodes + "," + state;
+                            stateCodes = stateCodes + "," + state;
                         }
                     }
 
                     for (String key : keyList) {
                         if (!key.equals("total")) {
-
                             String distance = mStateDistances.getDouble(key) + "";
-
-                            if (mDistances.equals("")) {
-                                mDistances = mDistances + distance;
+                            if (distances.equals("")) {
+                                distances = distances + distance;
                             } else {
-                                mDistances = mDistances + ", " + distance;
+                                distances = distances + ", " + distance;
                             }
                         }
                     }
-                    mStateCodes = mStateCodes.replace("total,", "");
+                    stateCodes = stateCodes.replace("total,", "");
                     String totalDistance = mStateDistances.getDouble("total") + "";
-                    if (mStatesDurations.equals("")) mStatesDurations = "0";
+                    if (stateDurations.equals("")) stateDurations = "0";
 
-                    statesData.put("id", params[0]);
-                    statesData.put("stateCodes", mStateCodes);
-                    statesData.put("stateDistances", mDistances);
+                    statesData.put("stateCodes", stateCodes);
+                    statesData.put("stateDistances", distances);
                     statesData.put("totalDistance", totalDistance);
-                    statesData.put("stateDurations", mStatesDurations);
+                    statesData.put("stateDurations", stateDurations);
                 }
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
+                e.printStackTrace();
             }
-
             Log.i(TAG, "Service: " + GetSummaryInfoTask.class.getSimpleName() + ",\n" +
                     "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
 
@@ -155,7 +151,6 @@ public class GetSummaryInfoTask extends AsyncTask<String, Void, HashMap<String, 
         super.onPostExecute(mStatesInfo);
 
         mCallback.onSummaryDataRetrieved(
-                mStatesInfo.get("id"),
                 mStatesInfo.get("stateCodes"),
                 mStatesInfo.get("stateDistances"),
                 mStatesInfo.get("totalDistance"),

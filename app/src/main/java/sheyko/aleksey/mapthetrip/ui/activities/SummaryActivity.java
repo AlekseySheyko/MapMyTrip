@@ -24,16 +24,15 @@ import com.parse.ParseQuery;
 import java.util.List;
 
 import sheyko.aleksey.mapthetrip.R;
-import sheyko.aleksey.mapthetrip.models.Trip;
 import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask;
-import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnStatesDataRetrieved;
+import sheyko.aleksey.mapthetrip.utils.tasks.GetSummaryInfoTask.OnSummaryDataRetrieved;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendLocationTask.OnLocationSent;
 import sheyko.aleksey.mapthetrip.utils.tasks.UpdateTripStatusTask;
 
 public class SummaryActivity extends Activity
-        implements OnStatesDataRetrieved, OnLocationSent {
+        implements OnSummaryDataRetrieved, OnLocationSent {
 
     private String mTripId;
     private int mDuration;
@@ -52,10 +51,9 @@ public class SummaryActivity extends Activity
 
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        Trip currentTrip = getIntent().getExtras().getParcelable("CurrentTrip");
         mDistance = currentTrip.getDistance();
         mDuration = currentTrip.getDuration();
-        mStartTime = currentTrip.getStartTime();
+        mStartTime = mSharedPrefs.getString("start_time", "");
         mTripId = mSharedPrefs.getString("trip_id", "");
 
         // Update UI
@@ -147,9 +145,14 @@ public class SummaryActivity extends Activity
     }
 
     @Override
-    public void onSummaryDataRetrieved(String id, String stateCodes, String stateDistances,
+    public void onSummaryDataRetrieved(String stateCodes, String stateDistances,
                                        String totalDistance, String statesDurations) {
-        saveTrip(id, stateCodes, stateDistances, totalDistance, statesDurations);
+        mSharedPrefs.edit()
+                .putString("state_codes", stateCodes)
+                .putString("state_distances", stateDistances)
+                .putString("total_distance", totalDistance)
+                .putString("state_durations", statesDurations)
+                .apply();
     }
 
     private void saveTrip(String id, String stateCodes, String stateDistances,
