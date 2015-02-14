@@ -1,6 +1,7 @@
 package sheyko.aleksey.mapthetrip.utils;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -16,10 +17,11 @@ import com.parse.ParseObject;
 
 import sheyko.aleksey.mapthetrip.models.Device;
 import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask;
+import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 
 
 public class LocationService extends Service
-        implements ConnectionCallbacks, LocationListener {
+        implements ConnectionCallbacks, LocationListener, OnTripRegistered {
 
     private LocationClient mLocationClient;
     private LocationRequest mLocationRequest;
@@ -36,44 +38,21 @@ public class LocationService extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        createLocationClient().connect();
+        if (isTripJustStarted) {
+            new RegisterTripTask(this, this).execute();
+            isTripJustStarted = false;
+        }
         return START_STICKY;
     }
 
-    private void pinCurrentCoordinates() {
-        try {
-            ParseObject coordinates = new ParseObject("Coordinates");
-            String tripId = PreferenceManager.getDefaultSharedPreferences(LocationService.this)
-                    .getString("trip_id", "");
-            coordinates.put("trip_id", tripId);
-            coordinates.put("latitude", mLatitude);
-            coordinates.put("longitude", mLongitude);
-            coordinates.put("datetime",
-                    new Device(this).getCurrentDateTime());
-            coordinates.put("altitude", mAltitude);
-            coordinates.put("accuracy", mAccuracy);
-            coordinates.pinInBackground();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void onTripRegistered(Context context, String tripId) {
+        createLocationClient().connect();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
         startLocationUpdates(mLocationClient);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        try {
-            pinCurrentCoordinates();
-        } catch (Exception ignored) {
-        }
-        try {
-            stopLocationUpdates(mLocationClient);
-        } catch (Exception ignored) {
-        }
     }
 
     private LocationClient createLocationClient() {
@@ -106,10 +85,7 @@ public class LocationService extends Service
 
     @Override
     public void onLocationChanged(Location location) {
-        if (isTripJustStarted) {
-            new RegisterTripTask(this).execute();
-            isTripJustStarted = false;
-        }
+
         updateMapFragment(location);
 
         mLatitude = location.getLatitude() + "";
@@ -120,9 +96,37 @@ public class LocationService extends Service
         pinCurrentCoordinates();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        pinCurrentCoordinates();
+        try {
+            stopLocationUpdates(mLocationClient);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void pinCurrentCoordinates() {
+        try {
+            ParseObject coordinates = new ParseObject("Coordinates");
+            String tripId = PreferenceManager.getDefaultSharedPreferences(this)
+                    .getString("trip_id", "");
+            coordinates.put("trip_id", tripId);
+            coordinates.put("latitude", mLatitude);
+            coordinates.put("longitude", mLongitude);
+            coordinates.put("datetime",
+                    new Device(this).getCurrentDateTime());
+            coordinates.put("altitude", mAltitude);
+            coordinates.put("accuracy", mAccuracy);
+            coordinates.pinInBackground();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void updateMapFragment(Location location) {
         Intent intent = new Intent("LocationUpdates");
-        // Also include extra data
+        // Include extra data
         Bundle b = new Bundle();
         b.putParcelable("Location", location);
         intent.putExtra("Location", b);
