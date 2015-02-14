@@ -102,17 +102,8 @@ public class SummaryActivity extends Activity
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> statusUpdates, ParseException e) {
-                new SendStatusTask(SummaryActivity.this)
-                        .execute(statusUpdates);
-
-                /*
-                for (ParseObject statusUpdate : statusUpdates) {
-                    new SendStatusTask(SummaryActivity.this).execute(
-                            statusUpdate.getString("trip_id"),
-                            statusUpdate.getString("status"));
-                    statusUpdate.deleteInBackground();
-                }
-                */
+                new SendStatusTask(SummaryActivity.this).execute(statusUpdates);
+                // Status updates then will be deleted inside SendStatusTask
             }
         });
     }
@@ -124,9 +115,8 @@ public class SummaryActivity extends Activity
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> coordinates, ParseException e) {
-                new SendCoordinatesTask(SummaryActivity.this, SummaryActivity.this)
-                        .execute(coordinates);
-                // Coordinates will be then deleted inside SendCoordinatesTask
+                new SendCoordinatesTask(SummaryActivity.this, SummaryActivity.this).execute(coordinates);
+                // Coordinates then will be deleted inside SendCoordinatesTask
             }
         });
     }
