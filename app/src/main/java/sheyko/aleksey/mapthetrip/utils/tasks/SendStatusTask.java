@@ -47,6 +47,7 @@ public class SendStatusTask extends AsyncTask<List<ParseObject>, Void, Void> {
                             .appendPath("TFLUpdateTripStatus")
                             .appendQueryParameter("TripId", id)
                             .appendQueryParameter("TripStatus", status)
+                            // TODO Брать дату с parse object-a
                             .appendQueryParameter("TripDateTime", device.getCurrentDateTime())
                             .appendQueryParameter("TripTimezone", device.getTimeZone())
                             .appendQueryParameter("UserId", device.getUserId());

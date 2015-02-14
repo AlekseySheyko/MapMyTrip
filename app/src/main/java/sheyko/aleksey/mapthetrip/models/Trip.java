@@ -24,6 +24,7 @@ import sheyko.aleksey.mapthetrip.utils.tasks.RegisterTripTask.OnTripRegistered;
 import sheyko.aleksey.mapthetrip.utils.tasks.SaveTripTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendCoordinatesTask;
 import sheyko.aleksey.mapthetrip.utils.tasks.SendCoordinatesTask.OnLocationSent;
+import sheyko.aleksey.mapthetrip.utils.tasks.SendStatusTask;
 
 public class Trip implements OnLocationSent, OnSummaryDataRetrieved, OnTripRegistered {
 
@@ -43,6 +44,7 @@ public class Trip implements OnLocationSent, OnSummaryDataRetrieved, OnTripRegis
 
         setStartTime();
         sendPreviousCoordinates();
+        sendStatusUpdates();
     }
 
     private void setStartTime() {
@@ -63,6 +65,19 @@ public class Trip implements OnLocationSent, OnSummaryDataRetrieved, OnTripRegis
                 } else {
                     new RegisterTripTask(mContext, Trip.this).execute();
                 }
+            }
+        });
+    }
+
+    private void sendStatusUpdates() {
+        ParseQuery<ParseObject> query =
+                ParseQuery.getQuery("Statuses");
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> statusUpdates, ParseException e) {
+                new SendStatusTask(mContext).execute(statusUpdates);
+                // Status updates then will be deleted inside SendStatusTask
             }
         });
     }
