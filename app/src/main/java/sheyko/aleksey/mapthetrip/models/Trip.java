@@ -39,6 +39,8 @@ public class Trip implements OnLocationSent, OnSummaryDataRetrieved {
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         setStartTime();
+        startLocationUpdates();
+
         sendPreviousCoordinates();
     }
 
@@ -57,8 +59,6 @@ public class Trip implements OnLocationSent, OnSummaryDataRetrieved {
             public void done(List<ParseObject> coordinates, ParseException e) {
                 if (coordinates.size() != 0) {
                     new SendCoordinatesTask(mContext, Trip.this).execute(coordinates);
-                } else {
-                    startLocationUpdates();
                 }
             }
         });

@@ -182,7 +182,7 @@ public class MapPane extends Fragment
 
                 mSharedPrefs.edit()
                         .putInt("duration", mDuration)
-                        .putFloat("distance", mDistance)
+                        .putString("distance", String.format("%.1f", mDistance))
                         .apply();
 
                 // Start summary activity

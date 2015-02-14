@@ -46,7 +46,7 @@ public class SummaryActivity extends Activity
 
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mTripId = mSharedPrefs.getString("trip_id", "");
-        mDistance = mSharedPrefs.getFloat("distance", 0) + "";
+        mDistance = mSharedPrefs.getString("distance", "0");
         mStartTime = mSharedPrefs.getString("start_time", "");
 
         // Update UI
@@ -171,6 +171,7 @@ public class SummaryActivity extends Activity
         }
     }
 
+    // TODO Сейчас сэйв трип таск запаздывает на одну поездку
     private void sendSaveQueries() {
         ParseQuery<ParseObject> query =
                 ParseQuery.getQuery("SaveTasks");

@@ -3,7 +3,6 @@ package sheyko.aleksey.mapthetrip.utils.tasks;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.parse.ParseObject;
@@ -43,9 +42,7 @@ public class SendCoordinatesTask extends AsyncTask<List<ParseObject>, Void, Void
         try {
             for (List<ParseObject> coordinates : coordinatesList) {
                 for (ParseObject coordinateSet : coordinates) {
-                    // TODO Take id from parse object, not shared prefs
-                    String tripId = PreferenceManager.getDefaultSharedPreferences(mContext)
-                            .getString("trip_id", "");
+                    String tripId = coordinateSet.getString("trip_id");
                     String latitude = coordinateSet.getString("latitude");
                     String longitude = coordinateSet.getString("longitude");
                     String datetime = coordinateSet.getString("datetime");

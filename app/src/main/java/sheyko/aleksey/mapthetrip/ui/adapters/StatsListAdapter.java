@@ -27,19 +27,16 @@ public class StatsListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return list.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return list.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
