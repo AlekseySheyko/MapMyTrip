@@ -1,10 +1,10 @@
 package sheyko.aleksey.mapthetrip.utils.tasks;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.parse.ParseObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,81 +12,88 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
-public class SaveTripTask extends AsyncTask<String, Void, Void> {
+public class SaveTripTask extends AsyncTask<List<ParseObject>, Void, Void> {
+
     public static final String TAG = SaveTripTask.class.getSimpleName();
-    private Context mContext;
 
-    public SaveTripTask(Context context) {
-        mContext = context;
+    public SaveTripTask() {
     }
 
     @Override
-    protected Void doInBackground(String... params) {
+    protected Void doInBackground(List<ParseObject>... saveTaskList) {
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
-        // Will contain JSON responses as a string
-        String saveTripJsonResponse;
-        String tripId = params[0];
-        if (tripId == null) {
-            tripId = PreferenceManager.getDefaultSharedPreferences(mContext).getString("trip_id", "");
-        }
-
         try {
-            // Construct the URL for the query
-            Uri.Builder builder = new Uri.Builder();
-            builder.scheme("http")
-                    .authority("wsapp.mapthetrip.com")
-                    .appendPath("TrucFuelLog.svc")
-                    .appendPath("TFLSaveTripandSummaryInfo")
-                    .appendQueryParameter("TripId", tripId)
-                    .appendQueryParameter("IsTripSaved", params[1])
-                    .appendQueryParameter("TotalDistanceTraveled", "" + params[2])
-                    .appendQueryParameter("TotalTripDuration", params[3])
-                    .appendQueryParameter("TripName", "" + params[4])
-                    .appendQueryParameter("TripDesc", "" + params[4])
-                    .appendQueryParameter("TripNotes", "" + params[5])
-                    .appendQueryParameter("StateCd", params[6])
-                    .appendQueryParameter("TotalStateDistanceTraveled", params[7])
-                    .appendQueryParameter("Total_State_Trip_Duration", "" + params[8])
-                    .appendQueryParameter("EntityId", "1")
-                    .appendQueryParameter("UserId", "1");
-            String mUrlString = builder.build().toString();
+            for (List<ParseObject> saveTasks : saveTaskList) {
+                for (ParseObject saveTask : saveTasks) {
+                    String id = saveTask.getString("trip_id");
+                    String isSaved = saveTask.getString("is_saved");
+                    String distance = saveTask.getString("total_distance");
+                    String duration = saveTask.getString("duration");
+                    String name = saveTask.getString("name");
+                    String notes = saveTask.getString("notes");
+                    String stateCodes = saveTask.getString("state_codes");
+                    String stateDistances = saveTask.getString("state_distances");
+                    String stateDurations = saveTask.getString("state_durations");
 
-            Log.i(TAG, "Service: TFLSaveTripandSummaryInfo,\n" +
-                    "Query: " + java.net.URLDecoder.decode(mUrlString, "UTF-8"));
+                    // Construct the URL for the query
+                    Uri.Builder builder = new Uri.Builder();
+                    builder.scheme("http")
+                            .authority("wsapp.mapthetrip.com")
+                            .appendPath("TrucFuelLog.svc")
+                            .appendPath("TFLSaveTripandSummaryInfo")
+                            .appendQueryParameter("TripId", id)
+                            .appendQueryParameter("IsTripSaved", isSaved)
+                            .appendQueryParameter("TotalDistanceTraveled", "" + distance)
+                            .appendQueryParameter("TotalTripDuration", duration)
+                            .appendQueryParameter("TripName", "" + name)
+                            .appendQueryParameter("TripDesc", "" + notes)
+                            .appendQueryParameter("TripNotes", "" + notes)
+                            .appendQueryParameter("StateCd", stateCodes)
+                            .appendQueryParameter("TotalStateDistanceTraveled", stateDistances)
+                            .appendQueryParameter("Total_State_Trip_Duration", "" + stateDurations)
+                            .appendQueryParameter("EntityId", "1")
+                            .appendQueryParameter("UserId", "1");
+                    String urlString = builder.build().toString();
 
-            URL mUrl = new URL(mUrlString);
+                    Log.i(TAG, "Service: TFLSaveTripandSummaryInfo,\n" +
+                            "Query: " + java.net.URLDecoder.decode(urlString, "UTF-8"));
 
-            // Create the request and open the connection
-            urlConnection = (HttpURLConnection) mUrl.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+                    URL url = new URL(urlString);
 
-            // Read the input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                // Nothing to do.
-                return null;
+                    // Create the request and open the connection
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.connect();
+
+                    // Read the input stream into a String
+                    InputStream inputStream = urlConnection.getInputStream();
+                    StringBuilder buffer = new StringBuilder();
+                    if (inputStream == null) {
+                        // Nothing to do.
+                        return null;
+                    }
+                    reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                        // But it does make debugging a *lot* easier if you print out the completed
+                        // buffer for debugging.
+                        buffer.append(line).append("\n");
+                    }
+                    String response = java.net.URLDecoder.decode(
+                            buffer.toString(), "UTF-8");
+                    Log.i(TAG, "Service: TFLSaveTripandSummaryInfo,\n" +
+                            "Result: " + response);
+
+                    saveTask.deleteInBackground();
+                }
             }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                // But it does make debugging a *lot* easier if you print out the completed
-                // buffer for debugging.
-                buffer.append(line).append("\n");
-            }
-
-            saveTripJsonResponse = buffer.toString();
-
-            Log.i(TAG, "Service: TFLSaveTripandSummaryInfo,\n" +
-                    "Result: " + java.net.URLDecoder.decode(saveTripJsonResponse, "UTF-8"));
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally{
@@ -102,12 +109,5 @@ public class SaveTripTask extends AsyncTask<String, Void, Void> {
             }
         }
         return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        PreferenceManager.getDefaultSharedPreferences(mContext)
-                .edit().putString("trip_id", null);
     }
 }

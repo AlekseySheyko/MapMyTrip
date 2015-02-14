@@ -8,7 +8,6 @@ import android.util.Log;
 import com.parse.ParseObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -95,7 +94,7 @@ public class SendCoordinatesTask extends AsyncTask<List<ParseObject>, Void, Void
                     // urlConnection.disconnect();
                     try {
                         reader.close();
-                    } catch (final IOException e) {
+                    } catch (final Exception e) {
                         Log.e(TAG, "Error closing stream", e);
                     }
 
@@ -132,16 +131,17 @@ public class SendCoordinatesTask extends AsyncTask<List<ParseObject>, Void, Void
                     while ((line = reader.readLine()) != null) {
                         buffer.append(line);
                     }
-
+                    String response = java.net.URLDecoder.decode(
+                            buffer.toString(), "UTF-8");
                     Log.i(TAG, "Service: record-position.php,\n" +
-                            "Result: " + java.net.URLDecoder.decode(buffer.toString(), "UTF-8"));
+                            "Result: " + response);
 
-                    // urlConnection.disconnect();
                     try {
                         reader.close();
-                    } catch (final IOException e) {
+                    } catch (Exception e) {
                         Log.e(TAG, "Error closing stream", e);
                     }
+
                     coordinateSet.deleteInBackground();
                 }
             }

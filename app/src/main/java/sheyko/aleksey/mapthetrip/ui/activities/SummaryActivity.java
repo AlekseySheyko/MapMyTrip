@@ -97,7 +97,7 @@ public class SummaryActivity extends Activity
 
     private void sendStatuses() {
         ParseQuery<ParseObject> query =
-                ParseQuery.getQuery("Status");
+                ParseQuery.getQuery("Statuses");
         query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -114,8 +114,8 @@ public class SummaryActivity extends Activity
         query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> coordinates, ParseException e) {
-                new SendCoordinatesTask(SummaryActivity.this, SummaryActivity.this).execute(coordinates);
+            public void done(List<ParseObject> coordinateList, ParseException e) {
+                new SendCoordinatesTask(SummaryActivity.this, SummaryActivity.this).execute(coordinateList);
                 // Coordinates then will be deleted inside SendCoordinatesTask
             }
         });
@@ -154,7 +154,7 @@ public class SummaryActivity extends Activity
         String stateDurations = mSharedPrefs.getString("state_durations", "0");
 
         try {
-            ParseObject coordinates = new ParseObject("SaveTripTask");
+            ParseObject coordinates = new ParseObject("SaveTasks");
             coordinates.put("trip_id", mTripId);
             coordinates.put("is_saved", isSaved);
             coordinates.put("total_distance", mDistance);
@@ -169,18 +169,26 @@ public class SummaryActivity extends Activity
             e.printStackTrace();
         } finally {
             if (isOnline()) {
-                new SaveTripTask(this).execute(
-                        mTripId, isSaved,
-                        mDistance, duration,
-                        tripName, tripNotes,
-                        stateCodes, stateDistances, stateDurations
-                );
+                sendSaveQueries();
             }
         }
         setProgressBarIndeterminateVisibility(false);
 
         startActivity(new Intent(this,
                 StatsActivity.class));
+    }
+
+    private void sendSaveQueries() {
+        ParseQuery<ParseObject> query =
+                ParseQuery.getQuery("SaveTasks");
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> saveTaskList, ParseException e) {
+                new SaveTripTask().execute(saveTaskList);
+                // Save tasks then will be deleted inside SaveTripTask
+            }
+        });
     }
 
     public boolean isOnline() {

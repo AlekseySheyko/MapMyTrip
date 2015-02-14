@@ -18,8 +18,8 @@ import java.util.List;
 import sheyko.aleksey.mapthetrip.models.Device;
 
 public class SendStatusTask extends AsyncTask<List<ParseObject>, Void, Void> {
-    public static final String TAG = SendStatusTask.class.getSimpleName();
 
+    public static final String TAG = SendStatusTask.class.getSimpleName();
     private Context mContext;
 
     public SendStatusTask(Context context) {
@@ -78,10 +78,10 @@ public class SendStatusTask extends AsyncTask<List<ParseObject>, Void, Void> {
                         // buffer for debugging.
                         buffer.append(line).append("\n");
                     }
-
-                    String response = buffer.toString();
+                    String response = java.net.URLDecoder.decode(
+                            buffer.toString(), "UTF-8");
                     Log.i(TAG, "Service: TFLUpdateTripStatus " + "(" + status + " trip)" + ",\n" +
-                            "Result: " + java.net.URLDecoder.decode(response, "UTF-8"));
+                            "Result: " + response);
 
                     statusUpdate.deleteInBackground();
                 }

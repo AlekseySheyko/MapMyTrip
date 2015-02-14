@@ -197,7 +197,7 @@ public class MapPane extends Fragment
 
     private void pinCurrentStatus(String status) {
         try {
-            ParseObject statusObject = new ParseObject("Status");
+            ParseObject statusObject = new ParseObject("Statuses");
             String tripId = PreferenceManager.getDefaultSharedPreferences(MapPane.this.getActivity())
                     .getString("trip_id", "");
             statusObject.put("trip_id", tripId);
@@ -212,7 +212,7 @@ public class MapPane extends Fragment
 
     private void updateStatusOnServer() {
         try {
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Status");
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Statuses");
             query.fromLocalDatastore();
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
